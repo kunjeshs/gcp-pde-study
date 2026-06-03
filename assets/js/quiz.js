@@ -45,9 +45,12 @@ export class Quiz {
     const stats = State.attemptStats(q.id);
     const flagged = State.isFlagged(q.id);
 
+    // Multi-answer questions ("select N") use checkboxes; single-answer use radios.
+    const correctIdxs = this.correctIndices();
+    const multi = correctIdxs.length > 1;
     const optsHtml = (q.options || []).map((text, i) => `
       <label class="opt" data-i="${i}">
-        <input type="radio" name="opt" value="${i}">
+        <input type="${multi ? "checkbox" : "radio"}" name="opt" value="${i}">
         <span class="letter">${LETTERS[i]}.</span>
         <span class="text">${escapeHtml(text)}</span>
       </label>`).join("");
@@ -64,6 +67,7 @@ export class Quiz {
           <span class="badge" style="background:transparent;color:var(--text-faint);font-weight:500">#${String(this.idx + 1).padStart(3, "0")} / ${String(this.questions.length).padStart(3, "0")}</span>
         </div>
         <p class="q-stem">${escapeHtml(q.question || "")}</p>
+        ${multi ? `<p class="q-multi-hint">Select ${correctIdxs.length} answers.</p>` : ""}
         <div class="opt-list">${optsHtml}</div>
         <div class="cta-row">
           <button class="button primary" data-submit>Submit</button>
@@ -94,32 +98,41 @@ export class Quiz {
     nav.querySelector("[data-next]")?.addEventListener("click", () => this.next());
   }
 
-  pickedIndex() {
-    const sel = this.root.querySelector('input[name="opt"]:checked');
-    return sel ? parseInt(sel.value, 10) : -1;
+  pickedIndices() {
+    return [...this.root.querySelectorAll('input[name="opt"]:checked')]
+      .map((el) => parseInt(el.value, 10));
   }
 
-  correctIndex() {
+  // Indices of every correct option (answer is an array of option texts).
+  correctIndices() {
     const q = this.questions[this.idx];
-    const ans = Array.isArray(q.answer) ? q.answer[0] : q.answer;
-    if (!ans) return -1;
-    return (q.options || []).findIndex((o) => (o || "").trim() === (ans || "").trim());
+    const ans = Array.isArray(q.answer) ? q.answer : (q.answer != null ? [q.answer] : []);
+    const opts = (q.options || []).map((o) => (o || "").trim());
+    const idxs = [];
+    for (const a of ans) {
+      const i = opts.indexOf((a || "").trim());
+      if (i >= 0 && !idxs.includes(i)) idxs.push(i);
+    }
+    return idxs;
   }
 
   async submit() {
     const q = this.questions[this.idx];
-    const picked = this.pickedIndex();
-    if (picked < 0) { alert("Pick an option first."); return; }
-    const correctIdx = this.correctIndex();
-    const correct = picked === correctIdx;
-    State.recordAttempt(q.id, correct, picked);
+    const picked = this.pickedIndices();
+    if (!picked.length) { alert("Pick an option first."); return; }
+    const correctIdxs = this.correctIndices();
+    const correctSet = new Set(correctIdxs);
+    const pickedSet = new Set(picked);
+    // Correct only if every right option is chosen and nothing extra is.
+    const correct = picked.length === correctIdxs.length && picked.every((i) => correctSet.has(i));
+    State.recordAttempt(q.id, correct, picked.length === 1 ? picked[0] : picked);
 
-    // Paint options
+    // Paint options: mark every correct one, and any wrong picks.
     this.root.querySelectorAll(".opt").forEach((node) => {
       const i = parseInt(node.dataset.i, 10);
-      if (i === correctIdx) node.classList.add("correct");
-      if (i === picked && i !== correctIdx) node.classList.add("wrong");
-      if (i === picked) node.classList.add("picked");
+      if (correctSet.has(i)) node.classList.add("correct");
+      if (pickedSet.has(i) && !correctSet.has(i)) node.classList.add("wrong");
+      if (pickedSet.has(i)) node.classList.add("picked");
       node.querySelector("input").disabled = true;
     });
     this.root.querySelector("[data-submit]").disabled = true;
@@ -129,8 +142,9 @@ export class Quiz {
     const htt = explanations?.[q.id]?.how_to_think?.markdown;
     const slot = this.root.querySelector("#explain-slot");
     slot.classList.remove("hide");
+    const answerLetters = correctIdxs.map((i) => LETTERS[i]).join(", ") || "?";
     slot.innerHTML = `
-      <h3>Answer: ${LETTERS[correctIdx] || "?"}</h3>
+      <h3>Answer: ${answerLetters}</h3>
       ${q.explanation ? `<div class="md">${md(q.explanation)}</div>` : ""}
       ${htt
         ? `<hr><div class="md">${md(htt)}</div>`

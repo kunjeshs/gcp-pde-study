@@ -291,14 +291,22 @@ details.card summary .title {
   margin: 6px 0 14px;
 }
 
-/* Radio option labels inside quiz-card */
+/* Radio / checkbox option labels inside quiz-card */
 .quiz-card .opt {
   cursor: pointer;
 }
-.quiz-card .opt input[type="radio"] {
+.quiz-card .opt input[type="radio"],
+.quiz-card .opt input[type="checkbox"] {
   margin-top: 4px;
   accent-color: var(--accent, #2f6f4e);
   flex-shrink: 0;
+}
+/* "Select N answers" hint shown above multi-answer options */
+.q-multi-hint {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent, #2f6f4e);
 }
 .quiz-card .opt.picked {
   border-color: var(--accent, #2f6f4e);
