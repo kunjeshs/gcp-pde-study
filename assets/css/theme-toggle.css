@@ -1,0 +1,565 @@
+/* theme-toggle.css
+ * Day/Night orbital dial + theme-attribute overrides for both stylesheets.
+ * Tokens for [data-theme="light"] and [data-theme="dark"] beat the
+ * @media (prefers-color-scheme) blocks in styles.css by selector specificity,
+ * so manual toggle wins over OS preference once user has chosen.
+ */
+
+/* ── styles.css token overrides (manual toggle beats @media) ───────────── */
+:root[data-theme="light"] {
+  --bg: #f0f4f8;
+  --bg-soft: #ffffff;
+  --surface: #ffffff;
+  --surface-strong: #f7f9fc;
+  --surface-hover: #edf1f7;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-faint: #94a3b8;
+  --accent: #0284c7;
+  --accent-strong: #0369a1;
+  --accent-dim: rgba(2, 132, 199, 0.08);
+  --green: #16a34a;
+  --green-dim: rgba(22, 163, 74, 0.1);
+  --amber: #d97706;
+  --amber-dim: rgba(217, 119, 6, 0.1);
+  --red: #dc2626;
+  --red-dim: rgba(220, 38, 38, 0.08);
+  --border: rgba(15, 23, 42, 0.09);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --shadow-sm: 0 1px 3px rgba(15,23,42,0.07), 0 1px 2px rgba(15,23,42,0.05);
+  --shadow: 0 4px 16px rgba(15,23,42,0.08), 0 1px 4px rgba(15,23,42,0.06);
+  --shadow-lg: 0 20px 48px rgba(15,23,42,0.12);
+  --s1: #4f46e5;
+  --s2: #059669;
+  --s3: #d97706;
+  --s4: #db2777;
+  --s5: #7c3aed;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b0f17;
+  --bg-soft: #111827;
+  --surface: #161d2a;
+  --surface-strong: #1e2838;
+  --surface-hover: #243044;
+  --text: #e8edf5;
+  --text-muted: #8b97ab;
+  --text-faint: #4e5c70;
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e9;
+  --accent-dim: rgba(56, 189, 248, 0.12);
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.12);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245, 158, 11, 0.12);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.12);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow: 0 4px 16px rgba(0,0,0,0.4), 0 1px 4px rgba(0,0,0,0.3);
+  --shadow-lg: 0 20px 48px rgba(0,0,0,0.5);
+  --s1: #818cf8;
+  --s2: #34d399;
+  --s3: #f59e0b;
+  --s4: #f472b6;
+  --s5: #a78bfa;
+
+  /* Promote pde-* tokens to global scope so classes outside .pde-redesign
+   * (dp-*, wa-*, rd-*, ew-*, pde-callout-*) pick up dark values via
+   * var(--pde-panel) etc. */
+  --pde-fg: #e8e4d8;
+  --pde-fg-muted: #9aa39a;
+  --pde-bg: #0e1114;
+  --pde-panel: #161a1f;
+  --pde-border: #2b3138;
+  --pde-accent: #6fd0a0;
+  --pde-accent-soft: #1a2e25;
+  --pde-warn: #e4954e;
+  --pde-danger: #e16a6a;
+}
+
+/* ── redesign.css token overrides for .pde-redesign content area ──────── */
+html[data-theme="dark"] .pde-redesign {
+  --pde-fg: #e8e4d8;
+  --pde-fg-muted: #9aa39a;
+  --pde-bg: #0e1114;
+  --pde-panel: #161a1f;
+  --pde-border: #2b3138;
+  --pde-accent: #6fd0a0;
+  --pde-accent-soft: #1a2e25;
+  --pde-warn: #e4954e;
+  --pde-danger: #e16a6a;
+}
+html[data-theme="dark"] .pde-redesign pre {
+  background: #0a0d10;
+  border-color: #2b3138;
+  color: #d6d3c8;
+}
+html[data-theme="dark"] .pde-redesign .pde-pill.streak {
+  background: #2a2316;
+  border-color: #5a4623;
+  color: #f0d9a0;
+}
+html[data-theme="dark"] .pde-redesign .pde-pill.due {
+  background: #14241c;
+  border-color: #2d4a3a;
+}
+html[data-theme="dark"] .pde-redesign .pde-progress-bar { background: #20252a; }
+html[data-theme="dark"] .pde-redesign .pde-topic-header {
+  background: rgba(14, 17, 20, 0.92);
+  border-bottom-color: #2b3138;
+}
+html[data-theme="dark"] .pde-redesign .pde-hero .pde-cta:hover { background: #4fa87a; }
+html[data-theme="dark"] .pde-redesign code,
+html[data-theme="dark"] .pde-redesign kbd { color: #c8d0c6; }
+
+/* Smooth theme crossfade */
+body,
+.topbar,
+.brand-mark,
+.pde-redesign,
+.pde-redesign .pde-panel,
+.pde-redesign .pde-card,
+.pde-redesign .pde-hero,
+.pde-redesign .pde-tabs,
+.pde-redesign pre,
+.pde-redesign .pde-pill,
+.pde-redesign .pde-topic-header { transition: background-color 280ms ease, color 280ms ease, border-color 280ms ease; }
+
+/* ── DAY/NIGHT ORBITAL DIAL ───────────────────────────────────────────── */
+.theme-dial-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin-left: 18px;
+}
+
+.theme-dial {
+  --dial-size: 42px;
+  position: relative;
+  width: var(--dial-size);
+  height: var(--dial-size);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  isolation: isolate;
+}
+
+.theme-dial:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Outer ring — conic sky going from midnight → dawn → noon → dusk */
+.theme-dial__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 270deg,
+    #1c2540 0deg,
+    #4a5b8a 60deg,
+    #f7c873 120deg,
+    #ffe6b4 180deg,
+    #f7c873 240deg,
+    #4a5b8a 300deg,
+    #1c2540 360deg
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    0 1px 3px rgba(0, 0, 0, 0.35);
+  filter: saturate(1.1);
+}
+
+/* Inner well — recessed dark core that holds celestial body + stars */
+.theme-dial__core {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 65%, #0a0d12 0%, #161c26 65%, #06080c 100%);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.85),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+/* Tiny constellation — fades in only when dark */
+.theme-dial__star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 520ms ease;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.6);
+}
+.theme-dial__star.s1 { top: 28%; left: 26%; }
+.theme-dial__star.s2 { top: 58%; left: 70%; }
+.theme-dial__star.s3 { top: 70%; left: 32%; width: 1.5px; height: 1.5px; }
+
+html[data-theme="dark"] .theme-dial__star { opacity: 0.85; }
+html[data-theme="dark"] .theme-dial__star.s2 {
+  animation: twinkle 2.6s infinite ease-in-out;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Orbit wrapper rotates 180° between day (sun on top) and night (moon on top) */
+.theme-dial__orbit {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  transition: transform 560ms cubic-bezier(.7, 0, .25, 1);
+  pointer-events: none;
+}
+html[data-theme="dark"] .theme-dial__orbit { transform: rotate(180deg); }
+
+/* Celestial body — sun by default; counter-rotates so moon stays upright */
+.theme-dial__body {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translate(-50%, 0);
+  background: radial-gradient(circle at 35% 30%, #fff7c6 0%, #ffd166 45%, #f4a13d 100%);
+  box-shadow:
+    0 0 8px 1px rgba(255, 200, 100, 0.7),
+    0 0 18px rgba(255, 180, 80, 0.45);
+  transition: background 560ms ease, box-shadow 560ms ease, transform 560ms cubic-bezier(.7, 0, .25, 1);
+}
+
+/* Moon state — invert disc, counter-rotate to stay right-side up */
+html[data-theme="dark"] .theme-dial__body {
+  background: radial-gradient(circle at 65% 35%, #f5f3ec 0%, #c9c8c0 45%, #7e8088 100%);
+  box-shadow:
+    0 0 6px rgba(180, 200, 255, 0.5),
+    inset -3px -2px 5px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, 0) rotate(-180deg);
+}
+
+/* Moon craters (visible in dark only) */
+.theme-dial__body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(0,0,0,0.22) 0 1.8px, transparent 2.5px),
+    radial-gradient(circle at 65% 65%, rgba(0,0,0,0.26) 0 2px, transparent 2.6px),
+    radial-gradient(circle at 55% 25%, rgba(0,0,0,0.18) 0 1.2px, transparent 1.8px);
+  transition: opacity 560ms ease;
+}
+html[data-theme="dark"] .theme-dial__body::after { opacity: 1; }
+
+/* Sun corona (visible in light only) */
+.theme-dial__body::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 48%, rgba(255, 200, 100, 0.35) 52%, transparent 64%);
+  transition: opacity 560ms ease;
+}
+html[data-theme="dark"] .theme-dial__body::before { opacity: 0; }
+
+.theme-dial:hover .theme-dial__body { filter: brightness(1.12); }
+.theme-dial:hover .theme-dial__ring { filter: saturate(1.3) brightness(1.05); }
+.theme-dial:active { transform: scale(0.96); }
+
+.theme-dial__label {
+  font-family: ui-monospace, "JetBrains Mono", Consolas, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+  text-align: center;
+  min-width: 42px;
+  line-height: 1;
+}
+
+/* AUTO mode badge */
+.theme-dial__auto-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 8px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 50%;
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  border: 1.5px solid var(--bg);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 220ms ease, transform 220ms ease;
+  pointer-events: none;
+}
+html.is-auto-theme .theme-dial__auto-badge { opacity: 1; transform: scale(1); }
+
+/* Full-viewport radial sweep on toggle */
+.theme-sweep {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: var(--sweep-color, #000);
+  opacity: 0;
+  clip-path: circle(0 at var(--sweep-x, 50%) var(--sweep-y, 50%));
+  animation: theme-sweep 620ms cubic-bezier(.4, 0, .2, 1) forwards;
+}
+@keyframes theme-sweep {
+  0%   { opacity: 0;    clip-path: circle(0 at var(--sweep-x) var(--sweep-y)); }
+  18%  { opacity: 0.42; }
+  60%  { opacity: 0.32; }
+  100% { opacity: 0;    clip-path: circle(160vmax at var(--sweep-x) var(--sweep-y)); }
+}
+
+/* Long-press hint — subtle pulse ring while finger held */
+.theme-dial.is-pressing::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  opacity: 0;
+  animation: dial-press 700ms ease-out forwards;
+  pointer-events: none;
+}
+@keyframes dial-press {
+  0%   { opacity: 0;   transform: scale(0.7); }
+  100% { opacity: 0.7; transform: scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-dial__orbit,
+  .theme-dial__body,
+  .theme-dial__body::before,
+  .theme-dial__body::after,
+  body, .topbar, .pde-redesign { transition: none !important; }
+  .theme-sweep { display: none; }
+  .theme-dial__star.s2 { animation: none; }
+}
+
+/* ── Dark-mode overrides for hardcoded-literal backgrounds ────────────── */
+/* These classes set background via literal hex (not var) so they need
+ * explicit dark overrides. Text color already inherits from body/var(--text)
+ * and goes light automatically. */
+html[data-theme="dark"] .dp-block,
+html[data-theme="dark"] .dp-empty .dp-empty-card,
+html[data-theme="dark"] .rd-stat,
+html[data-theme="dark"] .rd-section-row,
+html[data-theme="dark"] .rd-section-drill,
+html[data-theme="dark"] .miss-tag-panel,
+html[data-theme="dark"] .ew-clock,
+html[data-theme="dark"] .ew-rd-row,
+html[data-theme="dark"] .pde-redesign .pde-card-warn,
+html[data-theme="dark"] .pde-redesign .pde-step,
+html[data-theme="dark"] .pde-redesign .pde-nba,
+html[data-theme="dark"] .pde-redesign .pde-first-run,
+html[data-theme="dark"] .quiz-learn-panel,
+html[data-theme="dark"] .quiz-learn-rule,
+html[data-theme="dark"] .pde-redesign .pde-cta-ghost,
+html[data-theme="dark"] .wa-debug {
+  background: var(--pde-panel);
+  border-color: var(--pde-border);
+  color: var(--pde-fg);
+}
+
+/* Danger-tinted card (due review) — dark red wash, not cream */
+html[data-theme="dark"] .dp-due-card {
+  background: #2a1818;
+  border-left-color: #e16a6a;
+  color: var(--pde-fg);
+}
+html[data-theme="dark"] .dp-due-card * { color: var(--pde-fg); }
+html[data-theme="dark"] .dp-due-card .dp-due-cta,
+html[data-theme="dark"] .dp-due-card a.dp-due-cta { color: #fff; }
+
+/* Read-mode callouts — dark variants */
+html[data-theme="dark"] .pde-read-body .pde-callout            { background: #18222e; border-left-color: #4a90e2; color: #cfd9e6; }
+html[data-theme="dark"] .pde-read-body .pde-callout-warn       { background: #2a1c18; border-left-color: #e88a4a; color: #f0d6c4; }
+html[data-theme="dark"] .pde-read-body .pde-callout-warn strong{ color: #ff8a6a; }
+html[data-theme="dark"] .pde-read-body .pde-callout-tip        { background: #14241c; border-left-color: #5fc492; color: #cfe6d6; }
+html[data-theme="dark"] .pde-read-body .pde-callout-tip strong { color: #6fd0a0; }
+html[data-theme="dark"] .pde-read-body .pde-callout-decide     { background: #1f1b2e; border-left-color: #9b87f5; color: #d6cfe6; }
+
+/* Storage-fail banner — readable in dark */
+html[data-theme="dark"] .pde-storage-banner {
+  background: #2a1c18;
+  border-left-color: #e4954e;
+  color: #f0d6c4;
+}
+
+/* Streak/due pill text inside dp-* */
+html[data-theme="dark"] .dp-block h3,
+html[data-theme="dark"] .dp-block .dp-reason,
+html[data-theme="dark"] .dp-empty-card h2,
+html[data-theme="dark"] .dp-empty-card p { color: var(--pde-fg); }
+html[data-theme="dark"] .dp-block .dp-reason,
+html[data-theme="dark"] .dp-empty-card p { color: var(--pde-fg-muted); }
+
+/* Streak pill in light reused on dark backdrop */
+html[data-theme="dark"] .pde-pill,
+html[data-theme="dark"] .pde-pill.due,
+html[data-theme="dark"] .pde-pill.streak {
+  background: var(--pde-panel);
+  border-color: var(--pde-border);
+  color: var(--pde-fg);
+}
+
+/* Table row stripes (.pde-tbl uses hardcoded #f1efe8 and #f6f4ee) */
+html[data-theme="dark"] .pde-redesign table.pde-tbl td { background: var(--pde-panel); border-color: var(--pde-border); }
+html[data-theme="dark"] .pde-redesign table.pde-tbl tr:nth-child(even) td { background: #1b2026; }
+
+/* Topic-header backdrop already overridden above; reinforce blur layer */
+html[data-theme="dark"] .pde-redesign .pde-drill button.pde-reveal-btn:hover { background: #1b2026; }
+
+/* Progress bar tracks */
+html[data-theme="dark"] .pde-progress-bar,
+html[data-theme="dark"] .ew-rd-row .ew-bar { background: #20252a; }
+
+/* ── Question-bank / bank-card system (styles.css L1801+) ─────────────── */
+/* Native form chrome */
+:root[data-theme="dark"] { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+
+html[data-theme="dark"] select,
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="search"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] textarea {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] textarea:focus { outline-color: var(--accent); }
+
+/* qb-* + bank-* surfaces */
+html[data-theme="dark"] .bank-filter-bar,
+html[data-theme="dark"] .qb-toolbar {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+html[data-theme="dark"] .qb-pill-btn,
+html[data-theme="dark"] .qb-flag-btn,
+html[data-theme="dark"] .qb-collapse-btn,
+html[data-theme="dark"] .qb-filter-label select {
+  background: var(--surface-strong);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+html[data-theme="dark"] .qb-pill-btn:hover,
+html[data-theme="dark"] .qb-collapse-btn:hover { background: var(--surface-hover); }
+html[data-theme="dark"] .qb-card,
+html[data-theme="dark"] .bank-card {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+html[data-theme="dark"] .qb-card:hover { border-color: var(--border-strong); box-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+html[data-theme="dark"] .qb-empty-state {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text-muted);
+}
+
+/* Status badges — dark tinted bg, light tinted text, preserve semantic tone */
+html[data-theme="dark"] .qb-badge-unseen    { background: rgba(139, 151, 171, 0.15); color: #b5bdcc; border-color: rgba(139, 151, 171, 0.3); }
+html[data-theme="dark"] .qb-badge-answered  { background: rgba(56, 189, 248, 0.16);  color: #8ed4f8; border-color: rgba(56, 189, 248, 0.32); }
+html[data-theme="dark"] .qb-badge-correct   { background: rgba(34, 197, 94, 0.16);   color: #6ee7a0; border-color: rgba(34, 197, 94, 0.32); }
+html[data-theme="dark"] .qb-badge-incorrect { background: rgba(248, 113, 113, 0.16); color: #fca5a5; border-color: rgba(248, 113, 113, 0.32); }
+html[data-theme="dark"] .qb-badge-flag      { background: rgba(245, 158, 11, 0.16);  color: #fbbf24; border-color: rgba(245, 158, 11, 0.32); }
+html[data-theme="dark"] .qb-badge-htt       { background: rgba(167, 139, 250, 0.16); color: #c4b5fd; border-color: rgba(167, 139, 250, 0.32); }
+
+html[data-theme="dark"] .qb-flag-btn:hover { background: rgba(245, 158, 11, 0.14); border-color: #d4a259; color: #fbbf24; }
+html[data-theme="dark"] .qb-flag-btn.is-flagged,
+html[data-theme="dark"] .flag-btn.active.qb-flag-btn { background: rgba(245, 158, 11, 0.22); border-color: #d4a259; color: #fbbf24; }
+
+/* Stale banner */
+html[data-theme="dark"] .pde-stale-banner {
+  background: #2a230f;
+  border-left-color: #e4954e;
+  color: #fbd58a;
+}
+html[data-theme="dark"] .pde-stale-banner a { color: #6fd0a0; }
+
+/* ── Chapter-page read view: pde-read-item, pde-toc, pde-drill, pde-reveal */
+html[data-theme="dark"] .pde-redesign .pde-toc,
+html[data-theme="dark"] .pde-redesign .pde-read-item,
+html[data-theme="dark"] .pde-redesign .pde-drill,
+html[data-theme="dark"] .pde-redesign .pde-reveal-body {
+  background: var(--pde-panel);
+  border-color: var(--pde-border);
+  color: var(--pde-fg);
+}
+html[data-theme="dark"] .pde-redesign .pde-toc a,
+html[data-theme="dark"] .pde-redesign .pde-read-item a { color: var(--pde-accent); }
+html[data-theme="dark"] .pde-redesign .pde-step-dot {
+  background: var(--pde-border);
+  color: var(--pde-fg);
+}
+html[data-theme="dark"] .pde-redesign table.pde-tbl th,
+html[data-theme="dark"] .pde-redesign th { background: #1b2026; color: var(--pde-fg); border-color: var(--pde-border); }
+html[data-theme="dark"] .pde-redesign hr { border-color: var(--pde-border); }
+
+/* pde-read-body markdown surfaces */
+html[data-theme="dark"] .pde-redesign .pde-read-body pre,
+html[data-theme="dark"] .pde-redesign .pde-read-body code {
+  background: #0a0d10;
+  color: #d6d3c8;
+  border-color: var(--pde-border);
+}
+html[data-theme="dark"] .pde-redesign .pde-read-body blockquote {
+  background: var(--pde-panel);
+  border-left-color: var(--pde-accent);
+  color: var(--pde-fg);
+}
+
+/* New-question drill cards — tinted both themes.
+ * Uses !important because the template still ships an inline
+ * style="background:#fdfcf6;" on these elements (Flask was not reloaded
+ * after the template change). Safe to drop the !important once Flask
+ * reloads chapter.html which now uses .pde-drill--new instead. */
+.pde-redesign .pde-drill.pde-drill--new { background: #fdfcf6; }
+html[data-theme="dark"] .pde-redesign .pde-drill[style*="fdfcf6"],
+html[data-theme="dark"] .pde-redesign .pde-drill.pde-drill--new {
+  background: #1c1f17 !important;
+  border-color: #3a4030;
+}
+
+/* Progress-bar tracks / weight chips / mini chips */
+html[data-theme="dark"] .rd-section-bar,
+html[data-theme="dark"] .wa-weight { background: #20252a; color: var(--pde-fg); }
+html[data-theme="dark"] .conf-btn,
+html[data-theme="dark"] .readiness-cell {
+  background: var(--pde-panel);
+  border-color: var(--pde-border);
+  color: var(--pde-fg);
+}
+html[data-theme="dark"] .conf-btn:hover { background: #1b2026; }
+html[data-theme="dark"] .miss-chip {
+  background: var(--pde-panel);
+  border-color: var(--pde-border);
+  color: var(--pde-fg);
+}

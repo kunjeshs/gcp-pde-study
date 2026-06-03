@@ -1,0 +1,1246 @@
+{
+ "topic": "3.1 Selecting storage systems",
+ "slug": "3-1-selecting-storage-systems",
+ "question_count": 74,
+ "questions": [
+  {
+   "id": "test_11_q23",
+   "source": "test 11",
+   "question": "How can you design the storage for two relational tables in a 10-TB database on Google Cloud to enable horizontally scalable transactions and optimize data for range queries on non-key columns. (Which option from the following alternatives should you choose)?",
+   "options": [
+    "Use Cloud Spanner for storage and add secondary indexes to support query patterns",
+    "Use Cloud Spanner for storage and use Cloud Dataflow to transform data to support query patterns.",
+    "Use Cloud SQL for storage and add secondary indexes to support query patterns",
+    "Use Cloud SQL for storage and utilize Cloud Dataflow to transform data to support query patterns."
+   ],
+   "answer": [
+    "Use Cloud Spanner for storage and add secondary indexes to support query patterns"
+   ],
+   "explanation": "Option A, using Cloud SQL for storage and adding secondary indexes to support query patterns, may not be sufficient for scaling horizontally as Cloud SQL has limitations on scalability. In addition, adding too many indexes can negatively impact write performance. Option B, using Cloud SQL for storage and using Cloud Dataflow to transform data to support query patterns, may not be the most efficient solution as it requires additional processing overhead for transforming the data. Option D, using Cloud Spanner for storage and using Cloud Dataflow to transform data to support query patterns, may not be necessary as Cloud Spanner already has built-in scalability and can handle large datasets with high concurrency. However, adding secondary indexes to support query patterns is still a viable solution. Therefore, option C, using Cloud Spanner for storage and adding secondary indexes to support query patterns, is the most suitable option as it provides scalability and efficient querying with secondary indexes.",
+   "also_appears_in": [
+    "test_1_q2"
+   ]
+  },
+  {
+   "id": "test_10_q49",
+   "source": "test 10",
+   "question": "What is the recommended approach for designing storage for very large text files in a data pipeline on Google Cloud that supports ANSI SQL queries, compression, and parallel loading from input locations based on Google‘s best practices. Which of the following options is the most appropriate?",
+   "options": [
+    "Use the Grid Computing Tools to compress text files to gzip format and store the data in BigQuery for querying",
+    "Use Cloud Dataflow to convert text files to compressed Avro format and store the data in BigQuery for querying.",
+    "Use Cloud Dataflow to convert text files to compressed Avro format and store the data in Cloud Storage, with BigQuery permanent linked tables for querying.",
+    "Use the Grid Computing Tools to compress text files to gzip format and store the data in Cloud Storage, then import the data into Cloud Bigtable for querying."
+   ],
+   "answer": [
+    "Use Cloud Dataflow to convert text files to compressed Avro format and store the data in Cloud Storage, with BigQuery permanent linked tables for querying."
+   ],
+   "explanation": "The recommended approach for designing storage for very large text files in a data pipeline on Google Cloud that supports ANSI SQL queries, compression, and parallel loading from input locations based on Google‘s best practices is Option B: Use Cloud Dataflow to convert text files to compressed Avro format and store the data in Cloud Storage, with BigQuery permanent linked tables for querying. Option A is not the best choice because using BigQuery as storage may lead to additional costs and is less scalable than Cloud Storage. Option C is not recommended since gzip is not an optimized format for querying in BigQuery Option D is not the best choice because Cloud Bigtable is a NoSQL database that is not optimized for querying with ANSI SQL.",
+   "also_appears_in": [
+    "test_1_q4"
+   ]
+  },
+  {
+   "id": "test_1_q9",
+   "source": "test 1",
+   "question": "You work for a game developer that is using Cloud Firestore and needs to regularly create backups. You‘d like to issue a command and have it return immediately while the backup runs in the background. You want the backup file to be stored in a Cloud Storage bucket named game-ds-backup. What command would you use?",
+   "options": [
+    "gsutil datastore export gs://game-ds-backup --async",
+    "gcloud datastore export gs://game-ds-backup --async",
+    "gcloud datastore backup gs://game-ds-backup",
+    "gsutil datastore export gs://game-ds-backup"
+   ],
+   "answer": [
+    "gcloud datastore export gs://game-ds-backup --async"
+   ],
+   "explanation": "The correct command is gcloud datastore export gs://game-ds-backup –async. Export, not backup, is the datastore command to save data to a Cloud Storage bucket. Gsutil is used to manage Cloud Storage, not Cloud Datastore. See https://cloud.google.com/datastore/docs/export-import-entities and https://cloud.google.com/sdk/gcloud/reference/datastore/export",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_12_q11",
+    "test_16_q3"
+   ]
+  },
+  {
+   "id": "test_12_q2",
+   "source": "test 12",
+   "question": "The online retailer has a Google App Engine-based application and wants to allow customers to transact directly through it, in addition to managing shopping transactions and analyzing data from multiple datasets via a business intelligence tool. They have a preference to utilize only one database for this purpose. The question is, which Google Cloud database would be the most appropriate option?",
+   "options": [
+    "Cloud SQL",
+    "BigQuery",
+    "Cloud BigTable",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud SQL"
+   ],
+   "explanation": "Option Transactional Support BI Support Verdict BigQuery No Yes Incorrect Cloud SQL Yes Limited Best choice Cloud Bigtable Scalable Poor for BI Not relational Cloud Datastore NoSQL Not ideal for analytics Not relational",
+   "also_appears_in": [
+    "test_1_q13"
+   ]
+  },
+  {
+   "id": "test_12_q15",
+   "source": "test 12",
+   "question": "You are consulting to a company developing an IoT application that analyzes data from sensors deployed on drones. The application depends on a database that can write large volumes of data at low latency. The company has used Hadoop HBase in the past but wants to migrate to a managed database service. What service would you recommend?",
+   "options": [
+    "BigQuery",
+    "Cloud Firestore",
+    "Cloud Spanner",
+    "Bigtable"
+   ],
+   "answer": [
+    "Bigtable"
+   ],
+   "explanation": "Bigtable is a wide column database with low latency writes that is well suited for IoT data storage and it has an HBase API. BigQuery is a data warehouse service. Cloud Dataproc is a managed Spark/Hadoop service. Cloud Firestore is a NoSQL document model database. See https://cloud.google.com/bigtable/docs/hbase-bigtable",
+   "also_appears_in": [
+    "test_1_q20"
+   ]
+  },
+  {
+   "id": "test_11_q53",
+   "source": "test 11",
+   "question": "A university research group has started a company to commercialize a laboratory management system. Their application uses a MongoDB database but the group would like to migrate to a managed database service in Google Cloud. What service would you recommend they use?",
+   "options": [
+    "BigQuery",
+    "Cloud Bigtable",
+    "Cloud SQL",
+    "Cloud Firestore"
+   ],
+   "answer": [
+    "Cloud Firestore"
+   ],
+   "explanation": "MongoDB is a document database so Cloud Firestore is the best option since it is also a document database. Cloud Bigtable is a wide-column NoSQL database and not a good replacement for MongoDB. BigQuery is an analytical database designed for data warehousing and data analysis. Cloud SQL is a relational database and not a good replacement for a NoSQL database. See https://firebase.google.com/docs/firestore/data-model",
+   "also_appears_in": [
+    "test_16_q54",
+    "test_1_q27"
+   ]
+  },
+  {
+   "id": "test_1_q29",
+   "source": "test 1",
+   "question": "A startup is providing a streaming service for cricket fans around the world. The service will provide both live streams and videos of previously played matches. The architect of the startup wants to ensure all users have the same experience regardless of where they are located. What GCP service could the startup use to help ensure a consistent experience for previously played matches?",
+   "options": [
+    "Cloud Storage using Nearline storage",
+    "Cloud Firestore",
+    "Cloud Storage using multiple regions",
+    "Cloud CDN"
+   ],
+   "answer": [
+    "Cloud CDN"
+   ],
+   "explanation": "Cloud CDN is a content delivery network service designed to store copies of data close to end users. Cloud Storage using multiple regions would require more management than Cloud CDN and does not have the automatic caching features of Cloud CDN. Cloud Storage Nearline is for storing objects that are accessed less than once in 30 days. Cloud Firestore is a NoSQL database and not appropriate for storing and streaming videos. See https://cloud.google.com/cdn"
+  },
+  {
+   "id": "test_11_q9",
+   "source": "test 11",
+   "question": "What data structure in the Cloud Firestore document data model is analogous to a row in a relational database?",
+   "options": [
+    "Interleaved row",
+    "Entity",
+    "Kinds",
+    "Index"
+   ],
+   "answer": [
+    "Entity"
+   ],
+   "explanation": "Entities are analogous to rows in relational data models, both of which describe a single modeled element. Kinds are collections of related entities and analogous to a table in relational data models. An index is used to implement efficient querying in both Cloud Firestore and relational databases. There is no such thing as an interleaved row; interleaved tables are a feature of Cloud Spanner which improves query performance by storing related data together. See https://firebase.google.com/docs/firestore/data-model",
+   "also_appears_in": [
+    "test_16_q5",
+    "test_1_q30"
+   ]
+  },
+  {
+   "id": "test_11_q55",
+   "source": "test 11",
+   "question": "An IoT service uses Bigtable to store timeseries data. You have noticed that write operations tend to happen on one node at a time rather than being evenly distributed across nodes. What could be the cause of this problem?",
+   "options": [
+    "Using the wrong type of GCP load balancer in front of Bigtable",
+    "Using a row key that causes data that arrives close in time to be written to a single node, rather than evenly distributed.",
+    "Misconfiguring replication",
+    "Using too many columns in your data model"
+   ],
+   "answer": [
+    "Using a row key that causes data that arrives close in time to be written to a single node, rather than evenly distributed."
+   ],
+   "explanation": "This is an example of hot spotting, where workload is skewed toward a small number of nodes instead of evenly distributed. In Bigtable, this can be caused by row keys that are lexically close to each other and generated close in time. Bigtable distributes write operations based on the row key, not one of the GCP load balancers. Replication does not impact where data is originally written. Bigtable is a wide column database and can support a large number of columns and the number of columns does not affect the distribution of data across nodes. See https://cloud.google.com/bigtable/docs/performance",
+   "also_appears_in": [
+    "test_16_q20",
+    "test_1_q31"
+   ]
+  },
+  {
+   "id": "test_11_q54",
+   "source": "test 11",
+   "question": "You are designing a Bigtable schema and have several groups of columns that are frequently used together. You want to optimize read performance and follow Google Cloud recommended best practices. How would you treat these groups of columns?",
+   "options": [
+    "Put related columns in column family",
+    "Put only one set of related columns in a table and use one table for each group",
+    "Create secondary indexes that include all columns in a group. Create one secondary index for each group.",
+    "Define a separate row key for each group."
+   ],
+   "answer": [
+    "Put related columns in column family"
+   ],
+   "explanation": "Related columns should be placed in a column family. A single table can have multiple column families. Related data should be in one table, not multiple tables. Bigtable does not support secondary indexes. Row keys are specified for each row, not for each column family. See https://cloud.google.com/bigtable/docs/schema-design#best-practices",
+   "also_appears_in": [
+    "test_16_q6",
+    "test_1_q35"
+   ]
+  },
+  {
+   "id": "test_10_q48",
+   "source": "test 10",
+   "question": "An online gaming company has used a normalized database to manage players‘ in-game possessions but it is difficult to maintain because the schema has to change frequently to support new game features and types of possessions. What kind of data model would you recommend instead of a normalized data model?",
+   "options": [
+    "Document model",
+    "Star schema",
+    "Network model",
+    "Snowflake schema"
+   ],
+   "answer": [
+    "Document model"
+   ],
+   "explanation": "A document model supports semi-structured schemas that frequently change. Both a star schema and snowflake schema are denormalized relational data models used in data warehousing but would not meet the needs of an interactive game. A network model is used to model graph-like structures such as transportation networks and is not as good a fit for the requirements as a document model. See https://firebase.google.com/docs/firestore/data-model",
+   "also_appears_in": [
+    "test_16_q14",
+    "test_1_q37"
+   ]
+  },
+  {
+   "id": "test_11_q32",
+   "source": "test 11",
+   "question": "Epidemiology and infectious disease researchers are collecting data on the genomic sequences of several pathogens. The data is stored in a bioinformatics-specific format called FASTQ and are tens of gigabytes in size. They will eventually store several terabytes of FASTQ data. The data will be processed by Cloud Dataflow and results will be written to BigQuery. What is a good option for storing FASTQ data?",
+   "options": [
+    "Cloud Storage",
+    "BigQuery",
+    "Bigtable",
+    "Cloud Firestore"
+   ],
+   "answer": [
+    "Cloud Storage"
+   ],
+   "explanation": "The specialized data format in this scenario makes object storage a good option so Cloud Storage is the best choice. Cloud Firestore is a good option for document storage, such as JSON structures. BigQuery and Bigtable are not suited to store large objects. See https://cloud.google.com/blog/topics/developers-practitioners/map-storage-options-google-cloud",
+   "also_appears_in": [
+    "test_16_q49",
+    "test_1_q38"
+   ]
+  },
+  {
+   "id": "test_11_q57",
+   "source": "test 11",
+   "question": "A global transportation company is using Cloud Spanner for managing shipping orders. They have migrated an Oracle database to Cloud Spanner with minimal changes and are experiencing similar performance problems with joins. In particular, a one-to-many join between an orders table and an order items table is not performing as needed. What would you recommend?",
+   "options": [
+    "Use interleaved tables",
+    "Use Cloud SQL for better join performance",
+    "Use Cloud Bigtable for better join performance",
+    "Use interleaved hashes"
+   ],
+   "answer": [
+    "Use interleaved tables"
+   ],
+   "explanation": "Interleaved tables store parent and children records together, such as orders and order items. This is more efficient than storing related items separately since the parent and child data can be read at the same time. Cloud Bigtable is a NoSQL database and would not meet requirements. Cloud SQL does not scale beyond regional-scale databases and would not meet requirements. There is no such thing as interleaved hashes in Cloud Spanner. See https://cloud.google.com/spanner/docs/schema-and-data-model and https://cloud.google.com/spanner/docs/whitepapers/optimizing-schema-design",
+   "also_appears_in": [
+    "test_16_q52",
+    "test_1_q42"
+   ]
+  },
+  {
+   "id": "test_16_q55",
+   "source": "test 16",
+   "question": "What types of indexes are automatically created in Cloud Firestore? (Choose 2).",
+   "options": [
+    "Atomic values, ascending",
+    "Composite indexes, multi-value",
+    "Hash indexes",
+    "Atomic values, descending",
+    "Composite indexes, single value"
+   ],
+   "answer": [
+    "Atomic values, ascending",
+    "Atomic values, descending"
+   ],
+   "explanation": "Cloud Firestore automatically creates atomic value ascending and descending indexes. A composite index is made up of two or more values and are not created manually. There is no single valued composite index; all composite indexes have multiple values. There isn‘t a hash index type in Cloud Firestore. sEe https://firebase.google.com/docs/firestore/query-data/index-overview",
+   "also_appears_in": [
+    "test_1_q51"
+   ]
+  },
+  {
+   "id": "test_12_q14",
+   "source": "test 12",
+   "question": "To avoid hot-spotting in your Bigtable clusters, you have designed a row key that uses a UUID prefix. This is not working as expected and there is hot-spotting when writing data to Bigtable. What could be the cause of the hot-spotting?",
+   "options": [
+    "The name of the row key column is too long.",
+    "You have chosen a type of UUID that has sequentially ordered strings.",
+    "You have incorrectly configured column families.",
+    "Secondary indexes are slowing write operations."
+   ],
+   "answer": [
+    "You have chosen a type of UUID that has sequentially ordered strings."
+   ],
+   "explanation": "This could be caused by UUIDs that are sequentially generated. You should use UUID version 4 that uses a random number generator. Column families structure do not affect hot spotting. The name of a row key does not cause hot spotting. Bigtable does not support secondary indexes. See https://cloud.google.com/bigtable/docs/performance",
+   "also_appears_in": [
+    "test_12_q21",
+    "test_1_q52"
+   ]
+  },
+  {
+   "id": "test_2_q13",
+   "source": "test 2",
+   "question": "A financial services company is using a single Bigtable cluster to store data about equity prices. There is a large volume of write operations during the trading day. There are also analytic batch jobs that run through the day. You have been hired to help optimize the performance of Bigtable. What would you recommend they do?",
+   "options": [
+    "Isolate the write and batch workloads by adding a second cluster to the Bigtable instance and create two app profiles, one for write traffic and one for batch jobs.",
+    "Continue to write data to Bigtable but create a Cloud Dataflow job to copy data to a Cloud Spanner data warehouse for batch operations.",
+    "Continue to write data to Bigtable but create a Cloud Dataflow job to copy data to a Cloud Firestore data warehouse for batch operations.",
+    "Isolate the write and batch workloads by adding a second set of tables to the Bigtable instance and write the data needed by batch jobs to the second set of tables."
+   ],
+   "answer": [
+    "Isolate the write and batch workloads by adding a second cluster to the Bigtable instance and create two app profiles, one for write traffic and one for batch jobs."
+   ],
+   "explanation": "To isolate batch analytics jobs from other operations in Bigtable, Google Cloud recommends using two clusters in a single instance and using app profile to route operations to the appropriate cluster. Cloud Spanner and Cloud Datastore are not designed for data warehousing. A second set of tables would be managed by the same set of nodes and not reduce the total workload on the nodes in the cluster. See https://cloud.google.com/bigtable/docs/performance",
+   "also_appears_in": [
+    "test_11_q15"
+   ]
+  },
+  {
+   "id": "test_2_q19",
+   "source": "test 2",
+   "question": "A manufacturer of delivery drones has been using a PostgreSQL database running in Compute Engine to store data. The company is growing and the database is not able to keep up with the ingestion of telemetry data from the drones. The CTO would like to use a managed database service that will provide low latency writes and scale to petabytes of data. The top priority is scalability and the CTO is willing to invest development time in changing the application if needed. What managed Google Cloud database service would you recommend?",
+   "options": [
+    "Cloud SQL using PostgreSQL",
+    "Cloud Spanner",
+    "Cloud Bigtable",
+    "BigQuery"
+   ],
+   "answer": [
+    "Cloud Bigtable"
+   ],
+   "explanation": "Cloud Bigtable is the most suitable managed database service for this scenario. Why Cloud Bigtable? Scalability: It’s designed to handle massive datasets and high-throughput workloads, making it ideal for petabytes of telemetry data. Low-Latency Writes: Cloud Bigtable is optimized for low-latency writes, which is crucial for real-time telemetry data ingestion. NoSQL Data Model: Its NoSQL data model is flexible and can easily adapt to the evolving needs of the drone telemetry data. Strong Consistency: Cloud Bigtable offers strong consistency, ensuring that data is always accurate and up-to-date. While Cloud Spanner is also a powerful option, Cloud Bigtable’s superior performance and scalability for massive datasets make it the better choice in this specific case. Considerations for Migration: Data Model: The application may need to be adapted to leverage the NoSQL data model of Cloud Bigtable. Data Migration: A robust data migration strategy will be necessary to move the existing PostgreSQL data to Cloud Bigtable. Performance Optimization: Careful tuning of Cloud Bigtable’s configuration and query patterns will be essential to maximize performance. By choosing Cloud Bigtable, the manufacturer can ensure that their database infrastructure is capable of handling the increasing volume and complexity of their drone telemetry data.",
+   "also_appears_in": [
+    "test_11_q33",
+    "test_12_q30"
+   ]
+  },
+  {
+   "id": "test_2_q21",
+   "source": "test 2",
+   "question": "A Cloud Spanner database is experiencing hot-spotting. You suggest changing the primary keys of tables in the database. What methods would you consider when defining new keys? (Choose 2)",
+   "options": [
+    "Hash value of existing primary key",
+    "Auto-incrementing values",
+    "Big-reversed sequential values",
+    "Timestamps",
+    "Start primary key with low cardinality attribute"
+   ],
+   "answer": [
+    "Hash value of existing primary key",
+    "Big-reversed sequential values"
+   ],
+   "explanation": "Hot-spotting occurs in Cloud Spanner when too many inserts or updates target the same portion of the key space, causing uneven load on servers. To reduce hot-spotting: Hash the primary key – Adding a hash of an existing key spreads the data evenly across nodes. Big-reversed sequential values – If keys are sequential, reversing them distributes writes across nodes. Why not the others: Auto-incrementing values → still sequential, can cause hot-spotting. Timestamps → sequential in nature, can lead to hot-spotting. Low cardinality first → starting with low-cardinality attributes concentrates data, worsening hot-spotting. See https://cloud.google.com/spanner/docs/schema-design"
+  },
+  {
+   "id": "test_2_q25",
+   "source": "test 2",
+   "question": "You have a real-time monitoring application that streams data to Bigtable. It is not performing as well as expected. You use a row key that starts with a unique ID of each source system. Each source system sends 500K of data per minute and that is written to one row. There are approximately 200 column families, each having on average 10 columns. What could be the cause of the poor performance?",
+   "options": [
+    "500K is more data than Bigtable can efficiently ingest per row",
+    "200 column families exceeds the recommended 100 column family limit",
+    "Row keys should not start with a unique ID",
+    "10 columns per column family is exceeds the recommended 5 columns maximum per column family"
+   ],
+   "answer": [
+    "200 column families exceeds the recommended 100 column family limit"
+   ],
+   "explanation": "Correct Option B. 200 column families exceeds the recommended 100 column family limit Correct Bigtable best practices recommend limiting the number of column families to under 100. Having 200 column families introduces significant overhead in terms of storage and performance. Each column family is stored separately, so excessive families increase resource usage and slow down queries and writes. This is the most likely cause of poor performance in the given scenario. Incorrect Option A. 500K is more data than Bigtable can efficiently ingest per row Incorrect Bigtable can handle very large amounts of data per row. The issue is not the volume of data per row but the schema design (too many column families). Option C. Row keys should not start with a unique ID Incorrect Using a unique ID at the start of a row key is acceptable if it ensures even distribution. The real performance issue here is not the row key design but the excessive number of column families. Option D. 10 columns per column family exceeds the recommended 5 columns maximum per column family Incorrect There is no strict recommendation limiting the number of columns per family to 5. Bigtable can handle many columns per family; the problem lies in the number of column families, not the number of columns per family.",
+   "also_appears_in": [
+    "test_12_q3"
+   ]
+  },
+  {
+   "id": "test_2_q30",
+   "source": "test 2",
+   "question": "Auditors have informed the CIO of your company that all logs from applications running in Google Cloud will need to be retained for 60 days. You would also like to access logs from 3rd party tools up to 60 days old. What solution would you recommend to meet this requirement?",
+   "options": [
+    "Use Cloud Logging and set up a Log Router to create a Bigtable sink to keep the logs 60 days. Create a data lifecycle policy to delete logs after 60 days.",
+    "Use Cloud Logging and set up a Pub/Sub topic to receive log data and write that data to a Cloud Storage bucket to keep the logs 60 days. Create a data lifecycle policy to delete logs after 60 days.",
+    "Use Cloud Logging and keep log data in the Cloud Firestore service for 60 days. Create a logging policy to delete the data after 60 days.",
+    "Use Cloud Logging and set up a Log Router to create a Cloud Storage sink to keep the logs 60 days. Create a data lifecycle policy to delete logs after 60 days."
+   ],
+   "answer": [
+    "Use Cloud Logging and set up a Log Router to create a Cloud Storage sink to keep the logs 60 days. Create a data lifecycle policy to delete logs after 60 days."
+   ],
+   "explanation": "Cloud Logging keeps logs by default up to 30 days and could be stored for a custom time period. By setting up a log sink for Cloud Storage, you can route logs to Cloud Storage where it can be kept for 60 days and accessed by 3rd party tools during that time. If log data were written to Cloud Pub/Sub another service would have to read that data and write it to a long term storage system, such as Cloud Storage. Bigtable is not a Cloud Logging sink option. See https://cloud.google.com/logging/docs/routing/overview and https://cloud.google.com/logging/docs/buckets.",
+   "also_appears_in": [
+    "test_11_q35"
+   ]
+  },
+  {
+   "id": "test_2_q39",
+   "source": "test 2",
+   "question": "A database administrator would like to migrate a PostgreSQL database to a managed service in Google Cloud with minimal changes. The database is used by a team of researchers all located in Spain and France. Which of the following services would you recommend?",
+   "options": [
+    "Cloud Spanner",
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Firestore"
+   ],
+   "answer": [
+    "Cloud SQL"
+   ],
+   "explanation": "Cloud SQL is a regional SQL database managed service that supports PostgreSQL databases. Cloud Spanner is a global scale relational database which would cost more to operate than Cloud SQL. Cloud Bigtable and Cloud Firestore are both NoSQL databases and would not meet the requirements outlined here. See https://cloud.google.com/sql/docs/postgres"
+  },
+  {
+   "id": "test_2_q40",
+   "source": "test 2",
+   "question": "The CIO of a online gaming company is concerned with the increasing cost of maintaining a MongoDB database used to store player game data. What managed service in Google Cloud would you recommend as an alternative option to MongoDB?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Firestore",
+    "Cloud Dataproc",
+    "Bigtable"
+   ],
+   "answer": [
+    "Cloud Firestore"
+   ],
+   "explanation": "MongoDB is a NoSQL database that uses a document model so Cloud Firestore is a good option for a managed service. Cloud SQL is a relational database. Cloud Dataproc is a managed Spark and Hadoop service, not a database. Bigtable is a NoSQL database but it is a wide column database, not a document database. See https://cloud.google.com/firestore",
+   "also_appears_in": [
+    "test_10_q30"
+   ]
+  },
+  {
+   "id": "test_2_q42",
+   "source": "test 2",
+   "question": "A Web hosting company has been using a custom built data store modeled on the sparse multidimensional array data structure. The CIO no longer wants to pay to develop and maintain a custom data store. Instead, the CIO wants a managed database service if possible and if not, they want to use a well supported open source database that is also based on sparse multidimensional array data structure. The Web hosting company is already using Google Cloud Compute Engine, Cloud Storage, and Kubernetes Engine. What would you recommend to the company?",
+   "options": [
+    "Cassandra",
+    "Cloud Bigtable",
+    "BigQuery",
+    "Cloud Spanner"
+   ],
+   "answer": [
+    "Cloud Bigtable"
+   ],
+   "explanation": "Cloud Bigtable is a managed database service based on sparse multidimensional arrays and so meets the requirements, including using a managed database service. Cassandra is an open source database that is based on multidimensional sparse arrays but it is not a managed service and so not as good of a choice for the given requirements. BigQuery uses a compressed, columnar data model not a sparse multidimensional array and does not meet the requirements. Cloud Spanner is a global scale relational database and does not meet the requirements. See https://cloud.google.com/bigtable/docs/overview",
+   "also_appears_in": [
+    "test_11_q31"
+   ]
+  },
+  {
+   "id": "test_2_q48",
+   "source": "test 2",
+   "question": "As a consultant to a multi-national company, you are tasked with helping design a service to support an inventory management system that is strongly consistent, supports SQL, and can scale to support hundreds of users in North America, Asia, and Europe. What Google Cloud service would you recommend for this service?",
+   "options": [
+    "Cloud Spanner",
+    "BigQuery",
+    "Cloud Firestore",
+    "Cloud SQL"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "Cloud Spanner is a global, horizontally scalable relational database with strong consistency and is the best option. Cloud SQL is not scalable beyond a single region. Cloud Firestore does not support SQL. BigQuery is an analytical database for data warehousing not an OLTP system such as an inventory management system. See https://cloud.google.com/blog/products/gcp/introducing-cloud-spanner-a-global-database-service-for-mission-critical-applications",
+   "also_appears_in": [
+    "test_11_q48",
+    "test_16_q16"
+   ]
+  },
+  {
+   "id": "test_2_q50",
+   "source": "test 2",
+   "question": "A multi-national financial services company is creating a new service to facilitate cross-currency transactions. The database must provide strong consistency for transactions that may be initiated by any customer. Customers are initially located in Europe but the company plans to expand to Asia, Africa, North America and South America within a year. The database must support normalized data models. What Google Cloud managed database service would you use?",
+   "options": [
+    "Cloud Spanner",
+    "BigQuery",
+    "Cloud SQL",
+    "Cloud Bigtable"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "Cloud Spanner is the correct choice, it provides global scale relational database services, including strong consistency. Cloud SQL is appropriate for regional-scale databases. BigQuery is an analytical database designed for data warehousing and analytics. Cloud Bigtable is a NoSQL database and does not meet the specified requirements. https://cloud.google.com/blog/topics/developers-practitioners/what-cloud-spanner",
+   "also_appears_in": [
+    "test_11_q52",
+    "test_16_q12"
+   ]
+  },
+  {
+   "id": "test_3_q9",
+   "source": "test 3",
+   "question": "You need to find a cost-effective solution to retrieve large result sets of medical information from a database with over 10 TBs of data, and store it in new tables for further query. The database should have a low-maintenance architecture and be accessible via SQL. Which option should you choose?",
+   "options": [
+    "Use Cloud SQL, organize data into tables, and use JOIN in queries to retrieve data.",
+    "Use BigQuery as a data warehouse and set output destinations for caching large queries",
+    "Use a MySQL cluster installed on a Compute Engine managed instance group for scalability",
+    "Use Cloud Spanner to replicate data across regions and normalize it in a series of tables."
+   ],
+   "answer": [
+    "Use BigQuery as a data warehouse and set output destinations for caching large queries"
+   ],
+   "explanation": "Given that the company wants to retrieve large result sets of medical information, a data warehouse solution like BigQuery is ideal. BigQuery is a fully managed, serverless data warehouse that can store and query large amounts of data quickly and cost-effectively. It also provides easy SQL-based access to data, making it accessible to analysts and data scientists. Setting output destinations for caching large queries can also help improve performance and reduce costs by avoiding repeated queries. Option A (using Cloud SQL) may not be suitable for such a large database, option C (using a MySQL cluster) requires more maintenance and management. Option D (using Cloud Spanner) is not cost-effective for such large datasets and may not be necessary unless high scalability and strong consistency are critical requirements",
+   "also_appears_in": [
+    "test_9_q31"
+   ]
+  },
+  {
+   "id": "test_3_q15",
+   "source": "test 3",
+   "question": "What is the best database and data model to store one-second interval samples of time series CPU and memory usage for millions of computers, allow for real-time, ad hoc analytics, ensure scalability, and avoid being charged for every query executed?",
+   "options": [
+    "Create a table in BigQuery, and append the new samples for CPU and memory to the table",
+    "Create a wide table in BigQuery with a column for each sample value at each second and update the row with the interval for each second",
+    "Create a narrow table in Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second.",
+    "Create a wide table in Bigtable with a row key that combines the computer identifier with the sample time at each minute, and combine the values for each second as column data."
+   ],
+   "answer": [
+    "Create a narrow table in Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second."
+   ],
+   "explanation": "Correct option C. Create a narrow table in Bigtable with a row key that combines the Compute Engine computer identifier with the sample time at each second. Bigtable narrow table design optimizes high-throughput time series ingestion with row key = computer_id#timestamp (per-second granularity). Provides real-time ad hoc analytics via fast point lookups/range scans with no query charges (storage + compute billed separately). Incorrect option A. Create a table in BigQuery, and append the new samples for CPU and memory to the table Query-based billing – charged for every analytics query executed, violates cost requirement. option B. Create a wide table in BigQuery with a column for each sample value at each second and update the row with the interval for each second BigQuery immutable – cannot update rows, append-only design; wide table unworkable for 1-second samples. option D. Create a wide table in Bigtable with a row key that combines the computer identifier with the sample time at each minute, and combine the values for each second as column data Inefficient – minute granularity loses 1-second precision; wide columns create key skew and scan inefficiency.",
+   "also_appears_in": [
+    "test_9_q32"
+   ]
+  },
+  {
+   "id": "test_3_q21",
+   "source": "test 3",
+   "question": "What is the most suitable GCP database to move a 20 TB on-premises operational system transaction data to GCP?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Spanner",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "Correct Option C. Cloud Spanner Why Correct: Cloud Spanner is Google Cloud’s horizontally scalable, globally distributed relational database. It is designed for large-scale transactional workloads (OLTP) and can handle datasets in the tens of terabytes or more. Provides strong consistency, high availability, and automatic sharding, making it ideal for migrating a large operational system with transactional data. Supports SQL queries and relational schema, which aligns with enterprise transactional systems. Incorrect Option A. Cloud SQL Why Incorrect: Cloud SQL is a managed relational database service (MySQL, PostgreSQL, SQL Server). It is suitable for smaller workloads but not optimized for 20 TB scale transactional systems. Scaling Cloud SQL to this size would be inefficient and costly compared to Cloud Spanner. Option B. Cloud Bigtable Why Incorrect: Cloud Bigtable is a NoSQL wide-column database, optimized for analytical workloads and time-series data. It is not designed for transactional consistency or relational schema requirements. Therefore, it is unsuitable for migrating an operational transactional system. Option D. Cloud Datastore Why Incorrect: Cloud Datastore (now Firestore in Datastore mode) is a NoSQL document database. It is good for web/mobile app data but not for large-scale transactional relational workloads. It lacks the relational features and scalability needed for a 20 TB transactional system.",
+   "also_appears_in": [
+    "test_9_q29"
+   ]
+  },
+  {
+   "id": "test_3_q26",
+   "source": "test 3",
+   "question": "What is the best fully managed database for a new project that needs to automatically scale up, provide transactional consistency, be able to scale up to 6 TB, and be queried using SQL?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Spanner",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "Correct Option C. Cloud Spanner This is the correct answer. Cloud Spanner is Google Cloud’s fully managed, horizontally scalable, relational database service. It supports SQL queries, provides strong transactional consistency, and can scale to multiple terabytes (well beyond 6 TB). It is designed for applications that require both relational features and global scalability. It automatically handles replication, scaling, and high availability. Incorrect Option A. Cloud SQL Incorrect because Cloud SQL is a managed relational database (MySQL, PostgreSQL, SQL Server) but it does not automatically scale horizontally. It is limited in scalability compared to Cloud Spanner and is not ideal for workloads requiring seamless scaling to large datasets. Option B. Cloud Bigtable Incorrect because Bigtable is a NoSQL wide-column database optimized for analytical and time-series workloads. It does not provide transactional consistency or support SQL queries. Option D. Cloud Datastore Incorrect because Datastore (now Firestore in Datastore mode) is a NoSQL document database. It supports scalability but does not provide SQL querying or strong transactional consistency across large datasets.",
+   "also_appears_in": [
+    "test_10_q22"
+   ]
+  },
+  {
+   "id": "test_3_q38",
+   "source": "test 3",
+   "question": "What is the best primary key strategy for a new transaction table in Cloud Spanner that stores product sales data, considering performance?",
+   "options": [
+    "Use the current epoch time as the primary key",
+    "Concatenate the product name and the current epoch time as the primary key.",
+    "Generate a random universally unique identifier number (version 4 UUID) as the primary key",
+    "Use the original order identification number from the sales system, which is a monotonically increasing integer, as the primary key."
+   ],
+   "answer": [
+    "Generate a random universally unique identifier number (version 4 UUID) as the primary key"
+   ],
+   "explanation": "Ref: https://cloud.google.com/spanner/docs/schema-design",
+   "also_appears_in": [
+    "test_8_q5"
+   ]
+  },
+  {
+   "id": "test_3_q39",
+   "source": "test 3",
+   "question": "Which solution is best for building a scalable data pipeline to share data between job generators and job runners without negatively affecting existing applications?",
+   "options": [
+    "Develop an API using App Engine to transmit messages to and from the applications.",
+    "Utilize a Cloud Pub/Sub topic to publish jobs and execute them through subscriptions",
+    "Establish a table on Cloud SQL to manage the job information by inserting and deleting rows",
+    "Establish a table on Cloud Spanner to manage the job information by inserting and deleting rows"
+   ],
+   "answer": [
+    "Utilize a Cloud Pub/Sub topic to publish jobs and execute them through subscriptions"
+   ],
+   "explanation": "Using Cloud Pub/Sub topic is a more appropriate solution for a data pipeline that requires scalability to manage data between job generators and job runners. Cloud Pub/Sub is a messaging service that can handle high throughput of data, and it supports a wide range of publishing and subscription methods. By using Cloud Pub/Sub topic, the job information can be published and subscribers can execute them as required, without negatively impacting existing applications. Option A could be a valid solution, but App Engine may not be the best choice when it comes to scaling as it has certain limitations. Option C is not recommended as Cloud SQL tables may not be able to handle large amounts of data and it may negatively impact existing applications. Option D is a viable option, but it may not be necessary to use a globally distributed database like Cloud Spanner for this particular use case.",
+   "also_appears_in": [
+    "test_9_q40"
+   ]
+  },
+  {
+   "id": "test_3_q51",
+   "source": "test 3",
+   "question": "You are tasked with storing and managing transaction data for a large bank with operations across North America. You need a data storage solution that can ensure ACID compliance and provide SQL access to the data. Which of the following options is appropriate?",
+   "options": [
+    "Use Cloud Spanner to store transaction data and enable stale reads to reduce latency",
+    "Use Cloud Spanner to store transaction data and utilize locking read-write transactions",
+    "Store transaction data in BigQuery and disable the query cache to ensure consistency",
+    "Use Cloud SQL to store transaction data and use federated queries in BigQuery for analysis"
+   ],
+   "answer": [
+    "Use Cloud Spanner to store transaction data and utilize locking read-write transactions"
+   ],
+   "explanation": "The appropriate solution for this use case is to use Cloud Spanner to store transaction data and utilize locking read-write transactions. Cloud Spanner is a fully managed relational database that offers the scalability and performance benefits of NoSQL databases while also providing ACID compliance and SQL access to the data. Additionally, locking read-write transactions ensure consistency and protect against data corruption during write operations.",
+   "also_appears_in": [
+    "test_8_q47"
+   ]
+  },
+  {
+   "id": "test_4_q9",
+   "source": "test 4",
+   "question": "You are operating a stock trading database and application that retrieves average stock prices for a given company over an adjustable window of time. The database is stored in Cloud Bigtable, with the datetime of the stock trade as the beginning of the row key. The application is experiencing degraded performance as more stocks are added and concurrent users increase. What should you do to improve the performance of the application?",
+   "options": [
+    "Change the Cloud Bigtable row key syntax to begin with the stock symbol",
+    "Change the Cloud Bigtable row key syntax to begin with a random number per second",
+    "Change the data pipeline to use BigQuery for storing stock trades and update the application",
+    "Use Cloud Dataflow to summarize daily stock trades and store them in an Avro file on Cloud Storage. Update the application to read from both Cloud Storage and Cloud Bigtable to compute the responses"
+   ],
+   "answer": [
+    "Change the Cloud Bigtable row key syntax to begin with the stock symbol"
+   ],
+   "explanation": "Correct Option A. Change the Cloud Bigtable row key syntax to begin with the stock symbol Current datetime-first keys cause hot-spotting as recent trades cluster, degrading performance with concurrent users; stock symbol prefix evenly distributes access patterns for range scans over time windows per company. Incorrect Option B. Change the Cloud Bigtable row key syntax to begin with a random number per second Random prefixes prevent hot-spotting but destroy time-range locality needed for efficient adjustable window queries, forcing full scans. Option C. Change the data pipeline to use BigQuery for storing stock trades and update the application BigQuery suits analytics not real-time trading latency; migration adds complexity/cost without solving Bigtable’s core row key issue. Option D. Use Cloud Dataflow to summarize daily stock trades and store them in an Avro file on Cloud Storage. Update the application to read from both Cloud Storage and Cloud Bigtable to compute the responses",
+   "also_appears_in": [
+    "test_8_q3"
+   ]
+  },
+  {
+   "id": "test_4_q10",
+   "source": "test 4",
+   "question": "You are tasked with migrating a 3TB relational database to the Google Cloud Platform, but you do not have the resources to make significant changes to the application that uses this database. The primary consideration is the cost of operating the database. In this context, which service would you choose from the Google Cloud Platform to store and serve your data. (Your choices are)?",
+   "options": [
+    "Cloud Spanner",
+    "Cloud Bigtable",
+    "Cloud Firestore",
+    "Cloud SQL"
+   ],
+   "answer": [
+    "Cloud SQL"
+   ],
+   "explanation": "Correct option D. Cloud SQL Why D is Correct Cloud SQL is the most cost-effective managed relational database for 3TB migration with no application changes: Full SQL compatibility (MySQL, PostgreSQL, SQL Server) No schema/application changes required Automatic scaling, backups, patching Cost: ~$0.10/GB/month for 3TB = ~$300/month Incorrect option A. Cloud Spanner Expensive (~$0.90/node-hour) + requires schema changes for horizontal scaling. Overkill for single 3TB DB. option B. Cloud Bigtable NoSQL wide-column – no SQL support, major application rewrite needed. option C. Cloud Firestore Document NoSQL – no relational features (JOINs, transactions), application rewrite required. Data Engineer Key Concept text 3TB Relational Migration (No App Changes): Cloud SQL = Drop-in MySQL/PostgreSQL replacement ✓ Managed, scales to 64TB single instance Cost-effective for OLTP workloads Spanner = Expensive + schema changes Bigtable/Firestore = NoSQL rewrites Cost Comparison (3TB): text Cloud SQL: ~$300/month Spanner: ~$2,500+/month Bigtable: NoSQL rewrite + $500+/month Firestore: NoSQL rewrite + $400+/month",
+   "also_appears_in": [
+    "test_10_q38"
+   ]
+  },
+  {
+   "id": "test_4_q26",
+   "source": "test 4",
+   "question": "Suppose you are using Google Cloud Bigtable for a real-time application that experiences a heavy load, which comprises a mix of read and write operations. Recently, you have identified a new use case that requires you to run an hourly analytical job to compute certain statistics across the entire database. Your main priority is to ensure the reliability of your production application while also successfully executing the analytical workload. Which option would you choose?",
+   "options": [
+    "Export a copy of the Bigtable data to Google Cloud Storage (GCS) and run the hourly analytical job on the exported files.",
+    "Add a second cluster to an existing instance with multi-cluster routing. Configure a live-traffic app profile to handle your regular workload, and a batch-analytics profile to handle the analytical workload",
+    "Add a second cluster to an existing instance with single‑cluster routing",
+    "Double the size of your existing cluster and execute the analytics workload on the newly resized cluster."
+   ],
+   "answer": [
+    "Add a second cluster to an existing instance with single‑cluster routing"
+   ],
+   "explanation": "Correct Option C. Add a second cluster to an existing instance with single‑cluster routing Correct because this approach allows you to separate workloads: One cluster handles the production traffic (read/write operations). The other cluster handles the analytical workload. Using single‑cluster routing ensures that each workload is directed to its designated cluster, preventing interference and maintaining reliability for the production application. This is the recommended solution for balancing real‑time and batch analytics in Bigtable. Incorrect Option A. Export to GCS and run analytics on exported files Incorrect because exporting data to GCS introduces latency and overhead. It is not efficient for hourly analytics and does not meet the requirement for minimal disruption to the production workload. Option B. Add a second cluster with multi‑cluster routing Incorrect because multi‑cluster routing is designed for high availability across regions, not workload separation. It would still mix traffic across clusters, risking performance issues for the production workload. Option D. Double the size of the existing cluster Incorrect because scaling up the cluster does not isolate workloads. Running analytics on the same cluster as production traffic could degrade performance and reliability."
+  },
+  {
+   "id": "test_4_q29",
+   "source": "test 4",
+   "question": "You are running a web application that currently serves customers from a single region in Asia. You are planning to expand your services globally, but initially, you want to optimize for cost. After securing funding, you plan to optimize for global presence and performance using a native JDBC driver. Which option should you choose?",
+   "options": [
+    "Configure a single region instance of Cloud Spanner initially and then configure multi-region Cloud Spanner instances after securing funding",
+    "Start with a highly available instance of Cloud SQL for PostgreSQL, and then use Bigtable with US, Europe, and Asia replication after securing funding. Option",
+    "Start with a zonal instance of Cloud SQL for PostgreSQL, and then use Cloud Spanner after securing funding.",
+    "Start with a zonal instance of Cloud SQL for PostgreSQL and then use Cloud SQL for PostgreSQL with highly available configuration after securing funding."
+   ],
+   "answer": [
+    "Start with a zonal instance of Cloud SQL for PostgreSQL, and then use Cloud Spanner after securing funding."
+   ],
+   "explanation": "Correct Option C. Start with a zonal instance of Cloud SQL for PostgreSQL, and then use Cloud Spanner after securing funding Cloud SQL (zonal) is cost‑effective for initial deployment in a single region. Once funding is secured, migrating to Cloud Spanner provides global scalability, strong consistency, and native JDBC driver support. This path balances cost optimization at the start and global performance later, aligning perfectly with the requirements. Incorrect Option A. Single region Cloud Spanner → Multi‑region Cloud Spanner Cloud Spanner is powerful but expensive, even in single‑region mode. This does not meet the initial requirement to optimize for cost. Option B. Cloud SQL HA → Bigtable with replication Bigtable is a NoSQL wide‑column database, not a relational SQL database. It does not support ACID transactions or JDBC drivers, making it unsuitable for ERP‑style workloads. Option D. Cloud SQL zonal → Cloud SQL HA This improves availability but does not provide global presence or scalability. It fails to meet the requirement of expanding services worldwide with strong consistency.",
+   "also_appears_in": [
+    "test_10_q21"
+   ],
+   "needs_review": true
+  },
+  {
+   "id": "test_4_q39",
+   "source": "test 4",
+   "question": "What is the most efficient and cost-effective way to store both the raw social media posts for historical archiving and the data extracted from them, while meeting the requirements of analyzing hundreds of thousands of social media posts daily with minimal steps?",
+   "options": [
+    "Utilize BigQuery to store both the social media posts and the data extracted from the API.",
+    "Utilize Cloud SQL to store both the social media posts and the data extracted from the API.",
+    "Store the raw social media posts in Cloud Storage, and write the extracted data from the API into BigQuery",
+    "Feed the social media posts directly into the API from their source, and write the extracted data from the API into BigQuery"
+   ],
+   "answer": [
+    "Store the raw social media posts in Cloud Storage, and write the extracted data from the API into BigQuery"
+   ],
+   "explanation": "The most efficient and cost-effective way to store both the raw social media posts for historical archiving and the data extracted from them, while meeting the requirements of analyzing hundreds of thousands of social media posts daily with minimal steps, is to store the raw social media posts in Cloud Storage and write the extracted data from the API into BigQuery.",
+   "also_appears_in": [
+    "test_9_q46"
+   ]
+  },
+  {
+   "id": "test_4_q40",
+   "source": "test 4",
+   "question": "You are working with a data pipeline that writes data to Cloud Bigtable using effective row keys. Your goal is to monitor the pipeline and determine when to increase the size of your Cloud Bigtable cluster. Which two actions can you take to achieve this (Choose two from the following options)?",
+   "options": [
+    "Examine Key Visualizer metrics and increase the size of the Cloud Bigtable cluster when the Read pressure index exceeds 100",
+    "Check Key Visualizer metrics and increase the size of the Cloud Bigtable cluster when the Write pressure index exceeds 100.",
+    "Monitor the latency of write operations and increase the size of the Cloud Bigtable cluster when write latency experiences a sustained increase.",
+    "Keep track of storage utilization and increase the size of the Cloud Bigtable cluster when utilization rises above 70% of maximum capacity.",
+    "Track the latency of read operations and increase the size of the Cloud Bigtable cluster when read operations take longer than 100 ms"
+   ],
+   "answer": [
+    "Monitor the latency of write operations and increase the size of the Cloud Bigtable cluster when write latency experiences a sustained increase.",
+    "Keep track of storage utilization and increase the size of the Cloud Bigtable cluster when utilization rises above 70% of maximum capacity."
+   ],
+   "explanation": "C: Adding more nodes to a cluster (not replication) can improve the write performance Ref: https://cloud.google.com/bigtable/docs/performance D : Google recommends adding nodes when storage utilization is > 70% Ref: https://cloud.google.com/bigtable/docs/modifying-instance#nodes",
+   "also_appears_in": [
+    "test_9_q50"
+   ]
+  },
+  {
+   "id": "test_4_q46",
+   "source": "test 4",
+   "question": "Your company, based in the United States, has developed an application for analyzing and responding to user actions. The primary table of the application has a data volume that increases by 200,000 records per second. Many third-party developers use your application‘s APIs to integrate its functionality into their own frontend applications. Your APIs should meet the following requirements: 1)Provide a single global endpoint (2)Support ANSI SQL (3)Ensure consistent access to the most up-to-date data. Which of the following options should you choose?",
+   "options": [
+    "Use BigQuery without selecting any specific region for storage or processing",
+    "Use Cloud Spanner with the master located in North America and read-only replicas located in Asia and Europe",
+    "Use Cloud SQL for PostgreSQL with the master located in North America and read replicas located in Asia and Europe.",
+    "Use Bigtable with the primary cluster located in North America and secondary clusters located in Asia and Europe."
+   ],
+   "answer": [
+    "Use Cloud Spanner with the master located in North America and read-only replicas located in Asia and Europe"
+   ],
+   "explanation": "Given that the primary table‘s data volume grows by 250,000 records per second, the application requires a scalable and distributed database solution. Cloud Spanner is a globally distributed, horizontally scalable, and strongly consistent relational database service that can handle such workloads. It also provides a single global endpoint, supports ANSI SQL, and ensures consistent access to the most up-to-date data. Additionally, with its read-only replicas located in Asia and Europe, the API users can access the data with low latency",
+   "also_appears_in": [
+    "test_10_q34"
+   ]
+  },
+  {
+   "id": "test_5_q10",
+   "source": "test 5",
+   "question": "You need to choose a database for a new project that has the following requirements:? Fully managed? Able to automatically scale up? Transactionally consistent? Able to scale up to 6 TB? Able to be queried using SQLWhich database do you choose?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Spanner",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "The best database for the given requirements is: C. Cloud Spanner Here’s a breakdown of why: Fully managed: Cloud Spanner is a fully managed database service, meaning Google handles the underlying infrastructure and maintenance. Automatically scale up: Cloud Spanner can automatically scale up to handle increased workloads, ensuring high availability and performance. Transactionally consistent: Cloud Spanner is a strongly consistent database, meaning it guarantees that all transactions are executed in a consistent manner. Scale up to 6 TB: Cloud Spanner can scale up to handle large datasets, including up to 6 TB. Queried using SQL: Cloud Spanner uses a SQL-like query language, making it easy for developers to work with. The other options are not as suitable: Cloud SQL: While Cloud SQL is a fully managed relational database service, it might not be able to handle the large dataset and high transaction rates required for the project. Cloud Bigtable: Cloud Bigtable is a NoSQL database that is optimized for large-scale, high-performance analytics workloads. It might not be suitable for transactional workloads or SQL-based queries. Cloud Datastore: Cloud Datastore is a NoSQL database that is optimized for storing and retrieving individual entities. It might not be suitable for complex queries or large datasets. Therefore, Cloud Spanner is the best choice for the given requirements, as it offers a fully managed, scalable, transactionally consistent, and SQL-compatible database solution."
+  },
+  {
+   "id": "test_5_q23",
+   "source": "test 5",
+   "question": "Your financial services company is moving to cloud technology and wants to store 50 TB of financial time-series data in the cloud. This data is updated frequently and new data will be streaming in all the time. Your company also wants to move their existing Apache Hadoop jobs to the cloud to get insights into this data.Which product should they use to store the data?",
+   "options": [
+    "Cloud Bigtable",
+    "Google BigQuery",
+    "Google Cloud Storage",
+    "Google Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Bigtable"
+   ],
+   "explanation": "Correct Option A. Cloud Bigtable Why correct: Cloud Bigtable is Google’s NoSQL database service designed for large-scale, low-latency workloads. It is ideal for storing and analyzing time-series data, such as financial transactions, sensor data, or stock prices. It supports frequent updates and streaming inserts efficiently. Additionally, Bigtable integrates with Hadoop and other big data tools, making it suitable for migrating existing Apache Hadoop jobs to the cloud. Incorrect Option B. Google BigQuery Why incorrect: BigQuery is a serverless data warehouse optimized for analytics, not for frequent updates or streaming inserts at scale. It is excellent for querying large datasets but not for storing continuously updated time-series data. Option C. Google Cloud Storage Why incorrect: Cloud Storage is an object storage service, best for unstructured data such as images, backups, or logs. It is not optimized for frequent updates or time-series workloads. It lacks the low-latency access needed for streaming financial data. Option D. Google Cloud Datastore Why incorrect: Datastore (now Firestore in Datastore mode) is a NoSQL document database designed for application data (e.g., user profiles, metadata). It is not suitable for large-scale time-series data or Hadoop integration."
+  },
+  {
+   "id": "test_5_q25",
+   "source": "test 5",
+   "question": "Your company uses a proprietary system to send inventory data every 6 hours to a data ingestion service in the cloud. Transmitted data includes a payload of several fields and the timestamp of the transmission. If there are any concerns about a transmission, the system re-transmits the data. How should you deduplicate the data most efficiency?",
+   "options": [
+    "Assign global unique identifiers (GUID) to each data entry.",
+    "Compute the hash value of each data entry, and compare it with all historical data.",
+    "Store each data entry as the primary key in a separate database and apply an index.",
+    "Maintain a database table to store the hash value and other metadata for each data entry."
+   ],
+   "answer": [
+    "Assign global unique identifiers (GUID) to each data entry."
+   ],
+   "explanation": "The best answer is “A“. Answer “D“ is not as efficient or error-proof due to two reasons 1. You need to calculate hash at sender as well as at receiver end to do the comparison. Waste of computing power. 2. Even if we discount the computing power, we should note that the system is sending inventory information. Two messages sent at different can denote same inventory level (and thus have same hash). Adding sender time stamp to hash will defeat the purpose of using hash as now retried messages will have different timestamp and a different hash. if timestamp is used as message creation timestamp than that can also be used as a UUID."
+  },
+  {
+   "id": "test_6_q16",
+   "source": "test 6",
+   "question": "Your United States-based company has created an application for assessing and responding to user actions. The primary table‘s data volume grows by 250,000 records per second. Many third parties use your application‘s APIs to build the functionality into their own frontend applications. Your application‘s APIs should comply with the following requirements:? Single global endpoint? ANSI SQL support? Consistent access to the most up-to-date dataWhat should you do?",
+   "options": [
+    "Implement BigQuery with no region selected for storage or processing.",
+    "Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe.",
+    "Implement Cloud SQL for PostgreSQL with the master in Norht America and read replicas in Asia and Europe.",
+    "Implement Cloud Bigtable with the primary cluster in North America and secondary clusters in Asia and Europe."
+   ],
+   "answer": [
+    "Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe."
+   ],
+   "explanation": "B. Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe. Explanation Requirements Recap:Your application needs: Single global endpoint → clients worldwide should access the same service/API. ANSI SQL support → queries must use standard SQL syntax. Consistent access to the most up-to-date data → strong consistency, even across regions. High write throughput → 250,000 records per second into the primary table. Why Cloud Spanner: Globally distributed relational database with horizontal scalability. Provides ANSI SQL support for queries. Supports strong consistency across multiple regions. Can handle high write throughput, making it suitable for your 250k records/sec scenario. Multi-region configurations allow read-only replicas closer to users in Asia/Europe while maintaining a single authoritative leader. Why the other options are not suitable: Option Problem A. BigQuery BigQuery is analytics-focused, not for high-volume transactional workloads; it has eventual consistency for streaming inserts, not strong consistency for fast transactions. C. Cloud SQL Cloud SQL does not scale horizontally for writes; adding read replicas doesn’t solve the high ingestion rate or global consistency. D. Cloud Bigtable Bigtable is NoSQL; it doesn’t support ANSI SQL, so your SQL-based APIs won’t work."
+  },
+  {
+   "id": "test_6_q23",
+   "source": "test 6",
+   "question": "You‘re using Bigtable for a real-time application, and you have a heavy load that is a mix of read and writes. You‘ve recently identified an additional use case and need to perform hourly an analytical job to calculate certain statistics across the whole database. You need to ensure both the reliability of your production application as well as the analytical workload.What should you do?",
+   "options": [
+    "Export Bigtable dump to GCS and run your analytical job on top of the exported files. profile for the analytics workload. profile for the analytics workload.",
+    "Add a second cluster to an existing instance with a multi-cluster routing, use live-traffic app profile for your regular workload and batch-analytics profile for the analytics workload.",
+    "Add a second cluster to an existing instance with a single-cluster routing, use live-traffic app profile for your regular workload and batch-analytics profile for the analytics workload.",
+    "Increase the size of your existing cluster twice and execute your analytics workload on your new resized cluster."
+   ],
+   "answer": [
+    "Add a second cluster to an existing instance with a multi-cluster routing, use live-traffic app profile for your regular workload and batch-analytics profile for the analytics workload."
+   ],
+   "explanation": "Correct Option B. Add a second cluster to an existing instance with multi-cluster routing, use live-traffic app profile for your regular workload and batch-analytics profile for the analytics workload. Correct because Bigtable supports multi-cluster routing, which allows workloads to be distributed across clusters. By adding a second cluster, you can isolate the real-time workload from the analytical workload, ensuring reliability and performance for both. Using separate app profiles (live-traffic vs. batch-analytics) ensures queries are routed appropriately without interfering with production traffic. This is the recommended approach for balancing operational reliability with analytical scalability. Incorrect Option A. Export Bigtable dump to GCS and run your analytical job on top of the exported files. Incorrect because exporting data to GCS introduces latency and overhead. This approach is not suitable for hourly analytics on large datasets, as it adds unnecessary complexity and delays. Option C. Add a second cluster to an existing instance with single-cluster routing, use live-traffic app profile for your regular workload and batch-analytics profile for the analytics workload. Incorrect because single-cluster routing does not distribute workloads across clusters. This means the analytical workload could still impact the performance of the production workload, defeating the purpose of adding a second cluster. Option D. Increase the size of your existing cluster twice and execute your analytics workload on your new resized cluster."
+  },
+  {
+   "id": "test_6_q27",
+   "source": "test 6",
+   "question": "You operate a database that stores stock trades and an application that retrieves average stock price for a given company over an adjustable window of time. The data is stored in Cloud Bigtable where the datetime of the stock trade is the beginning of the row key. Your application has thousands of concurrent users, and you notice that performance is starting to degrade as more stocks are added. What should you do to improve the performance of your application?",
+   "options": [
+    "Change the row key syntax in your Cloud Bigtable table to begin with the stock symbol.",
+    "Change the row key syntax in your Cloud Bigtable table to begin with a random number per second.",
+    "Change the data pipeline to use BigQuery for storing stock trades, and update your application.",
+    "Use Cloud Dataflow to write summary of each day‘s stock trades to an Avro file on Cloud Storage. Update your application to read from Cloud Storage and Cloud Bigtable to compute the responses."
+   ],
+   "answer": [
+    "Change the row key syntax in your Cloud Bigtable table to begin with the stock symbol."
+   ],
+   "explanation": "Option A. Below document explains Having EXCHANGE and SYMBOL in the leading positions in the row key will naturally distribute activity. https://cloud.google.com/bigtable/docs/schema-design-time-series"
+  },
+  {
+   "id": "test_6_q35",
+   "source": "test 6",
+   "question": "You need to migrate a 2TB relational database to Google Cloud Platform. You do not have the resources to significantly refactor the application that uses this database and cost to operate is of primary concern.Which service do you select for storing and serving your data?",
+   "options": [
+    "Cloud Spanner",
+    "Cloud Bigtable",
+    "Cloud Firestore",
+    "Cloud SQL"
+   ],
+   "answer": [
+    "Cloud SQL"
+   ],
+   "explanation": "D. Cloud SQL Here‘s why Cloud SQL is the best fit for your scenario: Relational Database Support: Cloud SQL is a managed relational database service that supports popular relational database engines like MySQL, PostgreSQL, and SQL Server. Since you have an existing 2TB relational database, Cloud SQL offers compatibility and a smooth migration path.Scalability: Cloud SQL offers various configurations to accommodate your 2TB database size. You can choose between shared core or dedicated core options, allowing you to scale storage and processing power based on your needs.Cost-Effectiveness: Compared to Cloud Spanner, Cloud SQL generally provides a more cost-effective solution for established relational databases, especially when cost is a primary concern. Cloud Spanner offers strong consistency guarantees and horizontal scalability, which might be beneficial for specific use cases, but often come at a higher cost.Other options and why they are less suitable: A. Cloud Spanner: Cloud Spanner is a fully managed relational database service with strong consistency guarantees and horizontal scalability. However, it can be more expensive than Cloud SQL for established relational databases, especially for a 2TB size.B. Cloud Bigtable: Cloud Bigtable is a NoSQL database service ideal for storing large, sparse datasets with high write throughput. It‘s not designed for relational data structures and wouldn‘t be a suitable choice for migrating your relational database.C. Cloud Firestore: Cloud Firestore is a NoSQL document database designed for mobile and web applications. It wouldn‘t be appropriate for migrating a large relational database like yours."
+  },
+  {
+   "id": "test_6_q46",
+   "source": "test 6",
+   "question": "You need to choose a database to store time series CPU and memory usage for millions of computers. You need to store this data in one-second interval samples. Analysts will be performing real-time, ad hoc analytics against the database. You want to avoid being charged for every query executed and ensure that the schema design will allow for future growth of the dataset. Which database and data model should you choose?",
+   "options": [
+    "Create a table in BigQuery, and append the new samples for CPU and memory to the table",
+    "Create a wide table in BigQuery, create a column for the sample value at each second, and update the row with the interval for each second",
+    "Create a narrow table in Cloud Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second",
+    "Create a wide table in Cloud Bigtable with a row key that combines the computer identifier with the sample time at each minute, and combine the values for each second as column data."
+   ],
+   "answer": [
+    "Create a narrow table in Cloud Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second"
+   ],
+   "explanation": "Answer C A tall and narrow table has a small number of events per row, which could be just one event, whereas a short and wide table has a large number of events per row. As explained in a moment, tall and narrow tables are best suited for time-series data. For time series, you should generally use tall and narrow tables. This is for two reasons: Storing one event per row makes it easier to run queries against your data. Storing many events per row makes it more likely that the total row size will exceed the recommended maximum (see Rows can be big but are not infinite). https://cloud.google.com/bigtable/docs/schema-design-time-series#patterns_for_row_key_design"
+  },
+  {
+   "id": "test_7_q9",
+   "source": "test 7",
+   "question": "If a dataset contains rows with individual people and columns for year of birth, country, and income, how many of the columns are continuous and how many are categorical?",
+   "options": [
+    "1 continuous and 2 categorical",
+    "3 categorical",
+    "3 continuous",
+    "2 continuous and 1 categorical"
+   ],
+   "answer": [
+    "2 continuous and 1 categorical"
+   ],
+   "explanation": "In this dataset: Continuous: Year of Birth: This is a continuous variable as it represents a range of possible values on a numerical scale. Income: Income can take on a wide range of numerical values, making it a continuous variable. Categorical: Country: This is a categorical variable as it represents distinct groups or categories (e.g., “USA,” “Canada,” “France”). Therefore, the correct answer is D. 2 continuous and 1 categorical."
+  },
+  {
+   "id": "test_7_q15",
+   "source": "test 7",
+   "question": "You want to process payment transactions in a point-of-sale application that will run on Google Cloud Platform. Your user base could grow exponentially, but you do not want to manage infrastructure scaling.Which Google database service should you use?",
+   "options": [
+    "Cloud SQL",
+    "BigQuery",
+    "Cloud Bigtable",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Datastore"
+   ],
+   "explanation": "Correct Option D. Cloud Datastore Correct because Cloud Datastore (now Firestore in Datastore mode) is a fully managed NoSQL database that automatically scales with demand. It is ideal for applications like point‑of‑sale systems where the user base can grow exponentially, and you do not want to manage infrastructure scaling. Datastore provides high availability, automatic sharding, and seamless scaling without manual intervention. Incorrect Option A. Cloud SQL Incorrect because Cloud SQL is a managed relational database service. While it supports scaling, it requires more manual management of infrastructure and does not scale as seamlessly as Datastore for exponential growth scenarios. Option B. BigQuery Incorrect because BigQuery is a data warehouse designed for analytics, not for transactional processing. It is optimized for querying large datasets, not handling real‑time payment transactions. Option C. Cloud Bigtable Incorrect because Cloud Bigtable is a wide‑column NoSQL database optimized for analytical workloads and time‑series data. It is not designed for transactional workloads like payment processing in a point‑of‑sale application."
+  },
+  {
+   "id": "test_7_q18",
+   "source": "test 7",
+   "question": "Your company is streaming real-time sensor data from their factory floor into Bigtable and they have noticed extremely poor performance. How should the row key be redesigned to improve Bigtable performance on queries that populate real-time dashboards?",
+   "options": [
+    "Use a row key of the form .",
+    "Use a row key of the form .",
+    "Use a row key of the form #.",
+    "Use a row key of the form >##."
+   ],
+   "answer": [
+    "Use a row key of the form >##."
+   ],
+   "explanation": "Correct option D. Use a row key of the form <sensorid>#<timestamp> This is the correct answer. Bigtable performance depends heavily on row key design. If the row key is poorly designed, data can become hot‑spotted (all writes go to the same node), leading to poor performance. By placing the sensor ID first, data is distributed across multiple nodes (since different sensors will have different prefixes). Adding the timestamp after the sensor ID ensures that queries for a specific sensor over time are efficient and sequential. This design balances distribution (avoiding hotspots) and query efficiency (supporting real‑time dashboards). Incorrect option A. Use a row key of the form <timestamp> Incorrect because using only the timestamp causes hotspotting. All new data arrives with increasing timestamps, which means writes are concentrated on a single node, degrading performance. option B. Use a row key of the form <sensorid> Incorrect because using only the sensor ID groups all data for a sensor together but makes time‑based queries inefficient. Dashboards that need recent sensor readings would struggle since there’s no time dimension in the key. option C. Use a row key of the form <timestamp>#<sensorid> Incorrect because putting the timestamp first still causes hotspotting. Even though sensor IDs are included, the leading timestamp means writes are sequential and concentrated, which hurts performance."
+  },
+  {
+   "id": "test_7_q23",
+   "source": "test 7",
+   "question": "Which of these are examples of a value in a sparse vector? (Select 2 answers.)",
+   "options": [
+    "[0, 5, 0, 0, 0, 0]",
+    "[0, 0, 0, 1, 0, 0, 1]",
+    "[0, 1]",
+    "[1, 0, 0, 0, 0, 0, 0]"
+   ],
+   "answer": [
+    "[0, 0, 0, 1, 0, 0, 1]",
+    "[1, 0, 0, 0, 0, 0, 0]"
+   ],
+   "explanation": "Correct Option B. [0, 0, 0, 1, 0, 0, 1] This is a sparse vector because most values are zero, with only a few non‑zero entries. Sparse vectors are defined by having a majority of zero values, which makes them efficient for representing categorical or high‑dimensional data. Option D. [1, 0, 0, 0, 0, 0, 0] This is also a sparse vector since it contains mostly zeros with only one non‑zero entry. Such vectors are common in one‑hot encodings and categorical feature representation. Incorrect Option A. [0, 5, 0, 0, 0, 0] Although it has many zeros, the presence of a large non‑zero value (5) makes this more like a dense representation of a feature rather than a typical sparse vector used in ML contexts. Sparse vectors usually represent categorical presence/absence or small non‑zero values, not arbitrary large values. Option C. [0, 1] This vector is too short to be considered sparse. Sparse vectors are typically high‑dimensional with many zeros; a 2‑element vector does not qualify as sparse."
+  },
+  {
+   "id": "test_7_q26",
+   "source": "test 7",
+   "question": "You work for a mid-sized enterprise that needs to move its operational system transaction data from an on-premises database to GCP. The database is about 20TB in size. Which database s You work for a mid-sized enterprise that needs to move its operational system transaction data from an on-premises database to GCP. The database is about 20TB in size. Which database should you choose? hould you choose?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Spanner",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud SQL"
+   ],
+   "explanation": "Correct Option A. Cloud SQL Correct because Cloud SQL is designed for operational system transaction data (OLTP workloads). It supports relational databases like MySQL, PostgreSQL, and SQL Server, which are commonly used for transactional systems. A 20TB database is within Cloud SQL’s supported size limits, making it a suitable choice for migrating on-premises transactional workloads. Incorrect Option B. Cloud Bigtable Incorrect because Cloud Bigtable is a NoSQL wide-column database optimized for analytical workloads, time-series data, and large-scale operational analytics. It is not intended for transactional relational workloads. Option C. Cloud Spanner Incorrect because Cloud Spanner is a globally distributed relational database designed for massive scale and high availability. While it supports transactional workloads, it is typically chosen for very large-scale, globally distributed systems, not a mid-sized enterprise with a single 20TB database. It would be an over-engineered solution in this scenario. Option D. Cloud Datastore Incorrect because Cloud Datastore (now Firestore in Datastore mode) is a NoSQL document database. It is not designed for transactional relational workloads and would not be appropriate for migrating an operational system database."
+  },
+  {
+   "id": "test_7_q39",
+   "source": "test 7",
+   "question": "Your weather app queries a database every 15 minutes to get the current temperature. The frontend is powered by Google App Engine and server millions of users. How should you design the frontend to respond to a database failure?",
+   "options": [
+    "Issue a command to restart the database servers.",
+    "Retry the query with exponential backoff, up to a cap of 15 minutes.",
+    "Retry the query every second until it comes back online to minimize staleness of data.",
+    "Reduce the query frequency to once every hour until the database comes back online."
+   ],
+   "answer": [
+    "Retry the query with exponential backoff, up to a cap of 15 minutes."
+   ],
+   "explanation": "Correct answer is B. App engine create applications that use Cloud SQL database connections effectively. Below is what is written in google cloud documnetation. If your application attempts to connect to the database and does not succeed, the database could be temporarily unavailable. In this case, sending too many simultaneous connection requests might waste additional database resources and increase the time needed to recover. Using exponential backoff prevents your application from sending an unresponsive number of connection requests when it can‘t connect to the database. This retry only makes sense when first connecting, or when first grabbing a connection from the pool. If errors happen in the middle of a transaction, the application must do the retrying, and it must retry from the beginning of a transaction. So even if your pool is configured properly, the application might still see errors if connections are lost. reference link is https://cloud.google.com/sql/docs/mysql/manage-connections"
+  },
+  {
+   "id": "test_7_q41",
+   "source": "test 7",
+   "question": "Which of these sources can you not load data into BigQuery from?",
+   "options": [
+    "File upload",
+    "Google Drive",
+    "Google Cloud Storage",
+    "Google Cloud SQL"
+   ],
+   "answer": [
+    "Google Cloud SQL"
+   ],
+   "explanation": "You can load data into BigQuery from a file upload, Google Cloud Storage, Google Drive, or Google Cloud Bigtable. It is not possible to load data into BigQuery directly from Google Cloud SQL. One way to get data from Cloud SQL to BigQuery would be to export data from Cloud SQL to Cloud Storage and then load it from there. Reference: https://cloud.google.com/bigquery/loading-data"
+  },
+  {
+   "id": "test_8_q32",
+   "source": "test 8",
+   "question": "You are designing storage for two relational tables that are part of a 10-TB database on Google Cloud. You want to support transactions that scale horizontally.You also want to optimize data for range queries on non-key columns. What should you do?",
+   "options": [
+    "Use Cloud SQL for storage. Add secondary indexes to support query patterns.",
+    "Use Cloud SQL for storage. Use Cloud Dataflow to transform data to support query patterns.",
+    "Use Cloud Spanner for storage. Add secondary indexes to support query patterns.",
+    "Use Cloud Spanner for storage. Use Cloud Dataflow to transform data to support query patterns."
+   ],
+   "answer": [
+    "Use Cloud Spanner for storage. Add secondary indexes to support query patterns."
+   ],
+   "explanation": "A is not correct because Cloud SQL does not natively scale horizontally. B is not correct because Cloud SQL does not natively scale horizontally. C is correct because Cloud Spanner scales horizontally, and you can create secondary indexes for the range queries that are required. D is not correct because Dataflow is a data pipelining tool to move and transform data, but the use case is centered around querying."
+  },
+  {
+   "id": "test_8_q39",
+   "source": "test 8",
+   "question": "Your company is running their first dynamic campaign, serving different offers by analyzing real-time data during the holiday season. The data scientists are collecting terabytes of data that rapidly grows every hour during their 30-day campaign. They are using Google Cloud Dataflow to preprocess the data and collect the feature (signals) data that is needed for the machine learning model in Google Cloud Bigtable. The team is observing suboptimal performance with reads and writes of their initial load of 10 TB of data. They want to improve this performance while minimizing cost. What should they do?",
+   "options": [
+    "Redefine the schema by evenly distributing reads and writes across the row space of the table.",
+    "The performance issue should be resolved over time as the site of the BigDate cluster is increased.",
+    "Redesign the schema to use a single row key to identify values that need to be updated frequently in the cluster.",
+    "Redesign the schema to use row keys based on numeric IDs that increase sequentially per user viewing the offers."
+   ],
+   "answer": [
+    "Redefine the schema by evenly distributing reads and writes across the row space of the table."
+   ],
+   "explanation": "A as the schema needs to be redesigned to distribute the reads and writes evenly across each table. Refer GCP documentation – Bigtable Performance: https://cloud.google.com/bigtable/docs/performance The table‘s schema is not designed correctly. To get good performance from Cloud Bigtable, it‘s essential to design a schema that makes it possible to distribute reads and writes evenly across each table. See Designing Your Schema for more information. https://cloud.google.com/bigtable/docs/schema-design Option B is wrong as increasing the size of cluster would increase the cost. Option C is wrong as single row key for frequently updated identifiers reduces performance Option D is wrong as sequential IDs would degrade the performance. A safer approach is to use a reversed version of the user‘s numeric ID, which spreads traffic more evenly across all of the nodes for your Cloud Bigtable table."
+  },
+  {
+   "id": "test_11_q19",
+   "source": "test 11",
+   "question": "You have a latency-sensitive application that uses Bigtable. You want to follow Google Cloud recommended best practices. What would you do?",
+   "options": [
+    "Use a service account for all read operations",
+    "Keep storage utilization per node below 60%",
+    "Use a global load balancer in front of Bigtable",
+    "Use HDD storage instead of SSD storage"
+   ],
+   "answer": [
+    "Keep storage utilization per node below 60%"
+   ],
+   "explanation": "For low latency applications, Google Cloud recommends keeping storage utilization below 60%. Using service accounts for read operations will not affect latency of write operations. HDD storage is less performant than SSD storage. A load balancer is not needed to distribute workload within a Bigtable cluster. Bigtable distributes operations based on row keys. See https://cloud.google.com/blog/products/databases/check-out-how-to-optimize-database-service-cloud-bigtable"
+  },
+  {
+   "id": "test_11_q22",
+   "source": "test 11",
+   "question": "How should you design storage for 20 TB of text files when deploying a data pipeline on Google Cloud in order to minimize the cost of querying aggregate values for multiple users who will query the data in Cloud Storage with multiple engines, given that your input data is in CSV format. (Which storage service and schema design should be utilized)?",
+   "options": [
+    "Use Cloud Bigtable for storage and link the data as permanent tables in BigQuery for querying",
+    "Use Cloud Bigtable for storage and install the HBase shell on a Compute Engine instance to query the data.",
+    "Use Cloud Storage for storage and link the data as temporary tables in BigQuery for querying.",
+    "Use Cloud Storage for storage and link the data as permanent tables in BigQuery for querying."
+   ],
+   "answer": [
+    "Use Cloud Storage for storage and link the data as permanent tables in BigQuery for querying."
+   ],
+   "explanation": "The recommended solution for storing 20 TB of text files for a data pipeline on Google Cloud in order to minimize the cost of querying aggregate values for multiple users who will query the data in Cloud Storage with multiple engines, given that the input data is in CSV format, is to use Cloud Storage for storage and link the data as permanent tables in BigQuery for querying.",
+   "also_appears_in": [
+    "test_1_q16"
+   ]
+  },
+  {
+   "id": "test_13_q23",
+   "source": "test 13",
+   "question": "Scenario: You have transactional data stored on-premises in a PostgreSQL database and want to modernize your data environment by running transactional workloads and supporting analytics needs with a single database. You aim to move to Google Cloud without changing database management systems, while minimizing cost and complexity. What steps should you take to achieve this goal?",
+   "options": [
+    "Migrate and modernize your database with Cloud Spanner.",
+    "Migrate your workloads to AlloyDB for PostgreSQL.",
+    "Migrate to BigQuery to optimize analytics.",
+    "Migrate your PostgreSQL database to Cloud SQL for PostgreSQL."
+   ],
+   "answer": [
+    "Migrate your PostgreSQL database to Cloud SQL for PostgreSQL."
+   ],
+   "explanation": "The best approach to achieve your goal is to: Migrate your PostgreSQL database to Cloud SQL for PostgreSQL. Here’s why: Maintaining PostgreSQL: Cloud SQL for PostgreSQL allows you to migrate your existing PostgreSQL database to Google Cloud without changing the database management system, meeting your requirement. Transactional Workloads and Analytics: Cloud SQL for PostgreSQL supports both transactional workloads and analytics needs, fulfilling your requirement of a single database. Minimizing Cost and Complexity: Cloud SQL for PostgreSQL is a managed service, which reduces the operational overhead and complexity compared to self-managing a PostgreSQL instance. Modernization: Migrating to Cloud SQL is a modernization step, as it moves your database to a cloud-based managed service. Here’s why the other options are not ideal: Migrate and modernize your database with Cloud Spanner: Cloud Spanner is a different database system, not PostgreSQL. Migrate your workloads to AlloyDB for PostgreSQL: While AlloyDB is a very good choice, for minimizing cost and complexity, Cloud SQL is the correct answer. Migrate to BigQuery to optimize analytics: BigQuery is a data warehouse and not designed for transactional workloads."
+  },
+  {
+   "id": "test_13_q49",
+   "source": "test 13",
+   "question": "Scenario: You have a network of 1000 sensors generating time series data at a rate of one metric per sensor per second, each with a timestamp. Currently, you have 1 TB of data, and the data is expected to increase by 1 GB daily. How should you store this data to ensure that you can access the data efficiently for both retrieving a specific sensor‘s metric at a specific timestamp with low latency and running complex analytic queries once a day?",
+   "options": [
+    "Store your data in BigQuery. Concatenate the sensor ID and timestamp, and use it as the primary key.",
+    "Store your data in Bigtable. Concatenate the sensor ID and timestamp and use it as the row key. Perform an export to BigQuery every day.",
+    "Store your data in Bigtable. Concatenate the sensor ID and metric, and use it as the row key. Perform an export to BigQuery every day.",
+    "Store your data in BigQuery. Use the metric as a primary key."
+   ],
+   "answer": [
+    "Store your data in Bigtable. Concatenate the sensor ID and timestamp and use it as the row key. Perform an export to BigQuery every day."
+   ],
+   "explanation": "The correct answer is B: Store your data in Bigtable. Concatenate the sensor ID and timestamp and use it as the row key. Perform an export to BigQuery every day.1. Bigtable is a NoSQL database designed for storing large amounts of data with low latency. By using Bigtable and concatenating the sensor ID and timestamp as the row key, you can efficiently retrieve the data for a specific sensor at a specific timestamp with a median single-digit millisecond latency, meeting the first access pattern requirement.2. Performing an export to BigQuery every day allows you to run complex analytic queries on the data, including joins, once a day, meeting the second access pattern requirement. BigQuery is a fully-managed, serverless data warehouse that is optimized for fast and cost-effective data analytics.Why the other options are incorrect:A. Storing data in BigQuery with the concatenated sensor ID and timestamp as the primary key may not provide the desired low-latency access for retrieving data for a specific sensor at a specific timestamp. BigQuery is better suited for running complex analytic queries rather than low-latency data retrieval.C. Storing data in Bigtable with the concatenated sensor ID and metric as the row key may not allow efficient retrieval of data for a specific sensor at a specific timestamp. Additionally, using the metric as the row key may not be optimal for performing complex analytic queries.D. Storing data in BigQuery and using the metric as the primary key may not provide the low-latency access required for retrieving data for a specific sensor at a specific timestamp. BigQuery is better suited for analytics and may not offer the desired performance for this use case."
+  },
+  {
+   "id": "test_14_q18",
+   "source": "test 14",
+   "question": "Scenario: Your startup operates a web application that caters to customers in a single region in Asia. Seeking funding to expand globally, you aim to optimize for cost initially and later for global presence and performance. Requirement: Utilize a native JDBC driver. How should you proceed in order to achieve your goals?",
+   "options": [
+    "Use Cloud Spanner to configure a single region instance initially, and then configure multi-region Cloud Spanner instances after securing funding.",
+    "Use a Cloud SQL for PostgreSQL highly available instance first, and Bigtable with US, Europe, and Asia replication after securing funding.",
+    "Use a Cloud SQL for PostgreSQL zonal instance first, and Bigtable with US, Europe, and Asia after securing funding.",
+    "Use a Cloud SQL for PostgreSQL zonal instance first, and Cloud SQL for PostgreSQL with highly available configuration after securing funding."
+   ],
+   "answer": [
+    "Use Cloud Spanner to configure a single region instance initially, and then configure multi-region Cloud Spanner instances after securing funding."
+   ],
+   "explanation": "A. Use Cloud Spanner to configure a single region instance initially, and then configure multi-region Cloud Spanner instances after securing funding.– Cloud Spanner is a globally distributed, horizontally scalable, and strongly consistent database service provided by Google Cloud Platform. It is a good choice for serving customers globally due to its multi-region capabilities, providing low-latency access to data across regions.– By starting with a single region instance of Cloud Spanner, you can optimize for cost initially while still having the flexibility to scale out to multi-region instances once you secure funding. This approach allows you to balance cost-effectiveness with future scalability and performance needs.Why other options are incorrect:B. Using Cloud SQL for PostgreSQL highly available instance first and then replicating to multiple regions with Bigtable:– Cloud SQL for PostgreSQL is not as well-suited for serving customers globally as Cloud Spanner due to its limited scalability and regional focus.– Replicating data across regions with Bigtable may not provide optimal performance for a globally distributed application compared to using a globally distributed database like Cloud Spanner.C. Using Cloud SQL for PostgreSQL zonal instance first and then replicating to multiple regions with Bigtable:– Similar to option B, Cloud SQL for PostgreSQL may not be the best choice for global presence and performance compared to Cloud Spanner.– Replicating data across regions with Bigtable may introduce latency and consistency challenges for a globally distributed application.D. Using Cloud SQL for PostgreSQL zonal instance first and then switching to a highly available configuration:– While upgrading to a highly available configuration of Cloud SQL for PostgreSQL can improve availability, it may not address the global scalability and performance requirements of serving customers globally.– Cloud SQL for PostgreSQL may not be the ideal solution for a globally distributed application compared to Cloud Spanner, which is designed for global scale and performance."
+  },
+  {
+   "id": "test_14_q26",
+   "source": "test 14",
+   "question": "Scenario: Your company needs to extract and store large result sets of medical information from a database with over 10 TBs. The new tables must support further queries and have a low-maintenance architecture accessible via SQL. What cost-effective solution should be implemented to support data analytics for large result sets in this scenario?",
+   "options": [
+    "Use Cloud SQL, but first organize the data into tables. Use JOIN in queries to retrieve data.",
+    "Use BigQuery as a data warehouse. Set output destinations for caching large queries.",
+    "Use a MySQL cluster installed on a Compute Engine managed instance group for scalability.",
+    "Use Cloud Spanner to replicate the data across regions. Normalize the data in a series of tables."
+   ],
+   "answer": [
+    "Use BigQuery as a data warehouse. Set output destinations for caching large queries."
+   ],
+   "explanation": "Correct Option B. Use BigQuery as a data warehouse. Set output destinations for caching large queries Correct because BigQuery is Google Cloud’s serverless, highly scalable, low-maintenance data warehouse. It is designed for large datasets (10 TBs and beyond) and supports SQL queries directly. BigQuery is cost-effective since it uses a pay-per-query model and eliminates the need for infrastructure management. Caching query results and using partitioned tables further optimize performance and cost. Incorrect Option A. Cloud SQL with JOIN queries Incorrect because Cloud SQL is suitable for transactional workloads and smaller datasets. Managing 10+ TBs in Cloud SQL would be expensive, high-maintenance, and inefficient for analytics. Option C. MySQL cluster on Compute Engine Incorrect because deploying and managing a MySQL cluster on Compute Engine requires significant manual scaling, patching, and maintenance. This is not cost-effective or low-maintenance compared to BigQuery. Option D. Cloud Spanner with normalized tables Incorrect because Cloud Spanner is designed for globally distributed transactional workloads, not large-scale analytical queries. While it supports SQL, it is more expensive and not optimized for analytics compared to BigQuery."
+  },
+  {
+   "id": "test_14_q56",
+   "source": "test 14",
+   "question": "Scenario: You migrated a data backend for an application that serves 10 PB of historical product data for analytics. Only the last known state for a product, which is about 10 GB of data, needs to be served through an API to other applications. What cost-effective persistent storage solution should you choose to accommodate the analytics requirements and the API performance of up to 1000 queries per second (QPS) with less than 1 second latency?",
+   "options": [
+    "1. Store the historical data in BigQuery for analytics. 2. Use a materialized view to precompute the last state of a product. 3. Serve the last state data directly from BigQuery to the API.",
+    "1. Store the products as a collection in Firestore with each product having a set of historical changes. 2. Use simple and compound queries for analytics. 3. Serve the last state data directly from Firestore to the API.",
+    "1. Store the historical data in Cloud SQL for analytics. 2. In a separate table, store the last state of the product after every product change. 3. Serve the last state data directly from Cloud SQL to the API.",
+    "1. Store the historical data in BigQuery for analytics. 2. In a Cloud SQL table, store the last state of the product after every product change. 3. Serve the last state data directly from Cloud SQL to the API."
+   ],
+   "answer": [
+    "1. Store the historical data in BigQuery for analytics. 2. In a Cloud SQL table, store the last state of the product after every product change. 3. Serve the last state data directly from Cloud SQL to the API."
+   ],
+   "explanation": "The correct answer is option D. Let‘s break down why D is the correct choice and why the other options are incorrect:Option D:1. Store the historical data in BigQuery for analytics: BigQuery is a cost-effective solution for storing and analyzing large datasets. It is designed for handling massive amounts of data, making it suitable for the 10 PB of historical product data.2. In a Cloud SQL table, store the last state of the product after every product change: Using Cloud SQL to store the last state of the product allows for efficient retrieval of the most recent data for serving through the API.3. Serve the last state data directly from Cloud SQL to the API: Cloud SQL can handle the API performance requirements of up to 1000 queries per second with less than 1 second latency, making it a suitable choice for serving the last state data.Now, let‘s discuss why the other options are incorrect:Option A:1. Storing historical data in BigQuery for analytics is a good choice, but using a materialized view for precomputing the last state of a product may not be efficient for serving through an API due to the volume of data.2. Serving the last state data directly from BigQuery to the API may not meet the performance requirements of up to 1000 queries per second with less than 1 second latency.Option B:1. Storing products as a collection in Firestore with historical changes may not be the most efficient solution for handling 10 PB of historical product data.2. Using Firestore for analytics may not be as performant as BigQuery for handling large datasets.3. Serving the last state data directly from Firestore to the API may not meet the performance requirements specified.Option C:1. Storing historical data in Cloud SQL for analytics may not be the most cost-effective solution for handling 10 PB of data.2. Storing the last state of the product in a separate table after every change in Cloud SQL may not be efficient for retrieving the last state data.3. Serving the last state data directly from Cloud SQL to the API may not meet the performance requirements specified.In conclusion, option D is the most suitable choice as it leverages BigQuery for analytics, Cloud SQL for storing the last state data, and meets the performance requirements for serving the data through the API."
+  },
+  {
+   "id": "test_15_q7",
+   "source": "test 15",
+   "question": "Scenario: You run a database storing stock trades and an application that calculates the average stock price for a specific company within a customizable timeframe. The data is kept in Cloud Bigtable, with the trade datetime at the start of the row key. With a growing number of stocks being added and thousands of concurrent users, the application‘s performance is deteriorating. How can you enhance the performance of your application under these circumstances?",
+   "options": [
+    "Change the row key syntax in your Cloud Bigtable table to begin with the stock symbol.",
+    "Change the row key syntax in your Cloud Bigtable table to begin with a random number per second.",
+    "Change the data pipeline to use BigQuery for storing stock trades, and update your application.",
+    "Use Cloud Dataflow to write a summary of each day‘s stock trades to an Avro file on Cloud Storage. Update your application to read from Cloud Storage and Cloud Bigtable to compute the responses."
+   ],
+   "answer": [
+    "Change the row key syntax in your Cloud Bigtable table to begin with the stock symbol."
+   ],
+   "explanation": "A. Change the row key syntax in your Cloud Bigtable table to begin with the stock symbol.By changing the row key syntax in the Cloud Bigtable table to begin with the stock symbol, you can improve the performance of your application. This is because storing data with the stock symbol at the beginning of the row key allows for better data locality. When querying for stock prices for a given company, the data retrieval becomes more efficient as related data is stored together based on the stock symbol.Why the other options are incorrect:B. Changing the row key syntax to begin with a random number per second would not be beneficial in this scenario. It could lead to data fragmentation and random distribution of data across different nodes in Bigtable, which might result in increased latency and decreased performance.C. Changing the data pipeline to use BigQuery for storing stock trades and updating your application is not the best solution for improving the performance of retrieving average stock prices. BigQuery is better suited for analytical queries rather than real-time lookups like retrieving average stock prices over an adjustable window of time.D. Using Cloud Dataflow to write a summary of each day‘s stock trades to an Avro file on Cloud Storage and then updating your application to read from Cloud Storage and Cloud Bigtable would add unnecessary complexity to your system. This approach would involve additional data processing steps and could introduce latency in retrieving real-time stock price data for your application."
+  },
+  {
+   "id": "test_15_q12",
+   "source": "test 15",
+   "question": "Scenario: You have a petabyte of analytics data and need to create a storage and processing platform for it. You must support data warehouse-style analytics on the data in Google Cloud and make the dataset accessible as files for batch analysis tools in other cloud providers. What steps should be taken to achieve this?",
+   "options": [
+    "Store and process the entire dataset in BigQuery.",
+    "Store and process the entire dataset in Bigtable.",
+    "Store the full dataset in BigQuery, and store a compressed copy of the data in a Cloud Storage bucket.",
+    "Store the warm data as files in Cloud Storage, and store the active data in BigQuery. Keep this ratio as 80% warm and 20% active."
+   ],
+   "answer": [
+    "Store the full dataset in BigQuery, and store a compressed copy of the data in a Cloud Storage bucket."
+   ],
+   "explanation": "The correct answer is C: Store the full dataset in BigQuery, and store a compressed copy of the data in a Cloud Storage bucket.1. Storing the full dataset in BigQuery allows you to perform data warehouse-style analytics on the data in Google Cloud. BigQuery is a fully managed, serverless, and highly scalable data warehouse that can handle petabyte-scale analytics workloads.2. Storing a compressed copy of the data in a Cloud Storage bucket enables you to expose the dataset as files for batch analysis tools in other cloud providers. Cloud Storage is a scalable and durable object storage service that can store large amounts of data in various formats, making it suitable for sharing data with other cloud platforms.Why the other options are incorrect:A. Storing and processing the entire dataset in BigQuery: While BigQuery is suitable for analytics workloads, storing the entire dataset in BigQuery may not be cost-effective for a petabyte-scale dataset. It‘s more efficient to store the full dataset in BigQuery and keep a compressed copy in Cloud Storage.B. Storing and processing the entire dataset in Bigtable: Bigtable is a NoSQL database service designed for real-time analytics and high throughput, low-latency workloads. It may not be the best choice for data warehouse-style analytics on a large dataset like a petabyte of analytics data.D. Storing the warm data as files in Cloud Storage, and storing the active data in BigQuery: This option introduces unnecessary complexity by splitting the data between Cloud Storage and BigQuery based on activity levels. It‘s more straightforward and efficient to store the full dataset in BigQuery and keep a compressed copy in Cloud Storage for sharing with other cloud providers."
+  },
+  {
+   "id": "test_15_q17",
+   "source": "test 15",
+   "question": "Scenario: A United States-based company has developed an application that evaluates and handles user actions. The main table of the application experiences a data volume increase of 250,000 records per second. Various third parties utilize the company‘s APIs to integrate the application‘s features into their frontend applications. The APIs of the application must adhere to specific requirements, including a single global endpoint, ANSI SQL support, and consistent access to the latest data. What steps should be taken to meet the specified requirements for the company‘s application APIs?",
+   "options": [
+    "Implement BigQuery with no region selected for storage or processing.",
+    "Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe.",
+    "Implement Cloud SQL for PostgreSQL with the master in North America and read replicas in Asia and Europe.",
+    "Implement Bigtable with the primary cluster in North America and secondary clusters in Asia and Europe."
+   ],
+   "answer": [
+    "Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe."
+   ],
+   "explanation": "The correct answer is B. Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe.– Cloud Spanner is a globally distributed, horizontally scalable, strongly consistent database service provided by Google Cloud Platform. It meets the requirements of having a single global endpoint, ANSI SQL support, and consistent access to the most up-to-date data.– By having the leader in North America and read-only replicas in Asia and Europe, you ensure low latency access for users in those regions while maintaining consistency across all replicas.Now, let‘s explain why the other options are incorrect:A. Implement BigQuery with no region selected for storage or processing.– BigQuery is a data warehouse solution that is optimized for analytics and querying large datasets. It does not provide real-time transactional capabilities or support for consistent access to the most up-to-date data.C. Implement Cloud SQL for PostgreSQL with the master in North America and read replicas in Asia and Europe.– Cloud SQL is a managed relational database service that is not designed for globally distributed, high-volume transaction processing like the scenario described. It may not provide the necessary performance and consistency for handling the high data volume and global access requirements.D. Implement Bigtable with the primary cluster in North America and secondary clusters in Asia and Europe.– Bigtable is a NoSQL database service that is optimized for high throughput and scalability, but it does not offer strong consistency guarantees like Cloud Spanner. It may not be suitable for ensuring consistent access to the most up-to-date data across regions in a scenario where user actions need to be assessed and responded to in real time."
+  },
+  {
+   "id": "test_15_q22",
+   "source": "test 15",
+   "question": "Scenario: You are tasked with creating a new data pipeline to facilitate data exchange between jobs generators and job runners. The solution should be scalable to handle increased usage and adaptable to incorporate new applications without impacting the performance of current ones. How would you approach this task to ensure the data pipeline meets the scalability requirements and can seamlessly integrate new applications while maintaining the performance of existing ones?",
+   "options": [
+    "Create an API using App Engine to receive and send messages to the applications",
+    "Use a Cloud Pub/Sub topic to publish jobs, and use subscriptions to execute them",
+    "Create a table on Cloud SQL, and insert and delete rows with the job information",
+    "Create a table on Cloud Spanner, and insert and delete rows with the job information"
+   ],
+   "answer": [
+    "Use a Cloud Pub/Sub topic to publish jobs, and use subscriptions to execute them"
+   ],
+   "explanation": "The correct answer is option B: Use a Cloud Pub/Sub topic to publish jobs, and use subscriptions to execute them.Using Cloud Pub/Sub for data pipeline between job generators and job runners is a scalable and efficient solution. Cloud Pub/Sub is a messaging service that allows asynchronous messaging between applications. By using a Pub/Sub topic to publish jobs and subscriptions to execute them, you can decouple the two types of applications, allowing for easy scalability and the addition of new applications without affecting existing ones. This approach ensures high performance and reliability in handling data transfer between applications.Why the other options are incorrect:A. Creating an API using App Engine: While App Engine can be used to create APIs, it may not be the most suitable solution for a data pipeline between applications. App Engine is more commonly used for application hosting and scaling web applications, not for handling asynchronous messaging between different types of applications.C. Creating a table on Cloud SQL: Cloud SQL is a fully-managed relational database service, which may not be the best choice for handling a data pipeline between applications that require scalability and flexibility. Inserting and deleting rows in a Cloud SQL table may not provide the necessary performance and scalability needed for a data pipeline.D. Creating a table on Cloud Spanner: Cloud Spanner is a globally distributed, horizontally scalable, and strongly consistent database service. While it offers scalability and performance advantages over traditional relational databases, using it just to insert and delete rows for a data pipeline may be overkill and not the most cost-effective solution. Cloud Spanner is more suitable for complex, mission-critical applications that require a globally distributed database with strong consistency."
+  },
+  {
+   "id": "test_15_q23",
+   "source": "test 15",
+   "question": "Scenario: A new transaction table needs to be created in Cloud Spanner to store product sales data. From a performance perspective, which strategy should be chosen for the primary key?",
+   "options": [
+    "The current epoch time",
+    "A concatenation of the product name and the current epoch time",
+    "A random universally unique identifier number (version 4 UUID)",
+    "The original order identification number from the sales system, which is a monotonically increasing integer"
+   ],
+   "answer": [
+    "A random universally unique identifier number (version 4 UUID)"
+   ],
+   "explanation": "From a performance perspective, the best strategy to choose as a primary key for the new transaction table in Cloud Spanner that stores product sales data is option C – a random universally unique identifier number (version 4 UUID).Explanation of why option C is correct:1. Random universally unique identifier number (version 4 UUID) is a good choice for a primary key because it provides a unique identifier for each row without the need for a centralized sequence generator. This helps to distribute the data evenly across the system and prevent hotspots that can occur with monotonically increasing keys.2. Using a random UUID as the primary key can help in achieving better write performance as there is no need to manage a sequence or generate unique keys in a centralized manner. This can lead to better scalability and reduced contention during write operations.3. Random UUIDs also provide good data distribution across nodes in a distributed system like Cloud Spanner, which can help in achieving better performance and scalability.Explanation of why the other options are incorrect:A. The current epoch time: Using current epoch time as a primary key can lead to contention and hotspots, especially in scenarios where multiple transactions are created within the same time interval. This can impact performance negatively.B. A concatenation of the product name and the current epoch time: Concatenating the product name with the current epoch time may not guarantee uniqueness, especially if multiple products are sold at the same time. This can lead to conflicts and performance issues.D. The original order identification number from the sales system, which is a monotonically increasing integer: Using a monotonically increasing integer as a primary key can lead to hotspots and contention, especially in high write scenarios. It can also limit the scalability of the system as all new rows will be inserted at the end of the table, potentially causing performance bottlenecks."
+  },
+  {
+   "id": "test_15_q38",
+   "source": "test 15",
+   "question": "Scenario: You are employed by a large bank with operations across North America. You are in the process of establishing a data storage system for managing bank account transactions that must adhere to ACID compliance and allow data access through SQL. Which solution would be suitable for this data storage system setup?",
+   "options": [
+    "Store transaction data in Cloud Spanner. Enable stale reads to reduce latency.",
+    "Store transaction in Cloud Spanner. Use locking read-write transactions.",
+    "Store transaction data in BigQuery. Disabled the query cache to ensure consistency.",
+    "Store transaction data in Cloud SQL. Use a federated query BigQuery for analysis."
+   ],
+   "answer": [
+    "Store transaction in Cloud Spanner. Use locking read-write transactions."
+   ],
+   "explanation": "The correct answer is B. Store transaction data in Cloud Spanner and use locking read-write transactions.– Cloud Spanner is a fully managed, scalable, relational database service that offers strong consistency and ACID compliance. It is designed to handle large-scale transactional workloads across multiple regions.– By using locking read-write transactions in Cloud Spanner, you ensure that the data remains consistent and accurate during transactions. This approach helps maintain data integrity and reliability, which is crucial for bank account transactions.Why the other options are incorrect:A. Storing transaction data in Cloud Spanner and enabling stale reads to reduce latency may compromise data consistency as stale reads can lead to accessing outdated data. This option does not ensure ACID compliance.C. Storing transaction data in BigQuery does not provide the level of transactional support and consistency required for handling bank account transactions. Disabling the query cache does not address the need for ACID compliance.D. Storing transaction data in Cloud SQL and using federated queries in BigQuery for analysis may not provide the necessary level of scalability and performance required for handling large-scale transactional workloads. Cloud SQL may not offer the same level of distributed transaction support as Cloud Spanner."
+  },
+  {
+   "id": "test_15_q46",
+   "source": "test 15",
+   "question": "Scenario: A live TV show is requesting viewers to vote via mobile phones, generating a significant amount of data in just 3 minutes. As the person responsible for the “Voting infrastructure,” you need to guarantee that the system can manage the influx of data and process all votes. Additionally, you are required to show interim results during the voting period and accurately tally the votes once voting concludes. Question: What steps should you take to ensure the voting infrastructure can handle the load, display partial results while voting is ongoing, and efficiently count the votes only once to minimize costs?",
+   "options": [
+    "Create a Memorystore instance with a high availability (HA) configuration.",
+    "Create a Cloud SQL for PostgreSQL database with high availability (HA) configuration and multiple read replicas.",
+    "Write votes to a Pub/Sub topic and have Cloud Functions subscribe to it and write votes to BigQuery.",
+    "Write votes to a Pub/Sub topic and load into both Bigtable and BigQuery via a Dataflow pipeline. Query Bigtable for real-time results and BigQuery for later analysis. Shut down the Bigtable instance when voting concludes."
+   ],
+   "answer": [
+    "Write votes to a Pub/Sub topic and load into both Bigtable and BigQuery via a Dataflow pipeline. Query Bigtable for real-time results and BigQuery for later analysis. Shut down the Bigtable instance when voting concludes."
+   ],
+   "explanation": "The correct answer is D. Write votes to a Pub/Sub topic and load into both Bigtable and BigQuery via a Dataflow pipeline. Query Bigtable for real-time results and BigQuery for later analysis. Shut down the Bigtable instance when voting concludes. – By writing the votes to a Pub/Sub topic, you decouple the voting process from the processing, allowing for scalability and handling of the large volume of data generated during the TV show. – Loading the data into both Bigtable and BigQuery via a Dataflow pipeline ensures that you can display real-time results using Bigtable and perform later analysis efficiently using BigQuery. – Shutting down the Bigtable instance when voting concludes helps optimize cost as you only pay for the resources you use during the required period. Now, let’s explain why the other options are incorrect: A. Creating a Memorystore instance with a high availability (HA) configuration is not the best choice for this scenario because Memorystore is a managed Redis service primarily used for caching and speeding up the performance of applications. It is not designed for handling the large volume of data generated by a live voting event. B. Creating a Cloud SQL for PostgreSQL database with high availability (HA) configuration and multiple read replicas is also not the best option in this case. While Cloud SQL provides a managed relational database service, it may not be the most cost-effective solution for handling the high throughput and processing requirements of the live voting scenario. C. Writing votes to a Pub/Sub topic and having Cloud Functions subscribe to it and write votes to BigQuery is a good approach for real-time processing and analysis. However, using only BigQuery for both real-time results and later analysis may not be as efficient as leveraging Bigtable for real-time results and BigQuery for later analysis in this specific scenario."
+  },
+  {
+   "id": "test_15_q55",
+   "source": "test 15",
+   "question": "Scenario: You are utilizing Bigtable to store and deliver stock market data for major indices. For the trading application, you require access to the most recent streaming stock prices. How should you structure your row key and tables in order to easily access the data with a straightforward query?",
+   "options": [
+    "Create one unique table for all of the indices, and then use the index and timestamp as the row key design.",
+    "Create one unique table for all of the indices, and then use a reverse timestamp as the row key design.",
+    "For each index, have a separate table and use a timestamp as the row key design.",
+    "For each index, have a separate table and use a reverse timestamp as the row key design."
+   ],
+   "answer": [
+    "Create one unique table for all of the indices, and then use a reverse timestamp as the row key design."
+   ],
+   "explanation": "The correct answer is B. Create one unique table for all of the indices, and then use a reverse timestamp as the row key design.Using a reverse timestamp as the row key design allows you to easily access the most recent data that is streaming in. Since the most recent data will have the highest timestamp value, using a reverse timestamp will ensure that the latest data is stored at the beginning of the row key range. This makes it simple to query and retrieve the most recent data quickly.Why the other options are incorrect:A. Creating one unique table for all of the indices and using the index and timestamp as the row key design would not be ideal for accessing only the most recent data. This design would require additional filtering or scanning to retrieve the latest data, making the query more complex and less efficient.C. Having a separate table for each index and using a timestamp as the row key design would not be efficient for accessing the most recent data. Querying multiple tables to retrieve the latest data for all indices would be more complicated and resource-intensive.D. Having a separate table for each index and using a reverse timestamp as the row key design could work, but it would result in managing multiple tables which could be cumbersome and less efficient compared to having a single table for all indices."
+  },
+  {
+   "id": "test_16_q23",
+   "source": "test 16",
+   "question": "Scenario: You are tasked with selecting a database for a new project that must meet the following criteria: fully managed, capable of automatic scaling, transactionally consistent, able to scale up to 6 TB, and queryable using SQL. Which database would you recommend for this project?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Spanner",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "Cloud Spanner would be the most suitable database for this project based on the given criteria. Here’s why: Fully Managed: Cloud Spanner is a fully managed, globally distributed, and scalable database service provided by Google Cloud. Automatic Scaling: Cloud Spanner automatically scales horizontally to handle increased workloads and data volumes without requiring manual intervention. Transactional Consistency: Cloud Spanner provides strong transactional consistency, ensuring that all data modifications are processed in the correct order and that data remains consistent across all regions. Scalability: Cloud Spanner can easily scale up to and beyond 6 TB while maintaining performance and consistency. SQL Queries: Cloud Spanner supports SQL queries, making it compatible with existing SQL-based analytics and applications. While other options like Cloud SQL might seem relevant, they have limitations: Cloud SQL: While fully managed and supporting SQL, Cloud SQL’s scalability might be limited for a 6 TB database. It might require manual scaling or sharding, which can be complex. Cloud Bigtable: Not designed for SQL queries and primarily focuses on NoSQL data storage. Cloud Datastore: A NoSQL document database, not suitable for SQL-based queries. Therefore, Cloud Spanner best fits the requirements of being fully managed, capable of automatic scaling, transactionally consistent, able to scale up to 6 TB, and queryable using SQL."
+  },
+  {
+   "id": "test_16_q27",
+   "source": "test 16",
+   "question": "Scenario: You work for a mid-sized enterprise that needs to transfer its operational system transaction data from an on-premises database to GCP. The database is approximately 20 TB in size. Which database should you choose for this data transfer?",
+   "options": [
+    "Cloud SQL",
+    "Cloud Bigtable",
+    "Cloud Spanner",
+    "Cloud Datastore"
+   ],
+   "answer": [
+    "Cloud Spanner"
+   ],
+   "explanation": "Correct Option C. Cloud Spanner Cloud Spanner is the correct choice for this scenario. It is a horizontally scalable, globally distributed, strongly consistent relational database service. It is designed to handle large datasets (tens of terabytes and beyond) while supporting transactional workloads. Perfect for operational system transaction data because it provides ACID compliance, high availability, and scalability. Incorrect Option A. Cloud SQL Cloud SQL is a managed relational database service (MySQL, PostgreSQL, SQL Server). It is suitable for smaller workloads (up to a few TBs). At 20 TB, Cloud SQL would face performance and scalability limitations, making it unsuitable for this scenario. Option B. Cloud Bigtable Cloud Bigtable is a NoSQL wide-column database optimized for analytical workloads and time-series data. It is not designed for transactional relational workloads. Using Bigtable for operational transaction data would not meet ACID requirements. Option D. Cloud Datastore (now Firestore in Datastore mode) Cloud Datastore is a NoSQL document database. It is suitable for web/mobile applications but not for large-scale transactional relational workloads. It lacks the scalability and transactional guarantees needed for a 20 TB operational system database."
+  },
+  {
+   "id": "test_16_q42",
+   "source": "test 16",
+   "question": "Scenario: A database is required to store time series CPU and memory usage for millions of computers, with data being recorded in one-second interval samples. Analysts will be conducting real-time, ad hoc analytics on the database. It is essential to prevent charges for each query executed and ensure scalability of the dataset in the future. What database and data model would be the best choice for this scenario?",
+   "options": [
+    "Create a table in BigQuery, and append the new samples for CPU and memory to the table",
+    "Create a wide table in BigQuery, create a column for the sample value at each second, and update the row with the interval for each second",
+    "Create a narrow table in Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second",
+    "Create a wide table in Bigtable with a row key that combines the computer identifier with the sample time at each minute, and combine the values for each second as column data."
+   ],
+   "answer": [
+    "Create a narrow table in Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second"
+   ],
+   "explanation": "C. Create a narrow table in Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second.– Bigtable is a good choice for storing time series data for millions of computers with one-second interval samples because it is designed for high-performance, scalable storage of structured data.– By creating a narrow table in Bigtable with a row key that combines the computer identifier and sample time at each second, you can efficiently store and retrieve the time series data for each computer.– The narrow table design in Bigtable is optimized for fast read and write operations, making it suitable for real-time ad hoc analytics against the database.– Storing the data at each second interval allows for detailed analysis and provides flexibility for querying the data.Why the other options are incorrect:A. Creating a table in BigQuery and appending new samples for CPU and memory to the table is not the best option for storing time series data with one-second interval samples. BigQuery is a data warehouse designed for running interactive SQL queries on large datasets, but it may not be the most efficient choice for storing and querying time series data at such a granular level.B. Creating a wide table in BigQuery with a column for the sample value at each second and updating the row with the interval for each second can lead to performance issues and increased storage costs, especially when dealing with millions of computers and one-second interval samples. This design may not scale well for real-time analytics and could result in high query costs.D. Creating a wide table in Bigtable with a row key that combines the computer identifier with the sample time at each minute and combining the values for each second as column data may not be suitable for real-time ad hoc analytics. Storing data at minute intervals may limit the granularity of analysis and make it challenging to perform detailed queries at the one-second interval level."
+  }
+ ]
+}

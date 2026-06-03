@@ -1,0 +1,1271 @@
+{
+ "topic": "4.2 Preparing data for AI and ML",
+ "slug": "4-2-preparing-data-for-ai-and-ml",
+ "question_count": 76,
+ "questions": [
+  {
+   "id": "test_1_q3",
+   "source": "test 1",
+   "question": "What is the best course of action to take when developing an application on Google Cloud that needs to automatically generate subject labels for users‘ blog posts, given competitive pressure to add this feature quickly and no additional developer resources, and no one on the team has machine learning experience. Which of the following options is the most suitable?",
+   "options": [
+    "Utilize the Cloud Natural Language API in the application and process the generated Entity Analysis as labels",
+    "Utilize the Cloud Natural Language API in the application and process the generated Sentiment Analysis as labels.",
+    "Develop and train a text classification model using TensorFlow, deploy it using Cloud Machine Learning Engine, call the model from the application, and process the results as labels.",
+    "Develop and train a text classification model using TensorFlow, deploy it using a Kubernetes Engine cluster, call the model from the application, and process the results as labels"
+   ],
+   "answer": [
+    "Utilize the Cloud Natural Language API in the application and process the generated Entity Analysis as labels"
+   ],
+   "explanation": "The Cloud Natural Language API is a pre-trained machine learning model that can perform entity analysis, sentiment analysis, and other natural language processing tasks. By utilizing the Entity Analysis feature, the API can automatically identify and extract relevant subject labels from the text, making it a quick and easy solution to implement without the need for additional development or machine learning expertise. Option B is not recommended since Sentiment Analysis is focused on analyzing the tone of the text and may not be suitable for generating subject labels. Options C and D require expertise in developing and training a text classification model using TensorFlow, which may not be feasible given the limited developer resources and competitive pressure to quickly add the feature",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_11_q21"
+   ]
+  },
+  {
+   "id": "test_1_q6",
+   "source": "test 1",
+   "question": "What are three possible ways to address overfitting when training a spam classifier (Select three options.)?",
+   "options": [
+    "Increase the number of training examples",
+    "Decrease the number of training examples",
+    "Use a reduced set of features",
+    "Use an expanded set of features",
+    "Increase the value of regularization parameters",
+    "Decrease the value of regularization parameter"
+   ],
+   "answer": [
+    "Increase the number of training examples",
+    "Use a reduced set of features",
+    "Increase the value of regularization parameters"
+   ],
+   "explanation": "Get more training examples: Having more training examples can help the model generalize better by capturing a wider range of variations in the data. Use a smaller set of features: Using a smaller set of features can help simplify the model and reduce overfitting by limiting its capacity to fit the noise in the data. Increase the regularization parameters: Increasing the regularization parameters, such as L1 or L2 regularization, can help control overfitting by penalizing large weights and biases and forcing the model to focus on the most relevant features.",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_11_q43"
+   ]
+  },
+  {
+   "id": "test_1_q32",
+   "source": "test 1",
+   "question": "A insurance claim review company provides expert opinion on contested insurance claims. The company uses Google Cloud for it‘s data analysis pipelines. Clients of the company upload documents to Cloud Storage. When a file is uploaded, the company wants to immediately move the files to a Classified Data bucket if the file contains personally identifying information. What method would you recommend to accomplish this?",
+   "options": [
+    "Create a quarantine bucket for uploading, once a file is uploaded trigger a Cloud Function to call a custom built machine learning model trained to detect PII. If PII is detected, move the file to the Classified Data bucket.",
+    "Create a quarantine bucket for uploading, use Cloud Scheduler to run a job to run hourly that will call a custom built machine learning model trained to detect PII. If PII is detected, move file to the Classified Data bucket.",
+    "Create a quarantine bucket for uploading, once a file is uploaded trigger a Cloud Function to call the Data Loss Prevention API to apply infotypes to detect PII. If PII is detected, move file to the Classified Data bucket.",
+    "Create a quarantine bucket for uploading, use Cloud Scheduler to run a job to run hourly that will call the Data Loss Prevention API to apply infotypes to detect PII. If PII is detected, move file to the Classified Data bucket."
+   ],
+   "answer": [
+    "Create a quarantine bucket for uploading, once a file is uploaded trigger a Cloud Function to call the Data Loss Prevention API to apply infotypes to detect PII. If PII is detected, move file to the Classified Data bucket."
+   ],
+   "explanation": "The correct solution is to use a quarantine bucket that triggers a Cloud Function on upload to invoke the DLP API and move the file if PII is found. Cloud Scheduler runs jobs at regular intervals but this calls for immediate processing of a file once uploaded so Cloud Functions should be used. You could train a custom machine learning model but that requires development time and maintenance. A managed service like DLP is a better option. See https://cloud.google.com/dlp/docs/reference/rest",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_11_q4",
+    "test_12_q16"
+   ]
+  },
+  {
+   "id": "test_1_q36",
+   "source": "test 1",
+   "question": "You are developing a deep learning model and have training data with a large number of features. You are not sure which features are important. You‘d like to use a regularization technique that will drive the parameter for the least important features toward zero. What regularization technique would you use?",
+   "options": [
+    "L1 or Lasso Regression",
+    "Backpropagation",
+    "Dropout",
+    "L2 or Ridge Regression"
+   ],
+   "answer": [
+    "L1 or Lasso Regression"
+   ],
+   "explanation": "L1 or Lassos Regression adds an absolute value of magnitude penalty which drives the parameters (or coefficients) of least useful features toward zero. L2 or Ridge Regression adds a squared magnitude penalty that penalizes large parameters. Dropout is another form of regularization that ignores some features at some steps of the training process. Backpropagation is an algorithm for assigning error penalties to nodes in a neural network. See https://cloud.google.com/bigquery-ml/docs/preventing-overfitting and https://machinelearningmastery.com/overfitting-and-underfitting-with-machine-learning-algorithms/",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_10_q29",
+    "test_16_q45"
+   ]
+  },
+  {
+   "id": "test_10_q52",
+   "source": "test 10",
+   "question": "You are training a deep learning model for a classification task. The precision and recall of the model is quite low. What could you do to improve the precision and recall scores?",
+   "options": [
+    "Use dropout",
+    "Use L2 regularization",
+    "Use more training instances",
+    "Use L1 regularization"
+   ],
+   "answer": [
+    "Use more training instances"
+   ],
+   "explanation": "The correct answer is to use more training instances. This is an example of underfitting. The other options are all regularizations used in cases of overfitting. See https://machinelearningmastery.com/overfitting-and-underfitting-with-machine-learning-algorithms/",
+   "also_appears_in": [
+    "test_12_q23",
+    "test_1_q41"
+   ]
+  },
+  {
+   "id": "test_1_q45",
+   "source": "test 1",
+   "question": "A team of analysts is building machine learning models. They want to use managed services when possible but they would also like the ability to customize and tune their models. In particular, they want to be able to tune hyperparameters themselves. What managed AI service would you recommend they use?",
+   "options": [
+    "Vertex AI custom training",
+    "Cloud TPUs",
+    "BigQuery ML",
+    "Vertex AI AutoML training"
+   ],
+   "answer": [
+    "Vertex AI custom training"
+   ],
+   "explanation": "Vertex AI custom training allows for tuning hyperparameters. Vertex AI AutoML training tunes hyperparameters for you. BigQuery ML does not allow for hyperparameter tuning. Cloud TPUs are accelerators you can use to train large deep learning models. See https://cloud.google.com/vertex-ai/docs/start/introduction-unified-platform",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_11_q50"
+   ]
+  },
+  {
+   "id": "test_2_q2",
+   "source": "test 2",
+   "question": "A machine learning model is not performing as well in production as the validation tests would predict. You suspect the model is overfitting. What technique can you use during training to reduce the risk of overfitting?",
+   "options": [
+    "L2 Regularization",
+    "Gradient descent",
+    "Backpropagation",
+    "Label engineering"
+   ],
+   "answer": [
+    "L2 Regularization"
+   ],
+   "explanation": "L2 regularization is a technique for preventing overfitting. Gradient descent is a general approach to finding optimal values. Backpropagation is an algorithm to adjusting weights in a neural network. There is no such thing as label engineering in ML; feature engineering is a practice for determining additional features used to model training. See https://cloud.google.com/bigquery-ml/docs/preventing-overfitting",
+   "also_appears_in": [
+    "test_10_q56"
+   ]
+  },
+  {
+   "id": "test_2_q9",
+   "source": "test 2",
+   "question": "A retailer has been using Kubernetes to deploy new applications built on microservices architectures. They now want to start building machine learning pipelines while leveraging their expertise in Kubernetes. What service would you recommend for running machine learning workflows on Kubernetes?",
+   "options": [
+    "Vertex AI",
+    "AutoML Tables",
+    "Kubeflow",
+    "Cloud Composer"
+   ],
+   "answer": [
+    "Kubeflow"
+   ],
+   "explanation": "The correct answer is Kubeflow, an open source tool for running ML pipelines in Kubernetes. Vertex AI is a set of managed machine learning services in Google Cloud. AutoML Tables is a managed ML service specifically for structured data. Cloud Composer is a workflow orchestration service. See https://cloud.google.com/blog/products/ai-machine-learning/getting-started-kubeflow-pipelines",
+   "also_appears_in": [
+    "test_11_q5"
+   ]
+  },
+  {
+   "id": "test_2_q14",
+   "source": "test 2",
+   "question": "A team of data analysts are proficient in using SQL but not programming in Java, Python, or other programming languages. They want to experiment with building machine learning models trained on relational data. They have approximately 1 TB of data to work with. What would you recommend they use?",
+   "options": [
+    "Bigtable",
+    "Cloud TPUs",
+    "BigQuery ML",
+    "Cloud Fusion"
+   ],
+   "answer": [
+    "BigQuery ML"
+   ],
+   "explanation": "The correct answer is BigQuery ML, which incorporates SQL functions to build, evaluate, and invoke machine learning models within SQL. Cloud TPUs are accelerators and are used with deep learning applications. Cloud Fusion is an ETL service. Bigtable is a NoSQL database for high volume, low latency write applications, such as IoT data ingestion and storage. See https://cloud.google.com/bigquery-ml/docs/introduction"
+  },
+  {
+   "id": "test_2_q16",
+   "source": "test 2",
+   "question": "A retailer is building machine learning models to help predict the number of products that will be sold and therefore should be available in inventory. What kind of model should they build?",
+   "options": [
+    "Regression",
+    "Classification",
+    "Feature",
+    "Reinforcement"
+   ],
+   "answer": [
+    "Regression"
+   ],
+   "explanation": "The correct answer is a regression model, which is used to predict a value based on a set of input parameters. Classification models categorize or label inputs, such as determining if a vehicle is a car or a truck. A feature is an attribute used in a machine learning model to describe the characteristics of an instance used in training. Reinforcement learning is a kind of machine learning in which an agent learns from the environment. See https://cloud.google.com/automl-tables/docs/problem-types",
+   "also_appears_in": [
+    "test_10_q58"
+   ]
+  },
+  {
+   "id": "test_2_q17",
+   "source": "test 2",
+   "question": "What technique is used in backpropagation to update parameters of a model during training?",
+   "options": [
+    "L1 or Lasso Regression",
+    "L2 or Ridge Regression",
+    "Feature crosses",
+    "Gradient descent"
+   ],
+   "answer": [
+    "Gradient descent"
+   ],
+   "explanation": "Gradient descent is an optimization algorithm that minimizes a function by iteratively moving in the direction of the steepest descent. L1 or Lasso and L2 or Ridge Regression are regularization techniques. Feature crosses are a way to create synthetic features from two or more features. See https://builtin.com/data-science/gradient-descent",
+   "also_appears_in": [
+    "test_11_q40",
+    "test_12_q27"
+   ]
+  },
+  {
+   "id": "test_2_q32",
+   "source": "test 2",
+   "question": "You have created a Compute Engine instance with an attached GPU but the GPU is not used when you train a Tensorflow model. What might you do to ensure the GPU can be used for training your models? (Choose 2)",
+   "options": [
+    "Use Pytorch instead of Tensorflow",
+    "Update Python 3 on the VM",
+    "Use a Deep Learning VM image",
+    "Install GPU drivers",
+    "Grant the Owner basic role to the VM service account"
+   ],
+   "answer": [
+    "Use a Deep Learning VM image",
+    "Install GPU drivers"
+   ],
+   "explanation": "GPU drivers need to be installed if they are not installed already when using GPUs. Deep Learning VM images have GPU drivers installed. Using Pytorch instead of Tensorflow will require work to recode and Pytorch would not be able to use GPUs either if the drivers are not installed. Updating Python will not address the problem of missing drivers. Granting a new role to the service account of the VM will not address the need to install GPU drivers. See https://cloud.google.com/compute/docs/gpus/install-drivers-gpu",
+   "also_appears_in": [
+    "test_10_q13",
+    "test_16_q53"
+   ]
+  },
+  {
+   "id": "test_2_q36",
+   "source": "test 2",
+   "question": "A machine learning model has been containerized and deployed on Kubernetes Engine. It is currently deployed with 2 replicas. You need to increase the number of replicas to 4. What command would you use?",
+   "options": [
+    "kubectl scale deployment command with the --replicas 4 parameter.",
+    "kubectl scale deployment command with the --replicas 2 parameter.",
+    "kubectl scale deployment command with the --deploy 4 parameter.",
+    "kubectl scale deployment command with the --deploy 2 parameter."
+   ],
+   "answer": [
+    "kubectl scale deployment command with the --replicas 4 parameter."
+   ],
+   "explanation": "The kubectl scale deployment with the –replicas 4 parameter will scale the deployment to 4 replicas. There is no –deploy parameter in the kubectl scale deployment command. See https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+   "also_appears_in": [
+    "test_11_q56"
+   ]
+  },
+  {
+   "id": "test_2_q44",
+   "source": "test 2",
+   "question": "A project sponsor wants to develop a machine learning model to classify potentially fraudulent transactions. They want to rank models based on a combination of precision and recall. What evaluation metric would you recommend?",
+   "options": [
+    "F-score",
+    "Root mean squared error",
+    "Feature crosses",
+    "Mean squared error"
+   ],
+   "answer": [
+    "F-score"
+   ],
+   "explanation": "F-score is the harmonic mean of precision and recall and is often used to measure the overall performance of classification models. Root mean squared error and mean squared error are used to evaluate regression models. Feature crosses is a way to generate synthetic features, not measure the performance of machine learning models. See https://cloud.google.com/automl-tables/docs/evaluate",
+   "also_appears_in": [
+    "test_11_q13"
+   ]
+  },
+  {
+   "id": "test_2_q52",
+   "source": "test 2",
+   "question": "An insurance company wants to implement a chatbot service to help direct customers to the best customer support team for their questions. What GCP service would you recommend?",
+   "options": [
+    "Text-to-Speech API",
+    "Speech-to-Text API",
+    "AutoML Tables",
+    "Dialogflow"
+   ],
+   "answer": [
+    "Dialogflow"
+   ],
+   "explanation": "The correct answer is Dialogflow is a service for creating conversational user interfaces. Speech-to-Text converts spoken words to written words. Text-to-Speech converts text words to human voice-like sound. AutoML Tables is a machine learning service for structured data. See https://cloud.google.com/dialogflow/docs",
+   "also_appears_in": [
+    "test_10_q11"
+   ]
+  },
+  {
+   "id": "test_2_q53",
+   "source": "test 2",
+   "question": "You are training a deep learning model with a relatively small set of features and a large number of instances. The model is not performing as well as you like. You believe the model is underfitting. What technique would you try to improve performance?",
+   "options": [
+    "AI",
+    "Use feature crosses",
+    "Use gradient descent",
+    "Use backpropagation"
+   ],
+   "answer": [
+    "Use feature crosses"
+   ],
+   "explanation": "Since there are a large number of training instances and few features, this is a good candidate for adding synthetic features by using feature crosses. Dropout is a type of regularization used to prevent overfitting. Backpropagation is an algorithm for adjusting parameters in a neural network. Gradient descent algorithm is used in optimization problems. See https://developers.google.com/machine-learning/crash-course/feature-crosses/encoding-nonlinearity",
+   "also_appears_in": [
+    "test_10_q3"
+   ]
+  },
+  {
+   "id": "test_2_q54",
+   "source": "test 2",
+   "question": "Machine learning engineers working in the us-central1 region have approximately 200 TB of data that will be used to train machine learning models. To train a model, only a small subset of that data is used. Data is organized into files that will be accessed about once per month. You would like to minimize storage costs but still have reliable and highly available storage. What would you recommend for storing this data?",
+   "options": [
+    "Cloud Storage Multi-Region storage",
+    "Cloud Storage Nearline storage",
+    "SSD Persistent Disks",
+    "Balanced Persistent Disks"
+   ],
+   "answer": [
+    "Cloud Storage Nearline storage"
+   ],
+   "explanation": "Cloud Storage Nearline storage is the best option for highly available data that is accessed once per month. Cloud Storage Multi-region meets the need but is more expensive and since the team is working in one region, multi-region storage is not necessary. Persistent disks are used with virtual machines and would require additional cost and operational overhead to store this data on persistent disk. Cloud Storage is a managed service that does not require as much operational overhead and would therefore cost less. See https://cloud.google.com/storage/docs/storage-classes",
+   "also_appears_in": [
+    "test_11_q34"
+   ]
+  },
+  {
+   "id": "test_3_q2",
+   "source": "test 3",
+   "question": "You have trained a support vector machine (SVM) classifier with default parameters for a binary classification problem and achieved an area under the curve (AUC) of 0.87 on the validation set. You want to improve the AUC of the model. Which option should you choose?",
+   "options": [
+    "Perform hyperparameter tuning on the SVM classifier",
+    "Train a deep neural network classifier, as they are always better than SVMs",
+    "Deploy the model and expect a higher real-world AUC due to generalization",
+    "Scale the predictions of the model by tuning a scaling factor as a hyperparameter to achieve the highest AUC"
+   ],
+   "answer": [
+    "Perform hyperparameter tuning on the SVM classifier"
+   ],
+   "explanation": "Hyperparameter tuning involves optimizing the parameters of a model to improve its performance. Since the SVM model was trained with default parameters, it is likely that there is room for improvement. By performing hyperparameter tuning, the performance of the SVM classifier can be improved, potentially leading to a higher AUC. Option B is not necessarily true, as the performance of deep neural networks depends on the nature of the data and the problem. Option C is not a reliable approach, as the real-world performance of a model can vary greatly depending on the context. Option D is not a common approach for improving model performance and may not be appropriate for a binary classification problem.",
+   "also_appears_in": [
+    "test_10_q36"
+   ]
+  },
+  {
+   "id": "test_3_q20",
+   "source": "test 3",
+   "question": "What is the best solution for automating the detection of damaged packages in transit using cameras installed in a shipping company’s delivery lines, flagging them for human review in real-time?",
+   "options": [
+    "Utilize BigQuery machine learning to analyze packages in batches and train the model at scale",
+    "Train an AutoML model on a corpus of images and build an API around it to integrate with package tracking applications",
+    "Use the Cloud Vision API to detect damage, raise an alert via Cloud Functions, and integrate it with package tracking applications.",
+    "Develop a TensorFlow model trained on a corpus of images and create a Python notebook in Cloud Datalab to analyze damaged packages."
+   ],
+   "answer": [
+    "Train an AutoML model on a corpus of images and build an API around it to integrate with package tracking applications"
+   ],
+   "explanation": "Correct Option B. Train an AutoML model on a corpus of images and build an API around it to integrate with package tracking applications AutoML Vision allows you to train a custom image classification/detection model without deep ML expertise. By training on labeled images of damaged vs. undamaged packages, the model can detect damage in real-time. Wrapping the model in an API enables seamless integration with package tracking systems, ensuring damaged packages are flagged for human review. This is the best solution because it combines automation, scalability, and real-time detection tailored to the company’s data. Incorrect Option A. Utilize BigQuery machine learning to analyze packages in batches and train the model at scale BigQuery ML is designed for structured data analysis, not real-time image recognition. It works well for tabular datasets but is not suited for camera-based image detection pipelines. Option C. Use the Cloud Vision API to detect damage, raise an alert via Cloud Functions, and integrate it with package tracking applications Cloud Vision API is powerful for general image recognition (labels, OCR, object detection). However, detecting package damage is a highly specialized use case requiring a custom-trained model. Vision API cannot reliably detect damage without custom training. Option D. Develop a TensorFlow model trained on a corpus of images and create a Python notebook in Cloud Datalab to analyze damaged packages While TensorFlow provides flexibility, this approach is manual and complex compared to AutoML. Cloud Datalab is not designed for real-time production deployment; it’s more for experimentation. This solution lacks scalability and integration ease compared to AutoML + API.",
+   "also_appears_in": [
+    "test_9_q7"
+   ]
+  },
+  {
+   "id": "test_3_q33",
+   "source": "test 3",
+   "question": "As an advertising company employee, you have developed a Spark ML model to predict click-through rates for ads. Your company is migrating to Google Cloud and your data will be moved to BigQuery. Since you periodically retrain your Spark ML models, you need to migrate your existing training pipelines to Google Cloud. What is the best approach for this?",
+   "options": [
+    "Use Vertex AI to train existing Spark ML models",
+    "Rewrite models using TensorFlow and use Vertex AI for training",
+    "Use Dataproc for training existing Spark ML models but read data directly from BigQuery",
+    "Spin up a Spark cluster on Compute Engine and train Spark ML models on the data exported from BigQuery"
+   ],
+   "answer": [
+    "Use Dataproc for training existing Spark ML models but read data directly from BigQuery"
+   ],
+   "explanation": "Since the data has been moved to BigQuery, it is best to read the data directly from BigQuery, instead of exporting it to a Spark cluster on Compute Engine. Option A is a good choice, but since the employee is already using Spark ML, it is better to stick with it instead of switching to TensorFlow. Option C allows for training the existing Spark ML models while leveraging the benefits of BigQuery.",
+   "also_appears_in": [
+    "test_9_q33"
+   ]
+  },
+  {
+   "id": "test_3_q42",
+   "source": "test 3",
+   "question": "You have a TensorFlow machine learning model that is trained on Compute Engine virtual machines (n2-standard-32), which takes two days to complete. The model requires custom TensorFlow operations that must run partially on a CPU. What can you do to reduce the training time in a cost-effective manner?",
+   "options": [
+    "Upgrade the VM type to n2-highmem-32",
+    "Upgrade the VM type to e2-standard-32",
+    "Use a VM with a GPU hardware accelerator to train the model.",
+    "Use a VM with a TPU hardware accelerator to train the model."
+   ],
+   "answer": [
+    "Use a VM with a GPU hardware accelerator to train the model."
+   ],
+   "explanation": "Given that the TensorFlow model has custom TensorFlow operations that must run partially on a CPU, the best option to reduce the training time in a cost-effective manner would be to train the model using a VM with a GPU hardware accelerator. Therefore, option C is the correct answer. GPU accelerators can significantly speed up TensorFlow training on virtual machines, especially when there are a lot of computations to be performed. The n2-highmem-32 and e2-standard-32 virtual machine types may have more memory and CPU resources, respectively, but they do not have the specialized hardware required to accelerate TensorFlow training like GPUs and TPUs. TPUs are specialized hardware accelerators designed for TensorFlow, but they may not be cost-effective for this scenario, as they can be more expensive than GPU-based VMs. Therefore, training the TensorFlow model using a VM with a GPU hardware accelerator is the most cost-effective option to reduce the training time. It is worth noting that selecting the appropriate GPU type based on the workload is also important to achieve the best performance and cost-effectiveness.",
+   "also_appears_in": [
+    "test_8_q46"
+   ]
+  },
+  {
+   "id": "test_3_q49",
+   "source": "test 3",
+   "question": "As an employee of a large real estate firm, you need to prepare 6 TB of home sales data for machine learning using SQL and BigQuery ML. You plan to use the resulting model for predictions against a raw dataset. To prevent skew at prediction time, which workflow should you follow?",
+   "options": [
+    "Use BigQuery‘s TRANSFORM clause to define preprocessing steps when creating your model. Then, at prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.",
+    "Use BigQuery‘s TRANSFORM clause to define preprocessing steps when creating your model. Before requesting predictions, transform your raw input data using a saved query and then use ML.EVALUATE",
+    "Define your preprocessing logic using a BigQuery view. Use the view as your model training data when creating your model. Then, at prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.",
+    "Preprocess all data using Dataflow. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any further transformations on the input data."
+   ],
+   "answer": [
+    "Use BigQuery‘s TRANSFORM clause to define preprocessing steps when creating your model. Then, at prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data."
+   ],
+   "explanation": "A is the answer. https://cloud.google.com/bigquery-ml/docs/bigqueryml-transform Using the TRANSFORM clause, you can specify all preprocessing during model creation. The preprocessing is automatically applied during the prediction and evaluation phases of machine learning",
+   "also_appears_in": [
+    "test_9_q8"
+   ]
+  },
+  {
+   "id": "test_3_q52",
+   "source": "test 3",
+   "question": "You are developing a linear regression model in BigQuery ML to predict a customer‘s likelihood of purchasing your company‘s products. The model requires city names as a key predictive component, but the data must be organized into columns for training and serving the model. Which method is the most efficient way to prepare the data?",
+   "options": [
+    "Create a new view in BigQuery that excludes the city column",
+    "Use SQL in BigQuery to apply one-hot encoding to the state column and convert each city to a binary value column",
+    "Use TensorFlow to generate a categorical variable with a vocabulary list and a vocabulary file that can be uploaded to BigQuery ML",
+    "Use Cloud Data Fusion to assign a number to each city based on its region and represent it with that number in the model"
+   ],
+   "answer": [
+    "Use SQL in BigQuery to apply one-hot encoding to the state column and convert each city to a binary value column"
+   ],
+   "explanation": "The most efficient method to prepare the data for a linear regression model on BigQuery ML with city names as a key predictive component is to use SQL in BigQuery to apply one-hot encoding to the state column and convert each city to a binary value column. Option B is the correct answer. One-hot encoding is a standard method for handling categorical variables in a linear regression model. It creates dummy variables for each city, allowing the model to incorporate the city information as a predictive variable. This approach requires less coding and is easier to implement compared to options C and D. Therefore, the correct answer is option B: Use SQL in BigQuery to apply one-hot encoding to the state column and convert each city to a binary value column",
+   "also_appears_in": [
+    "test_9_q42"
+   ]
+  },
+  {
+   "id": "test_4_q11",
+   "source": "test 4",
+   "question": "You are tasked with creating a data pipeline for a 1.5 PB time-series transaction data set that grows by 3 TB per day. The goal is to copy the data to BigQuery for analysis by your data science team, who will build machine learning models on this data. The data is structured and updated with new status every hour. To maximize performance and usability for your data science team, which two strategies should you adopt?",
+   "options": [
+    "Denormalize the data as much as possible.",
+    "Preserve the structure of the data as much as possible",
+    "Use BigQuery UPDATE to further reduce the size of the dataset.",
+    "Develop a data pipeline where status updates are appended to BigQuery instead of updated",
+    "Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file. Use BigQuery‘s support for external data sources to query"
+   ],
+   "answer": [
+    "Denormalize the data as much as possible.",
+    "Develop a data pipeline where status updates are appended to BigQuery instead of updated"
+   ],
+   "explanation": "Correct option A. Denormalize the data as much as possible option D. Develop a data pipeline where status updates are appended to BigQuery instead of updated Why A + D Are Correct option A. Denormalization BigQuery is optimized for analytical workloads. Denormalizing eliminates JOINs, reducing query scan costs and improving ML model training performance on 1.5PB dataset. option D. Append status updates Immutable append-only pattern perfect for time-series data (3TB/day growth). Use MERGE or UNION ALL for current status queries: sql SELECT * FROM transactions WHERE status_timestamp = (SELECT MAX(status_timestamp) FROM transactions) Why This Combination Maximizes Performance: text Denormalized + Append-only = Columnar scan optimized No JOINs + No UPDATEs = Lowest query cost Time-series partitioning = Fast ML feature engineering Incorrect option B. Preserve structure OLTP pattern – creates expensive JOINs for analytical queries. option C. BigQuery UPDATE Prohibitively expensive – updating 1.5PB + 3TB/day = million-dollar costs. option E. External tables Poor performance – no columnar optimization, slow ML model training.",
+   "also_appears_in": [
+    "test_9_q20"
+   ]
+  },
+  {
+   "id": "test_4_q16",
+   "source": "test 4",
+   "question": "As a retailer, you want to expand your online sales by integrating with various in-home assistants like Google Home. In order to process customer voice commands and place orders in the backend systems, what solutions would be appropriate?",
+   "options": [
+    "Use Speech-to-Text API",
+    "Utilize Cloud Natural Language API",
+    "Implement Dialogflow Enterprise Edition",
+    "Deploy AutoML Natural Language"
+   ],
+   "answer": [
+    "Implement Dialogflow Enterprise Edition"
+   ],
+   "explanation": "Dialogflow is a conversational AI platform that provides tools to create and manage conversational interfaces, including chatbots and voice assistants. The Dialogflow Enterprise Edition is specifically designed for large-scale, mission-critical deployments that require high availability, security, and scalability. The Speech-to-Text API (option A) is a Google Cloud service that converts audio to text. While this could be useful for processing voice commands, it does not provide the conversational flow management or intent recognition capabilities that are needed for building a full-featured voice assistant. The Cloud Natural Language API (option B) is another Google Cloud service that provides natural language processing capabilities, such as sentiment analysis and entity recognition. While this could be useful for analyzing the text of customer voice commands, it does not provide the conversational flow management or intent recognition capabilities that are needed for building a full-featured voice assistant. AutoML Natural Language (option D) is a Google Cloud service that allows users to create custom machine learning models for natural language processing tasks, such as sentiment analysis and entity recognition. While this could be useful for customizing the natural language processing capabilities of a voice assistant, it does not provide the conversational flow management or intent recognition capabilities that are needed for building a full-featured voice assistant. Therefore, Dialogflow Enterprise Edition (option C) is the best solution for integrating online sales capabilities with in-home assistants because it provides the necessary conversational flow management and intent recognition capabilities for building a full-featured voice assistant",
+   "also_appears_in": [
+    "test_10_q31"
+   ]
+  },
+  {
+   "id": "test_4_q17",
+   "source": "test 4",
+   "question": "You are working on a regression problem in the natural language processing domain with a dataset of 100 million labeled examples. After randomly splitting your dataset into train and test samples (90/10), training your neural network, and evaluating your model, you notice that the root-mean-squared error (RMSE) is twice as high on the train set compared to the test set. What is the best way to improve your model‘s performance?",
+   "options": [
+    "Increase the percentage of the test sample in the train-test split",
+    "Collect more data and increase the size of your dataset",
+    "Use regularization techniques like dropout or batch normalization to prevent overfitting",
+    "Increase the model‘s complexity by adding an extra layer or increasing the size of vocabularies or n-grams"
+   ],
+   "answer": [
+    "Use regularization techniques like dropout or batch normalization to prevent overfitting"
+   ],
+   "explanation": "Correct option C. Use regularization techniques like dropout or batch normalization to prevent overfitting This is the correct answer. The key observation is that the RMSE is higher on the training set than on the test set. This is unusual and indicates underfitting or poor generalization due to over-regularization or instability. In practice, when the training error is much worse than the test error, the model may be overfitting noise or failing to generalize properly. Regularization techniques such as dropout, L2 regularization, or batch normalization help stabilize training, reduce variance, and improve generalization. These methods are standard approaches in deep learning to improve performance when discrepancies between train and test metrics occur. Incorrect option A. Increase the percentage of the test sample in the train-test split Incorrect because changing the split ratio does not address the underlying issue. You already have a massive dataset (100 million examples), so the split size is not the bottleneck. Increasing the test set size would only reduce the training data available and not improve model performance. option B. Collect more data and increase the size of your dataset Incorrect because you already have 100 million labeled examples, which is more than sufficient for training a regression model in NLP. The problem is not data scarcity but model training dynamics. option D. Increase the model’s complexity by adding an extra layer or increasing the size of vocabularies or n‑grams Incorrect because the model is already struggling with training error being higher than test error. Adding complexity would likely worsen the problem by making the model harder to train and potentially increase variance. The issue is not lack of complexity but poor regularization.",
+   "also_appears_in": [
+    "test_9_q26"
+   ]
+  },
+  {
+   "id": "test_4_q20",
+   "source": "test 4",
+   "question": "As an employee working at a bank, you possess a dataset that is labeled and contains information about loan applications that have been approved and whether or not these applications resulted in defaults. Your task is to create a model that can predict the default rates for future credit applicants. What actions should you take to achieve this goal?",
+   "options": [
+    "Expand the size of the dataset by gathering more data.",
+    "Train a predictive model, such as a linear regression, to estimate the credit default risk score",
+    "Eliminate any biases present in the data and gather information on loan applications that have been declined",
+    "Connect the applicants‘ social profiles with their loan applications to facilitate feature engineering."
+   ],
+   "answer": [
+    "Eliminate any biases present in the data and gather information on loan applications that have been declined"
+   ],
+   "explanation": "Correct Option C. Eliminate any biases present in the data and gather information on loan applications that have been declined. Correct because the dataset currently only contains approved loan applications, which introduces selection bias. Without including declined applications, the model would not generalize well to all applicants. Eliminating bias and expanding the dataset to include declined applications ensures the model can accurately predict default risk for future applicants, not just those who were approved. Incorrect Option A. Expand the size of the dataset by gathering more data. Incorrect because simply expanding the dataset without addressing bias (only approved loans) does not solve the core issue. More of the same biased data will not improve predictive accuracy. Option B. Train a predictive model, such as a linear regression, to estimate the credit default risk score. Incorrect because training a model on biased data (only approved loans) will lead to skewed predictions. The model would fail to represent the true population of applicants. Option D. Connect the applicants’ social profiles with their loan applications to facilitate feature engineering. Incorrect because using social profiles raises privacy and ethical concerns and is not a standard or reliable practice in regulated banking environments. It does not directly address the bias problem in the dataset.",
+   "also_appears_in": [
+    "test_10_q24"
+   ],
+   "needs_review": true
+  },
+  {
+   "id": "test_4_q42",
+   "source": "test 4",
+   "question": "Given a dataset of real estate properties and their associated features, including latitude and longitude, and the goal of training a neural network to predict housing prices, what approach should be taken to incorporate the physical dependency of location on price. Which of the following options would be most appropriate for this task?",
+   "options": [
+    "providing latitude and longitude as input vectors to the neural net",
+    "creating a numeric column from a feature cross of latitude and longitude",
+    "creating a feature cross of latitude and longitude and bucketizing it at the minute level while using L1 regularization during optimization, or",
+    "creating a feature cross of latitude and longitude and bucketizing it at the minute level while using L2 regularization during optimization?"
+   ],
+   "answer": [
+    "creating a feature cross of latitude and longitude and bucketizing it at the minute level while using L1 regularization during optimization, or"
+   ],
+   "explanation": "Use L1 regularization when you need to assign greater importance to more influential features. It shrinks less important feature to 0. L2 regularization performs better when all input features influence the output & all with the weights are of equal size. Ref: https://developers.google.com/machine-learning/crash-course/regularization-for-sparsity/l1-regularization",
+   "also_appears_in": [
+    "test_8_q23"
+   ],
+   "needs_review": true
+  },
+  {
+   "id": "test_4_q48",
+   "source": "test 4",
+   "question": "You are part of a team that is working on a niche product in the image recognition domain. Your team has developed a model that relies heavily on custom C++ TensorFlow ops for performing bulky matrix multiplications. As a result, it takes several days to train the model, and you want to reduce this time and keep the cost low by using an accelerator on Google Cloud. What should you do?",
+   "options": [
+    "Use Cloud TPUs without any additional adjustments to your code.",
+    "Use Cloud TPUs after implementing GPU kernel support for your custom ops",
+    "Use Cloud GPUs after implementing GPU kernel support for your custom ops.",
+    "Stay on CPUs and increase the size of the cluster you are training your model on."
+   ],
+   "answer": [
+    "Use Cloud GPUs after implementing GPU kernel support for your custom ops."
+   ],
+   "explanation": "Ref: https://cloud.google.com/tpu/docs/tpus#when_to_use_tpus",
+   "also_appears_in": [
+    "test_10_q39"
+   ]
+  },
+  {
+   "id": "test_4_q49",
+   "source": "test 4",
+   "question": "As an employee of a manufacturing company that sources 750 different components from 750 suppliers, you have a labeled dataset that contains around 1000 examples of each unique component. Your team wants to create an app that can help warehouse workers identify incoming components by analyzing photos of them. You need to create a Proof-Of-Concept for this app within a few working days. Which approach should you take?",
+   "options": [
+    "Use Cloud Vision AutoML with the existing dataset.",
+    "Use Cloud Vision AutoML, but reduce the size of the dataset by half.",
+    "Use Cloud Vision API and provide custom labels as hints for recognition",
+    "Train your own image recognition model using transfer learning techniques."
+   ],
+   "answer": [
+    "Use Cloud Vision AutoML with the existing dataset."
+   ],
+   "explanation": "Given that the company has a large number of unique components (750) with 1000 examples of each component, and the goal is to create a working proof-of-concept for the app in a few working days, using Cloud Vision AutoML with the existing dataset would be the most practical and efficient option. Cloud Vision AutoML is a machine learning tool provided by Google Cloud that enables users to train custom models for image recognition. With the existing labeled dataset, it would be possible to quickly train an image recognition model using Cloud Vision AutoML. Option B is not an ideal approach because reducing the dataset size would result in less data to train the model on, which could potentially decrease its accuracy. Option C is not the best approach because it relies on custom labels as recognition hints, which might not be accurate or relevant for all components. Option D would require more time to train the model using transfer learning techniques, which would not be feasible for creating a working proof-of-concept within a few working days.",
+   "also_appears_in": [
+    "test_10_q37"
+   ]
+  },
+  {
+   "id": "test_5_q9",
+   "source": "test 5",
+   "question": "You are training a spam classifier. You notice that you are overfitting the training data. Which three actions can you take to resolve this problem? (Choose three.)",
+   "options": [
+    "Get more training examples",
+    "Reduce the number of training examples",
+    "Use a smaller set of features",
+    "Use a larger set of features",
+    "Increase the regularization parameters",
+    "Decrease the regularization parameters"
+   ],
+   "answer": [
+    "Get more training examples",
+    "Use a smaller set of features",
+    "Increase the regularization parameters"
+   ],
+   "explanation": "To address the issue of overfitting in a spam classifier, the three actions you can take are: A. Get more training examples Increasing the amount of training data can help the model generalize better and reduce overfitting by providing more diverse examples. C. Use a smaller set of features Reducing the number of features can help simplify the model, which may decrease its capacity to overfit the training data. E. Increase the regularization parameters Increasing regularization can help penalize overly complex models, thus reducing overfitting by discouraging the model from fitting noise in the training data. These actions collectively contribute to improving the model’s performance on unseen data by mitigating overfitting."
+  },
+  {
+   "id": "test_5_q15",
+   "source": "test 5",
+   "question": "You need to create a data pipeline that copies time-series transaction data so that it can be queried from within BigQuery by your data science team for analysis.Every hour, thousands of transactions are updated with a new status. The size of the intitial dataset is 1.5 PB, and it will grow by 3 TB per day. The data is heavily structured, and your data science team will build machine learning models based on this data. You want to maximize performance and usability for your data science team. Which two strategies should you adopt? (Choose two.)",
+   "options": [
+    "Denormalize the data as must as possible.",
+    "Preserve the structure of the data as much as possible.",
+    "Use BigQuery UPDATE to further reduce the size of the dataset.",
+    "Develop a data pipeline where status updates are appended to BigQuery instead of updated.",
+    "Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file. Use BigQuery‘s support for external data sources to query."
+   ],
+   "answer": [
+    "Denormalize the data as must as possible.",
+    "Develop a data pipeline where status updates are appended to BigQuery instead of updated."
+   ],
+   "explanation": "Correct Option A: Denormalize the data as much as possible BigQuery performs best with denormalized data using nested/repeated fields, eliminating expensive joins and enabling parallel slot execution for faster ML model training on 1.5 PB+ datasets. Option D: Develop a data pipeline where status updates are appended to BigQuery instead of updated Append-only ingestion avoids costly UPDATE/DELETE mutations (small-cell penalty), maintaining hourly transaction status changes as new records for efficient querying via filtering/window functions. Incorrect Option B: Preserve the structure of the data as much as possible Normalization requires joins that trigger data shuffling, severely degrading performance on 3 TB/day growth compared to denormalized structures. Option C: Use BigQuery UPDATE to further reduce the size of the dataset Frequent hourly UPDATES on thousands of transactions trigger small-cell recalculation penalties, exploding costs and slowing ingestion for massive datasets. Option E: Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file External tables scan GCS files repeatedly, yielding poor ML performance versus native BigQuery storage; snapshots lose hourly granularity."
+  },
+  {
+   "id": "test_5_q26",
+   "source": "test 5",
+   "question": "You are developing an application on Google Cloud that will automatically generate subject labels for users‘ blog posts. You are under competitive pressure to add this feature quickly, and you have no additional developer resources. No one on your team has experience with machine learning. What should you do?",
+   "options": [
+    "Call the Cloud Natural Language API from your application. Process the generated Entity Analysis as labels.",
+    "Call the Cloud Natural Language API from your application. Process the generated Sentiment Analysis as labels.",
+    "Build and train a text classification model using TensorFlow. Deploy the model using Cloud Machine Learning Engine. Call the model from your application and process the results as labels.",
+    "Build and train a text classification model using TensorFlow. Deploy the model using a Kubernetes Engine cluster. Call the model from your application and process the results as labels."
+   ],
+   "answer": [
+    "Call the Cloud Natural Language API from your application. Process the generated Entity Analysis as labels."
+   ],
+   "explanation": "Correct Answer : A Entity analysis -> Identify entities within documents receipts, invoices, and contracts and label them by types such as date, person, contact information, organization, location, events, products, and media. Sentiment analysis -> Understand the overall opinion, feeling, or attitude sentiment expressed in a block of text. — Avoid Custom models"
+  },
+  {
+   "id": "test_5_q29",
+   "source": "test 5",
+   "question": "Which of the following statements about the Wide & Deep Learning model are true? (Select 2 answers.)",
+   "options": [
+    "The wide model is used for memorization, while the deep model is used for generalization.",
+    "A good use for the wide and deep model is a recommender system.",
+    "The wide model is used for generalization, while the deep model is used for memorization.",
+    "A good use for the wide and deep model is a small-scale linear regression problem."
+   ],
+   "answer": [
+    "The wide model is used for memorization, while the deep model is used for generalization.",
+    "A good use for the wide and deep model is a recommender system."
+   ],
+   "explanation": "Can we teach computers to learn like humans do, by combining the power of memorization and generalization? It‘s not an easy question to answer, but by jointly training a wide linear model (for memorization) alongside a deep neural network (for generalization), one can combine the strengths of both to bring us one step closer. At Google, we call it Wide & Deep Learning. It‘s useful for generic large-scale regression and classification problems with sparse inputs (categorical features with a large number of possible feature values), such as recommender systems, search, and ranking problems. Reference: https://research.googleblog.com/2016/06/wide-deep-learning-better-together-with.html"
+  },
+  {
+   "id": "test_5_q34",
+   "source": "test 5",
+   "question": "You are a retailer that wants to integrate your online sales capabilities with different in-home assistants, such as Google Home. You need to interpret customer voice commands and issue an order to the backend systems. Which solutions should you choose?",
+   "options": [
+    "Cloud Speech-to-Text API",
+    "Cloud Natural Language API",
+    "Dialogflow Enterprise Edition",
+    "Cloud AutoML Natural Language"
+   ],
+   "answer": [
+    "Dialogflow Enterprise Edition"
+   ],
+   "explanation": "C: Dialogflow Enterprise Edition is an end-to-end development suite for building conversational interfaces for websites, mobile applications, popular messaging platforms, and IoT devices. You can use it to build interfaces (e.g., chatbots) that are capable of natural and rich interactions between your users and your business. It is powered by machine learning to recognize the intent and context of what a user says, allowing your conversational interface to provide highly efficient and accurate responses. https://cloud.google.com/dialogflow/ Dialogflow API V2 is the new iteration of our developer API. The new API integrates Google Cloud Speech-to-Text, enabling developers to send audio directly to Dialogflow for combined speech recognition and natural language understanding. https://dialogflow.com/v2-faq https://cloud.google.com/blog/products/gcp/introducing-dialogflow-enterprise-edition-a-new-way-to-build-voice-and-text-conversational-apps"
+  },
+  {
+   "id": "test_5_q35",
+   "source": "test 5",
+   "question": "Which of these numbers are adjusted by a neural network as it learns from a training dataset (select 2 answers)?",
+   "options": [
+    "Weights",
+    "Biases",
+    "Continuous features",
+    "Input values"
+   ],
+   "answer": [
+    "Weights",
+    "Biases"
+   ],
+   "explanation": "A neural network is a simple mechanism thats implemented with basic math. The only difference between the traditional programming model and a neural network is that you let the computer determine the parameters (weights and bias) by learning from training datasets. Reference: https://cloud.google.com/blog/big-data/2016/07/understanding-neural-networks-with-tensorflow-playground"
+  },
+  {
+   "id": "test_5_q41",
+   "source": "test 5",
+   "question": "Suppose you have a dataset of images that are each labeled as to whether or not they contain a human face. To create a neural network that recognizes human faces in images using this labeled dataset, what approach would likely be the most effective?",
+   "options": [
+    "Use K-means Clustering to detect faces in the pixels.",
+    "Use feature engineering to add features for eyes, noses, and mouths to the input data.",
+    "Use deep learning by creating a neural network with multiple hidden layers to automatically detect features of faces.",
+    "Build a neural network with an input layer of pixels, a hidden layer, and an output layer with two categories."
+   ],
+   "answer": [
+    "Use deep learning by creating a neural network with multiple hidden layers to automatically detect features of faces."
+   ],
+   "explanation": "Traditional machine learning relies on shallow nets, composed of one input and one output layer, and at most one hidden layer in between. More than three layers (including input and output) qualifies as “deep“ learning. So deep is a strictly defined, technical term that means more than one hidden layer. In deep-learning networks, each layer of nodes trains on a distinct set of features based on the previous layers output. The further you advance into the neural net, the more complex the features your nodes can recognize, since they aggregate and recombine features from the previous layer. A neural network with only one hidden layer would be unable to automatically recognize high-level features of faces, such as eyes, because it wouldn‘t be able to “build“ these features using previous hidden layers that detect low-level features, such as lines. Feature engineering is difficult to perform on raw image data. K-means Clustering is an unsupervised learning method used to categorize unlabeled data. Reference: https://deeplearning4j.org/neuralnet-overview"
+  },
+  {
+   "id": "test_5_q42",
+   "source": "test 5",
+   "question": "You work for a shipping company that has distribution centers where packages move on delivery lines to route them properly. The company wants to add cameras to the delivery lines to detect and track any visual damage to the packages in transit. You need to create a way to automate the detection of damaged packages and flag them for human review in real time while the packages are in transit. Which solution should you choose?",
+   "options": [
+    "Use BigQuery machine learning to be able to train the model at scale, so you can analyze the packages in batches.",
+    "Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications.",
+    "Use the Cloud Vision API to detect for damage, and raise an alert through Cloud Functions. Integrate the package tracking applications with this function.",
+    "Use TensorFlow to create a model that is trained on your corpus of images. Create a Python notebook in Cloud Datalab that uses this model so you can analyze for damaged packages."
+   ],
+   "answer": [
+    "Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications."
+   ],
+   "explanation": "Answer is B. Cloud Vision API detects lot of things for not damages. The description of Damages can be different for each business . So we need to train the model with test and training data to give our definition of Damages, so we need ML capabilities so answer is B, AutoML."
+  },
+  {
+   "id": "test_6_q10",
+   "source": "test 6",
+   "question": "Your neural network model is taking days to train. You want to increase the training speed. What can you do?",
+   "options": [
+    "Subsample your test dataset.",
+    "Subsample your training dataset.",
+    "Increase the number of input features to your model.",
+    "Increase the number of layers in your neural network."
+   ],
+   "answer": [
+    "Subsample your training dataset."
+   ],
+   "explanation": "The correct answer is B. Subsample your training dataset. Here’s why: B. Subsample your training dataset: Reducing the size of the training data directly reduces the amount of computation required for each training epoch, thus speeding up training. Here’s why the other options are not ideal for increasing training speed: A. Subsample your test dataset: The test dataset is used for evaluating the model’s performance, not for training. Reducing its size will not affect training speed. C. Increase the number of input features to your model: Adding more input features increases the complexity of the model and the amount of computation required, slowing down training. D. Increase the number of layers in your neural network: Adding more layers also increases the model’s complexity and computation, slowing down training."
+  },
+  {
+   "id": "test_6_q11",
+   "source": "test 6",
+   "question": "You want to use a database of information about tissue samples to classify future tissue samples as either normal or mutated. You are evaluating an unsupervised anomaly detection method for classifying the tissue samples. Which two characteristic support this method? (Choose two.)",
+   "options": [
+    "There are very few occurrences of mutations relative to normal samples.",
+    "There are roughly equal occurrences of both normal and mutated samples in the database.",
+    "You expect future mutations to have different features from the mutated samples in the database.",
+    "You expect future mutations to have similar features to the mutated samples in the database.",
+    "You already have labels for which samples are mutated and which are normal in the database."
+   ],
+   "answer": [
+    "There are very few occurrences of mutations relative to normal samples.",
+    "You expect future mutations to have different features from the mutated samples in the database."
+   ],
+   "explanation": "The two characteristics that support using an unsupervised anomaly detection method for classifying tissue samples are: A. There are very few occurrences of mutations relative to normal samples. Unsupervised anomaly detection methods work best when the “normal” class is the majority and the “anomalous” class (mutated in this case) is rare. The algorithm learns the characteristics of the dominant normal data and flags instances that deviate significantly from this learned pattern as anomalies. C. You expect future mutations to have different features from the mutated samples in the database. If you expect future mutations to be novel and exhibit different characteristics than the mutations you’ve already seen, an unsupervised approach is more suitable. It doesn’t rely on prior knowledge of specific mutation patterns. Instead, it identifies anything that is statistically unusual compared to the normal data. Here’s why the other options are less supportive of unsupervised anomaly detection in this scenario: B. There are roughly equal occurrences of both normal and mutated samples in the database. Unsupervised anomaly detection struggles when the classes are balanced. It becomes harder for the algorithm to define what is “normal” versus “anomalous” if both are equally represented. Supervised or semi-supervised methods would likely be more effective in this case. D. You expect future mutations to have similar features to the mutated samples in the database. If you have a good understanding of the characteristics of mutated samples and expect future mutations to be similar, a supervised classification method would likely be more accurate. You could train a model on the labeled data to specifically identify these known mutation patterns. E. You already have labels for which samples are mutated and which are normal in the database. If you have labeled data, you should generally use a supervised classification method. Supervised learning algorithms leverage the labels to learn the distinct features of each class and build a model for prediction. Unsupervised methods are used when labels are unavailable or scarce. Therefore, the two characteristics that support using an unsupervised anomaly detection method in this scenario are A and C."
+  },
+  {
+   "id": "test_6_q12",
+   "source": "test 6",
+   "question": "Your team is working on a binary classification problem. You have trained a support vector machine (SVM) classifier with default parameters, and received an area under the Curve (AUC) of 0.87 on the validation set. You want to increase the AUC of the model. What should you do?",
+   "options": [
+    "Perform hyperparameter tuning",
+    "Train a classifier with deep neural networks, because neural networks would always beat SVMs",
+    "Deploy the model and measure the real-world AUC; it‘s always higher because of generalization",
+    "Scale predictions you get out of the model (tune a scaling factor as a hyperparameter) in order to get the highest AUC"
+   ],
+   "answer": [
+    "Perform hyperparameter tuning"
+   ],
+   "explanation": "A. Perform hyperparameter tuning Hyperparameter tuning involves systematically searching for the optimal set of hyperparameters for a given model. SVMs have several hyperparameters (e.g., kernel type, C parameter, gamma) that significantly impact their performance. Since the model was trained with default parameters, there’s a high likelihood that tuning these parameters can lead to a better AUC score on the validation set. Techniques like grid search, random search, or more advanced optimization algorithms can be used for this purpose. B. Train a classifier with deep neural networks, because neural networks would always beat SVMs While deep neural networks can achieve state-of-the-art results in many domains, they do not universally outperform all other algorithms, including SVMs. The performance of a model depends heavily on the specific dataset, the nature of the problem, and the proper configuration of the model. Training a deep neural network without understanding the data or properly tuning its architecture and hyperparameters might not necessarily yield a better AUC than a well-tuned SVM. Moreover, neural networks are often more complex to train and require significantly more data and computational resources. C. Deploy the model and measure the real-world AUC; it’s always higher because of generalization. The real-world performance of a model after deployment is not guaranteed to be higher than its performance on the validation set. In fact, it’s often the opposite. The validation set is used to get an estimate of the model’s generalization ability on unseen data. The real-world data might have different characteristics or distributions than the training and validation sets, potentially leading to a lower AUC. Deploying a model with the hope that its performance will magically improve is not a sound practice. D. Scale predictions you get out of the model (tune a scaling factor as a hyperparameter) in order to get the highest AUC. While scaling the output probabilities of a classifier might affect calibration (how well the predicted probabilities match the true likelihood), it generally does not directly improve the AUC. AUC is a rank-based metric that measures the classifier’s ability to distinguish between the positive and negative classes. A simple scaling factor applied to the predictions will not change the relative order of the predictions and therefore will not change the AUC. Hyperparameter tuning should focus on the parameters of the SVM model itself, not on arbitrary post-processing of the output. https://towardsdatascience.com/understanding-hyperparameters-and-its-optimisation-techniques-f0debba07568"
+  },
+  {
+   "id": "test_6_q13",
+   "source": "test 6",
+   "question": "Business owners at your company have given you a database of bank transactions. Each row contains the user ID, transaction type, transaction location, and transaction amount. They ask you to investigate what type of machine learning can be applied to the data. Which three machine learning applications can you use? (Choose three.)",
+   "options": [
+    "Supervised learning to determine which transactions are most likely to be fraudulent.",
+    "Unsupervised learning to determine which transactions are most likely to be fraudulent.",
+    "Clustering to divide the transactions into N categories based on feature similarity.",
+    "Supervised learning to predict the location of a transaction.",
+    "Reinforcement learning to predict the location of a transaction.",
+    "Unsupervised learning to predict the location of a transaction."
+   ],
+   "answer": [
+    "Unsupervised learning to determine which transactions are most likely to be fraudulent.",
+    "Clustering to divide the transactions into N categories based on feature similarity.",
+    "Supervised learning to predict the location of a transaction."
+   ],
+   "explanation": "B. Unsupervised learning to determine which transactions are most likely to be fraudulent. Without prior labeling of fraudulent transactions, unsupervised learning techniques like anomaly detection can be used to identify unusual patterns or outliers in the transaction data. These outliers could potentially indicate fraudulent activity. Algorithms like Isolation Forest or k-Means clustering can help in this identification. C. Clustering to divide the transactions into N categories based on feature similarity. Clustering is an unsupervised learning technique that groups data points based on their similarity. By applying clustering to the transaction data, you can discover natural groupings of transactions based on their type, location, and amount. This can help in understanding different customer behaviors or transaction patterns. D. Supervised learning to predict the location of a transaction. If there is historical data available with labeled transaction locations, supervised learning algorithms can be trained to predict the location of future transactions based on user ID, transaction type, and transaction amount. This would be a classification problem if the locations are discrete categories or a regression problem if the locations are represented numerically (e.g., coordinates). Let’s analyze the incorrect options: A. Supervised learning to determine which transactions are most likely to be fraudulent. Supervised learning for fraud detection requires labeled data, where some transactions are explicitly marked as fraudulent or not fraudulent. The problem statement doesn’t mention any such labels being provided initially. If labels were available, supervised learning would be a viable option, but based on the initial information, unsupervised learning is a more direct approach to investigate potential fraud. E. Reinforcement learning to predict the location of a transaction. Reinforcement learning involves an agent learning to make decisions in an environment to maximize a reward. It’s not typically applied to straightforward predictive tasks like transaction location based on the given static features. Reinforcement learning is more suited for sequential decision-making problems. F. Unsupervised learning to predict the location of a transaction. Unsupervised learning algorithms discover patterns in unlabeled data. While clustering might group transactions by location similarity, directly predicting a specific location for a new transaction without any prior labeled examples of locations is not a typical application of standard unsupervised learning. Prediction usually implies a model trained on labeled data (supervised learning)."
+  },
+  {
+   "id": "test_6_q31",
+   "source": "test 6",
+   "question": "Which TensorFlow function can you use to configure a categorical column if you don‘t know all of the possible values for that column?",
+   "options": [
+    "categorical_column_with_vocabulary_list",
+    "categorical_column_with_hash_bucket",
+    "categorical_column_with_unknown_values",
+    "sparse_column_with_keys"
+   ],
+   "answer": [
+    "categorical_column_with_hash_bucket"
+   ],
+   "explanation": "If you know the set of all possible feature values of a column and there are only a few of them, you can use categorical_column_with_vocabulary_list. Each key in the list will get assigned an auto-incremental ID starting from 0. What if we don‘t know the set of possible values in advance? Not a problem. We can use categorical_column_with_hash_bucket instead. What will happen is that each possible value in the feature column occupation will be hashed to an integer ID as we encounter them in training. Reference: https://www.tensorflow.org/tutorials/wide"
+  },
+  {
+   "id": "test_6_q37",
+   "source": "test 6",
+   "question": "You work on a regression problem in a natural language processing domain, and you have 100M labeled exmaples in your dataset. You have randomly shuffled your data and split your dataset into train and test samples (in a 90/10 ratio). After you trained the neural network and evaluated your model on a test set, you discover that the root-mean-squared error (RMSE) of your model is twice as high on the train set as on the test set. How should you improve the performance of your model?",
+   "options": [
+    "Increase the share of the test sample in the train-test split.",
+    "Try to collect more data and increase the size of your dataset.",
+    "Try out regularization techniques (e.g., dropout of batch normalization) to avoid overfitting.",
+    "Increase the complexity of your model by, e.g., introducing an additional layer or increase sizing the size of vocabularies or n-grams used."
+   ],
+   "answer": [
+    "Increase the complexity of your model by, e.g., introducing an additional layer or increase sizing the size of vocabularies or n-grams used."
+   ],
+   "explanation": "D: A is incorrect since test sample is large enough. B is incorrect since dataset is pretty large already, and having more data typically helps with overfitting and not with underfitting. C is incorrect since regularization helps to avoid overfitting and we have a clear underfitting case. D is correct since increasing model complexity generally helps when you have an underfitting problem."
+  },
+  {
+   "id": "test_6_q40",
+   "source": "test 6",
+   "question": "You work for a global shipping company. You want to train a model on 40 TB of data to predict which ships in each geographic region are likely to cause delivery delays on any given day. The model will be based on multiple attributes collected from multiple sources. Telemetry data, including location in GeoJSON format, will be pulled from each ship and loaded every hour. You want to have a dashboard that shows how many and which ships are likely to cause delays within a region. You want to use a storage solution that has native functionality for prediction and geospatial processing. Which storage solution should you use?",
+   "options": [
+    "BigQuery",
+    "Cloud Bigtable",
+    "Cloud Datastore",
+    "Cloud SQL for PostgreSQL"
+   ],
+   "answer": [
+    "BigQuery"
+   ],
+   "explanation": "BigQuery : Scalability to handle 40 TB of data: BigQuery is a managed data warehouse designed to handle massive datasets efficiently. It can easily accommodate your 40 TB of data for training the prediction model.Built-in functionality for machine learning model training: BigQuery ML allows you to train machine learning models using familiar libraries like TensorFlow or scikit-learn directly within the platform. This eliminates the need for separate machine learning environments and simplifies model development.GeoJSON support for geospatial processing: BigQuery offers native support for GeoJSON, the format you‘re using for ship location data. This enables you to perform geospatial queries and analysis on your data directly within BigQuery.Integration with Dataflow for streaming data ingestion: Cloud Dataflow is a managed service for building data pipelines. You can leverage Dataflow to ingest the telemetry data from ships every hour into BigQuery for real-time model updates.BigQuery ML allows creating and deploying models directly within BigQuery: Once your model is trained, you can deploy it as a BigQuery ML model. This allows you to generate predictions directly within BigQuery using your trained model.Other options and why they are less suitable: Cloud Bigtable: While Bigtable excels in handling high-volume streaming data, it‘s not designed for large-scale data warehousing or machine learning model training.Cloud Datastore: Cloud Datastore is a NoSQL database that can handle various data types, but it‘s not optimized for large-scale analytics or geospatial processing.Cloud SQL for PostgreSQL: Cloud SQL for PostgreSQL is a managed relational database service. It‘s a great choice for storing relational data and running complex queries, but it wouldn‘t be suitable for training machine learning models or handling geospatial data at the scale you require."
+  },
+  {
+   "id": "test_6_q41",
+   "source": "test 6",
+   "question": "Why do you need to split a machine learning dataset into training data and test data?",
+   "options": [
+    "So you can try two different sets of features",
+    "To make sure your model is generalized for more than just the training data",
+    "To allow you to create unit tests in your code",
+    "So you can use one dataset for a wide model and one for a deep model"
+   ],
+   "answer": [
+    "To make sure your model is generalized for more than just the training data"
+   ],
+   "explanation": "The flaw with evaluating a predictive model on training data is that it does not inform you on how well the model has generalized to new unseen data. A model that is selected for its accuracy on the training dataset rather than its accuracy on an unseen test dataset is very likely to have lower accuracy on an unseen test dataset. The reason is that the model is not as generalized. It has specialized to the structure in the training dataset. This is called overfitting. Reference: https://machinelearningmastery.com/a-simple-intuition-for-overfitting/"
+  },
+  {
+   "id": "test_6_q42",
+   "source": "test 6",
+   "question": "You work for a manufacturing company that sources up to 750 different components, each from a different supplier. You‘ve collected a labeled dataset that has on average 1000 examples for each unique component. Your team wants to implement an app to help warehouse workers recognize incoming components based on a photo of the component. You want to implement the first working version of this app (as Proof-Of-Concept) within a few working days. What should you do?",
+   "options": [
+    "Use Cloud Vision AutoML with the existing dataset.",
+    "Use Cloud Vision AutoML, but reduce your dataset twice.",
+    "Use Cloud Vision API by providing custom labels as recognition hints.",
+    "Train your own image recognition model leveraging transfer learning techniques."
+   ],
+   "answer": [
+    "Use Cloud Vision AutoML with the existing dataset."
+   ],
+   "explanation": "A. Use Cloud Vision AutoML with the existing dataset. Here‘s why Cloud Vision AutoML is the best fit: Rapid Development: Cloud Vision AutoML is a managed service that allows you to train a custom image recognition model without extensive coding or machine learning expertise. This is ideal for creating a PoC within a few working days.Large Dataset Support: Cloud Vision AutoML can handle large datasets like yours, with 1000 examples per component (on average) totaling potentially millions of images.Ease of Use: The user-friendly interface of Cloud Vision AutoML simplifies the process of uploading your labeled dataset, training the model, and deploying it for real-time predictions.Other options and why they are less suitable: B. Reduce Dataset Size: While reducing the dataset size might speed up training slightly, it could negatively impact the model‘s accuracy. With a large dataset, Cloud Vision AutoML can potentially achieve high accuracy without needing significant reduction.C. Cloud Vision API with Custom Labels: Cloud Vision API offers pre-trained models for various tasks, but it wouldn‘t be ideal for your specific need of recognizing 750 unique components. You would need to create custom labels and potentially build additional logic around the API for recognition. This approach would require more development time compared to Cloud Vision AutoML.D. Train Your Own Model: Training your own image recognition model from scratch using transfer learning techniques would be the most time-consuming option. While it could potentially offer more control, it requires significant machine learning expertise and wouldn‘t be feasible for a quick PoC."
+  },
+  {
+   "id": "test_6_q52",
+   "source": "test 6",
+   "question": "What are two of the characteristics of using online prediction rather than batch prediction?",
+   "options": [
+    "It is optimized to handle a high volume of data instances in a job and to run more complex models.",
+    "Predictions are returned in the response message.",
+    "Predictions are written to output files in a Cloud Storage location that you specify.",
+    "It is optimized to minimize the latency of serving predictions."
+   ],
+   "answer": [
+    "Predictions are returned in the response message.",
+    "It is optimized to minimize the latency of serving predictions."
+   ],
+   "explanation": "Online prediction – .Optimized to minimize the latency of serving predictions. .Predictions returned in the response message. Batch prediction – .Optimized to handle a high volume of instances in a job and to run more complex models. .Predictions written to output files in a Cloud Storage location that you specify. Reference: https://cloud.google.com/ml-engine/docs/prediction-overview#online_prediction_versus_batch_prediction"
+  },
+  {
+   "id": "test_7_q4",
+   "source": "test 7",
+   "question": "You are working on a niche product in the image recognition domain. Your team has developed a model that is dominated by custom C++ TensorFlow ops your team has implemented. These ops are used inside your main training loop and are performing bulky matrix multiplications. It currently takes up to several days to train a model. You want to decrease this time significantly and keep the cost low by using an accelerator on Google Cloud. What should you do?",
+   "options": [
+    "Use Cloud TPUs without any additional adjustment to your code.",
+    "Use Cloud TPUs after implementing GPU kernel support for your customs ops.",
+    "Use Cloud GPUs after implementing GPU kernel support for your customs ops.",
+    "Stay on CPUs, and increase the size of the cluster you‘re training your model on."
+   ],
+   "answer": [
+    "Use Cloud GPUs after implementing GPU kernel support for your customs ops."
+   ],
+   "explanation": "The most effective solution to decrease the training time of your custom C++ TensorFlow ops while keeping costs low is: C. Use Cloud GPUs after implementing GPU kernel support for your customs ops. Here’s why: Cloud GPUs: GPUs are specifically designed for accelerating machine learning tasks, including matrix multiplications. They can significantly speed up the training process compared to CPUs. Custom op GPU kernel support: Since your model is dominated by custom C++ TensorFlow ops, implementing GPU kernel support for these ops will allow them to leverage the power of the GPU, resulting in a significant speedup. Cost-effective: Cloud GPUs are generally more cost-effective than Cloud TPUs, especially for smaller models. While Cloud TPUs are also powerful accelerators, they may not be the most cost-effective option for this scenario, especially if your model is not very large or complex. Additionally, implementing GPU kernel support for your custom ops is essential for achieving significant speedups on Cloud GPUs. Therefore, using Cloud GPUs with GPU kernel support for your custom ops is the best way to decrease the training time of your model while keeping costs low."
+  },
+  {
+   "id": "test_7_q17",
+   "source": "test 7",
+   "question": "You‘re training a model to predict housing prices based on an available dataset with real estate properties. Your plan is to train a fully connected neural net, and you‘ve discovered that the dataset contains latitude and longitude of the property. Real estate professionals have told you that the location of the property is highly influential on price, so you‘d like to engineer a feature that incorporates this physical dependency.What should you do?",
+   "options": [
+    "Provide latitude and longitude as input vectors to your neural net.",
+    "Create a numeric column from a feature cross of latitude and longitude.",
+    "Create a feature cross of latitude and longitude, bucketize at the minute level and use L1 regularization during optimization.",
+    "Create a feature cross of latitude and longitude, bucketize it at the minute level and use L2 regularization during optimization."
+   ],
+   "answer": [
+    "Create a feature cross of latitude and longitude, bucketize at the minute level and use L1 regularization during optimization."
+   ],
+   "explanation": "Correct Option C. Create a feature cross of latitude and longitude, bucketize at the minute level and use L1 regularization during optimization. Correct because feature engineering is required to capture the spatial dependency of housing prices. Simply passing raw latitude and longitude values does not help the model learn location influence effectively. By creating a feature cross of latitude and longitude and bucketizing at a fine granularity (minute level), you allow the neural net to learn localized effects. Using L1 regularization helps reduce overfitting by encouraging sparsity, which is important when dealing with many bucketized features. Incorrect Option A. Provide latitude and longitude as input vectors to your neural net. Incorrect because raw latitude and longitude values do not capture the nonlinear spatial relationships between property location and housing price. The model would struggle to learn meaningful patterns without engineered features. Option B. Create a numeric column from a feature cross of latitude and longitude. Incorrect because while a feature cross is useful, creating just a single numeric column does not provide enough granularity to capture localized effects. Bucketization is necessary to make the feature cross meaningful for geographic influence. Option D. Create a feature cross of latitude and longitude, bucketize it at the minute level and use L2 regularization during optimization. Incorrect because although feature crossing and bucketization are correct, L2 regularization penalizes large weights but does not enforce sparsity. For high‑dimensional bucketized features, L1 regularization is more effective in reducing irrelevant features and improving interpretability."
+  },
+  {
+   "id": "test_7_q19",
+   "source": "test 7",
+   "question": "You are building a model to make clothing recommendations. You know a user‘s fashion preference is likely to change over time, so you build a data pipeline to stream new data back to the model as it becomes available. How should you use this data to train the model?",
+   "options": [
+    "Continuously retrain the model on just the new data.",
+    "Continuously retrain the model on a combination of existing data and the new data.",
+    "Train on the existing data while using the new data as your test set.",
+    "Train on the new data while using the existing data as your test set."
+   ],
+   "answer": [
+    "Continuously retrain the model on a combination of existing data and the new data."
+   ],
+   "explanation": "Correct Option B. Continuously retrain the model on a combination of existing data and the new data because in Google Cloud’s recommended machine learning practices, retraining on both historical data and new streaming data ensures the model adapts to evolving user preferences while still retaining past knowledge. This approach prevents catastrophic forgetting (losing old patterns) and maintains a balanced, generalized model that can handle both long-term trends and recent changes. Incorrect Option A. Continuously retrain the model on just the new data because training only on new data risks forgetting historical patterns and reduces the model’s ability to generalize. It would bias recommendations toward recent behavior and ignore long-term preferences. Option C. Train on the existing data while using the new data as your test set because this treats new data only as validation, not as training input. Since user preferences evolve, excluding new data from training would make the model stale and unable to adapt. Option D. Train on the new data while using the existing data as your test set because this reverses the correct approach. Training only on new data ignores valuable historical context, and using old data as a test set does not reflect current user behavior. This would lead to poor recommendation accuracy."
+  },
+  {
+   "id": "test_7_q20",
+   "source": "test 7",
+   "question": "How can you get a neural network to learn about relationships between categories in a categorical feature?",
+   "options": [
+    "Create a multi-hot column",
+    "Create a one-hot column",
+    "Create a hash bucket",
+    "Create an embedding column"
+   ],
+   "answer": [
+    "Create an embedding column"
+   ],
+   "explanation": "Correct Option D. Create an embedding column Embeddings map categorical values into dense, low‑dimensional vectors. These vectors capture relationships and similarities between categories, allowing the neural network to learn patterns beyond simple distinct labels. This is the most effective method for teaching a model about relationships in categorical features. Incorrect Option A. Create a multi‑hot column Multi‑hot encoding represents multiple categories per instance but does not capture relationships between categories. It only indicates presence/absence, which is insufficient for learning deeper associations. Option B. Create a one‑hot column One‑hot encoding treats each category as independent with no relationship to others. While useful for simple categorical representation, it does not allow the model to learn similarities or relationships. Option C. Create a hash bucket Hash buckets reduce dimensionality for high cardinality features but still treat categories independently. They do not inherently capture relationships between categories."
+  },
+  {
+   "id": "test_7_q21",
+   "source": "test 7",
+   "question": "The CUSTOM tier for Cloud Machine Learning Engine allows you to specify the number of which types of cluster nodes?",
+   "options": [
+    "Workers",
+    "Masters, workers, and parameter servers",
+    "Workers and parameter servers",
+    "Parameter servers"
+   ],
+   "answer": [
+    "Workers and parameter servers"
+   ],
+   "explanation": "Correct Option C. Workers and parameter servers In the CUSTOM tier of Cloud Machine Learning Engine (AI Platform Training), you can configure the number of worker nodes and parameter servers. The master node is always provisioned automatically and cannot be customized. This flexibility allows tuning distributed training jobs for performance and scalability. Incorrect Option A. Workers While you can specify the number of workers, this option is incomplete because the CUSTOM tier also allows specifying parameter servers. Option B. Masters, workers, and parameter servers Incorrect because the master node count cannot be changed; it is always one. Only workers and parameter servers are configurable. Option D. Parameter servers Similar to Option A, this is incomplete. You can configure parameter servers, but the CUSTOM tier also requires specifying workers."
+  },
+  {
+   "id": "test_7_q35",
+   "source": "test 7",
+   "question": "You are building a model to predict whether or not it will rain on a given day. You have thousands of input features and want to see if you can improve training speed by removing some features while having a minimum effect on model accuracy. What can you do?",
+   "options": [
+    "Eliminate features that are highly correlated to the output labels.",
+    "Combine highly co-dependent features into one representative feature.",
+    "Instead of feeding in each feature individually, average their values in batches of 3.",
+    "Remove the features that have null values for more than 50% of the training records."
+   ],
+   "answer": [
+    "Combine highly co-dependent features into one representative feature."
+   ],
+   "explanation": "Vote for ‘B‘ combining features to createte a new feature is a step of “Feature construction“ or decomposing or splitting features to create new features. Ideally, PCA should be apply if we want to reduce the dimension. Removing those columns / features – where Data is miss > 50% (may improve the speed) – but will decrease the accuracy as well. So instead of dropping features where we have missing data, we need to impute something"
+  },
+  {
+   "id": "test_7_q38",
+   "source": "test 7",
+   "question": "You are creating a model to predict housing prices. Due to budget constraints, you must run it on a single resource-constrained virtual machine. Which learning algorithm should you use?",
+   "options": [
+    "Linear regression",
+    "Logistic classification",
+    "Recurrent neural network",
+    "Feedforward neural network"
+   ],
+   "answer": [
+    "Linear regression"
+   ],
+   "explanation": "correct answer -> Linear Regression Linear regression is a statistical method that allows to summarize and study relationships between two continuous (quantitative) variables: One variable, denoted X, is regarded as the independent variable. The other variable denoted y is regarded as the dependent variable. Linear regression uses one independent variable X to explain or predict the outcome of the dependent variable y. Whenever you are told to predict some future value of a process which is currently running, you can go with a regression algorithm. Refeerence: https://towardsdatascience.com/do-you-know-how-to-choose-the-right-machine-learning-algorithm-among-7-different-types-295d0b0c7f60"
+  },
+  {
+   "id": "test_8_q14",
+   "source": "test 8",
+   "question": "You work for a bank. You have a labelled dataset that contains information on already granted loan application and whether these applications have been defaulted. You have been asked to train a model to predict default rates for credit applicants.What should you do?",
+   "options": [
+    "Increase the size of the dataset by collecting additional data.",
+    "Train a linear regression to predict a credit default risk score.",
+    "Remove the bias from the data and collect applications that have been declined loans.",
+    "Match loan applicants with their social profiles to enable feature engineering."
+   ],
+   "answer": [
+    "Train a linear regression to predict a credit default risk score."
+   ],
+   "explanation": "The best course of action is B. Train a linear regression to predict a credit default risk score. Here’s why: Labelled Dataset for Classification: You have a labelled dataset where each loan application is marked as either “defaulted” or “not defaulted.” This is a classic binary classification problem. The goal is to predict the probability or likelihood of a new applicant defaulting. Linear Regression for Risk Score: While linear regression is typically used for predicting continuous values, it can be adapted for binary classification by predicting a probability or a risk score between 0 and 1. A threshold can then be applied to this score to classify applicants as “likely to default” or “not likely to default.” Let’s look at why the other options are less ideal as the initial step: A. Increase the size of the dataset by collecting additional data: While more data can often improve model performance, it’s not the immediate next step. You should first try to build a baseline model with the data you have to understand its predictive power and identify potential issues. Data collection can be time-consuming and expensive. C. Remove the bias from the data and collect applications that have been declined loans: Addressing bias in the data is crucial for building a fair and accurate model. However, immediately focusing on collecting declined loan applications might not be the most efficient first step. While having data on declined applications can be valuable (especially if you want to understand why applications were declined), your current labelled dataset on granted loans and their default status is directly relevant to the task at hand. You should analyze the existing data for potential biases first. D. Match loan applicants with their social profiles to enable feature engineering: Feature engineering can be a powerful way to improve model performance. However, it introduces complexity and potential privacy concerns. It’s generally better to start with the readily available features in your labelled dataset and build a baseline model before exploring more complex feature engineering techniques. Therefore, the most logical first step is to leverage your existing labelled data and train a suitable classification model, such as a linear regression adapted for predicting a risk score. This allows you to establish a baseline and understand the predictive power of your current data. Subsequent steps could involve addressing bias, exploring feature engineering, and potentially collecting more data if the initial model’s performance is not satisfactory. Given the prompt specifically asks what you should do, training a model with the existing data is the most direct action to address the request."
+  },
+  {
+   "id": "test_8_q29",
+   "source": "test 8",
+   "question": "You‘re working on a deep learning model to predict customer buying behavior on your ecommerce site. Your evaluation shows that the model is overfitting, and you want to improve its accuracy with new data. Which of the following actions should you take?",
+   "options": [
+    "Increase the size of the training dataset and remove some input features",
+    "Increase the size of the training dataset and add more input features",
+    "Decrease the size of the training dataset and add more input features",
+    "Decrease the size of the training dataset and remove some input features."
+   ],
+   "answer": [
+    "Increase the size of the training dataset and remove some input features"
+   ],
+   "explanation": "Ref: https://machinelearningmastery.com/impact-of-dataset-size-on-deep-learning-model-skill-and-performance-estimates/"
+  },
+  {
+   "id": "test_8_q34",
+   "source": "test 8",
+   "question": "If you want to create a machine learning model that predicts the price of a particular stock based on its recent price history, what type of estimator should you use?",
+   "options": [
+    "Unsupervised learning",
+    "Regressor",
+    "Classifier",
+    "Clustering estimator"
+   ],
+   "answer": [
+    "Regressor"
+   ],
+   "explanation": "Regression is the supervised learning task for modeling and predicting continuous, numeric variables. Examples include predicting real-estate prices, stock price movements, or student test scores. Classification is the supervised learning task for modeling and predicting categorical variables. Examples include predicting employee churn, email spam, financial fraud, or student letter grades. Clustering is an unsupervised learning task for finding natural groupings of observations (i.e. clusters) based on the inherent structure within your dataset. Examples include customer segmentation, grouping similar items in e-commerce, and social network analysis. Reference: https://elitedatascience.com/machine-learning-algorithms"
+  },
+  {
+   "id": "test_10_q12",
+   "source": "test 10",
+   "question": "What can be done to increase the training speed of a neural network model that is taking days to train?",
+   "options": [
+    "Should you subsample your test dataset?",
+    "Should you increase the number of layers in your neural network?",
+    "Should you increase the number of input features to your model?",
+    "Should you subsample your training dataset?"
+   ],
+   "answer": [
+    "Should you subsample your training dataset?"
+   ],
+   "explanation": "Subsampling the training dataset is a common technique to reduce the training time of a neural network model. By using a smaller portion of the dataset, the model can be trained faster, as it requires fewer iterations to reach computationally expensive to process. Subsampling the test dataset (option A) is not recommended, as this can lead to inaccurate performance measures and compromise the validity of the results. Increasing the number of input features (option C) or the number of layers in the neural network (option D) can also help to improve the performance of the model, but they are not directly related to the training speed. In fact, increasing the complexity of the model may increase the training time, as more computations are required."
+  },
+  {
+   "id": "test_13_q28",
+   "source": "test 13",
+   "question": "Scenario: You work for an airline and need to store weather data in a BigQuery table for input to a machine learning model. The model utilizes only the most recent 30 days of weather data to function effectively. To minimize costs and avoid storing unnecessary data, what steps should you take? What steps should you take to store weather data in a BigQuery table efficiently for the machine learning model that utilizes only the last 30 days of data?",
+   "options": [
+    "Create a BigQuery table where each record has an ingestion timestamp. Run a scheduled query to delete all the rows with an ingestion timestamp older than 30 days.",
+    "Create a BigQuery table partitioned by datetime value of the weather date. Set up partition expiration to 30 days.",
+    "Create a BigQuery table partitioned by ingestion time. Set up partition expiration to 30 days.",
+    "Create a BigQuery table with a datetime column for the day the weather data refers to. Run a scheduled query to delete rows with a datetime value older than 30 days."
+   ],
+   "answer": [
+    "Create a BigQuery table partitioned by datetime value of the weather date. Set up partition expiration to 30 days."
+   ],
+   "explanation": "Correct Option B. Create a BigQuery table partitioned by datetime value of the weather date. Set up partition expiration to 30 days. This is correct. Partitioning the table by the weather date ensures efficient querying, while setting a partition expiration of 30 days automatically removes older data. This approach minimizes storage costs and avoids manual cleanup, aligning perfectly with the requirement to only keep the last 30 days of data. Incorrect Option A. Create a BigQuery table where each record has an ingestion timestamp. Run a scheduled query to delete all the rows with an ingestion timestamp older than 30 days. Incorrect because while this works, it is inefficient. Scheduled queries add operational overhead and cost. Partition expiration is the recommended approach since it automates data lifecycle management. Option C. Create a BigQuery table partitioned by ingestion time. Set up partition expiration to 30 days. Incorrect because partitioning by ingestion time may not align with the actual weather date. If ingestion is delayed or batched, data older than 30 days could still be ingested later, leading to incorrect deletions or retention. Option D. Create a BigQuery table with a datetime column for the day the weather data refers to. Run a scheduled query to delete rows with a datetime value older than 30 days. Incorrect because, like Option A, this relies on scheduled queries for cleanup. While technically possible, it is less efficient and more costly compared to using native partition expiration."
+  },
+  {
+   "id": "test_13_q34",
+   "source": "test 13",
+   "question": "Scenario: In BigQuery, you are designing a data model to store retail transaction data. The tables sales_transaction_header and sales_transaction_line have a closely connected unchangeable relationship and are commonly combined during queries. How can you structure the sales_transaction_header and sales_transaction_line tables to enhance the efficiency of data analytics queries?",
+   "options": [
+    "Create a sales_transaction table that holds the sales_transaction_header information as rows and the sales_transaction_line rows as nested and repeated fields.",
+    "Create a sales_transaction table that holds the sales_transaction_header and sales_transaction_line information as rows, duplicating the sales_transaction_header data for each line.",
+    "Create a sales_transaction table that stores the sales_transaction_header and sales_transaction_line data as a JSON data type.",
+    "Create separate sales_transaction_header and sales_transaction_line tables and, when querying, specify the sales_transaction_line first in the WHERE clause."
+   ],
+   "answer": [
+    "Create a sales_transaction table that holds the sales_transaction_header information as rows and the sales_transaction_line rows as nested and repeated fields."
+   ],
+   "explanation": "A. Create a sales_transaction table that holds the sales_transaction_header information as rows and the sales_transaction_line rows as nested and repeated fields.– By creating a sales_transaction table with nested and repeated fields, you are denormalizing the data model by combining the header and line information into a single table. This approach is suitable for tables with a tightly coupled relationship like sales_transaction_header and sales_transaction_line.– Storing the line information as nested and repeated fields within the header table allows for easy retrieval of all related line data when querying the header, improving query performance.– Denormalizing the data model in this way can reduce the need for complex joins, which can enhance query performance for data analytics queries that frequently involve joining these two tables.Now, let‘s explain why the other options are incorrect:B. Create a sales_transaction table that holds the sales_transaction_header and sales_transaction_line information as rows, duplicating the sales_transaction_header data for each line.– This approach would lead to data redundancy and could result in increased storage requirements and potential data inconsistency issues. Duplicating the header data for each line can make the table less efficient for queries and maintenance.C. Create a sales_transaction table that stores the sales_transaction_header and sales_transaction_line data as a JSON data type.– Storing data as JSON can be flexible but might not be optimal for querying and joining operations in BigQuery. JSON data types can be harder to query efficiently compared to structured data, which can impact performance.D. Create separate sales_transaction_header and sales_transaction_line tables and, when querying, specify the sales_transaction_line first in the WHERE clause.– Keeping the tables separate and specifying the line table first in the WHERE clause may not necessarily improve query performance. It might still require complex joins and could lead to slower query execution compared to denormalizing the data into a single table with nested and repeated fields."
+  },
+  {
+   "id": "test_14_q9",
+   "source": "test 14",
+   "question": "Scenario: You are working on a new deep learning model that assesses a customer‘s probability of making a purchase on your ecommerce platform. Upon evaluating the model with the initial training data and new test data, you discover that it is overfitting the information. How can you enhance the model‘s accuracy in predicting new data?",
+   "options": [
+    "Increase the size of the training dataset, and increase the number of input features.",
+    "Increase the size of the training dataset, and decrease the number of input features.",
+    "Reduce the size of the training dataset, and increase the number of input features.",
+    "Reduce the size of the training dataset, and decrease the number of input features."
+   ],
+   "answer": [
+    "Increase the size of the training dataset, and decrease the number of input features."
+   ],
+   "explanation": "The correct answer is B. Increase the size of the training dataset, and decrease the number of input features.1. Increasing the size of the training dataset helps the model to generalize better by exposing it to more diverse examples, reducing the chances of overfitting.2. Decreasing the number of input features helps simplify the model, preventing it from memorizing noise in the data and focusing on the most important patterns and relationships.Why the other options are incorrect:A. Increasing the size of the training dataset while increasing the number of input features may not necessarily address the overfitting issue. Adding more features can increase the complexity of the model and exacerbate overfitting.C. Reducing the size of the training dataset while increasing the number of input features may lead to underfitting, where the model is too simplistic and fails to capture the underlying patterns in the data.D. Reducing both the size of the training dataset and the number of input features can further limit the model‘s ability to learn complex patterns and relationships in the data, resulting in poor predictive performance."
+  },
+  {
+   "id": "test_14_q10",
+   "source": "test 14",
+   "question": "Scenario: You are developing a chatbot for an e-commerce business to enhance their customer service by handling text and voice queries. You prefer a low-code or no-code solution that allows easy training of the chatbot to generate responses based on keywords. What steps should you take to achieve this goal?",
+   "options": [
+    "Use the Cloud Speech-to-Text API to build a Python application in App Engine.",
+    "Use the Cloud Speech-to-Text API to build a Python application in a Compute Engine instance.",
+    "Use Dialogflow for simple queries and the Cloud Speech-to-Text API for complex queries.",
+    "Use Dialogflow to implement the chatbot, defining the intents based on the most common queries collected."
+   ],
+   "answer": [
+    "Use Dialogflow to implement the chatbot, defining the intents based on the most common queries collected."
+   ],
+   "explanation": "The correct answer is D. Use Dialogflow to implement the chatbot, defining the intents based on the most common queries collected.– Dialogflow is a platform that allows you to easily build conversational interfaces such as chatbots and voice applications. It provides various features for natural language processing and understanding, making it suitable for responding to both text and voice inquiries.– By using Dialogflow, you can define intents based on the most common queries collected from customers. Intents represent the different ways users can interact with your chatbot and the corresponding responses the chatbot should provide.– Dialogflow also allows you to train the chatbot by providing examples of user queries and their corresponding intents, making it easy to customize the responses based on keywords or phrases.Now, let‘s discuss why the other options are incorrect:A. Use the Cloud Speech-to-Text API to build a Python application in App Engine.– This option focuses on using the Cloud Speech-to-Text API for converting speech to text and building a Python application in App Engine. While this approach can handle voice inquiries, it does not provide the conversational capabilities and intent-based responses needed for a chatbot.B. Use the Cloud Speech-to-Text API to build a Python application in a Compute Engine instance.– Similar to option A, this approach involves using the Cloud Speech-to-Text API for speech-to-text conversion and building a Python application in a Compute Engine instance. Again, this option lacks the conversational capabilities and intent-based responses required for a chatbot.C. Use Dialogflow for simple queries and the Cloud Speech-to-Text API for complex queries.– This option suggests using Dialogflow for simple queries and the Cloud Speech-to-Text API for complex queries. While this may seem like a viable solution, it introduces unnecessary complexity by using two separate platforms for handling different types of queries. Dialogflow is capable of handling both simple and complex queries, making this option less efficient compared to using Dialogflow for all inquiries."
+  },
+  {
+   "id": "test_14_q20",
+   "source": "test 14",
+   "question": "Scenario: A TensorFlow machine learning model running on Compute Engine virtual machines (n2-standard-32) requires two days to finish training. The model includes custom TensorFlow operations that need to utilize a CPU. How can you effectively decrease the training time at a reasonable cost?",
+   "options": [
+    "Change the VM type to n2-highmem-32.",
+    "Change the VM type to e2-standard-32.",
+    "Train the model using a VM with a GPU hardware accelerator.",
+    "Train the model using a VM with a TPU hardware accelerator."
+   ],
+   "answer": [
+    "Train the model using a VM with a GPU hardware accelerator."
+   ],
+   "explanation": "The correct answer is C. Train the model using a VM with a GPU hardware accelerator.Using a VM with a GPU hardware accelerator can significantly reduce the training time of a TensorFlow machine learning model that has custom TensorFlow operations running partially on a CPU. GPUs are well-suited for parallel processing tasks like machine learning, as they can handle a large number of computations simultaneously. This parallel processing capability can greatly speed up the training process compared to using just a CPU.Now, let‘s explain why the other options are incorrect:A. Change the VM type to n2-highmem-32:Changing the VM type to n2-highmem-32, which offers more memory, may not have a significant impact on reducing the training time of the model. The bottleneck in this scenario is likely the processing power rather than the memory capacity.B. Change the VM type to e2-standard-32:Changing the VM type to e2-standard-32 may not have a significant impact on reducing the training time either. The key factor in reducing training time for machine learning models is having access to hardware accelerators like GPUs, which can handle the computations more efficiently.D. Train the model using a VM with a TPU hardware accelerator:While TPUs (Tensor Processing Units) are designed specifically for machine learning workloads and can offer high performance for certain types of models, they are optimized for TensorFlow workloads. Since the model in this scenario has custom TensorFlow operations that must run partially on a CPU, using a TPU may not be the most effective solution. Additionally, training with TPUs may require modifications to the TensorFlow code to take full advantage of the TPU architecture."
+  },
+  {
+   "id": "test_14_q57",
+   "source": "test 14",
+   "question": "Scenario: A model is being developed to pinpoint the factors influencing sales conversions for customers. Data processing has been completed, and now the focus is on advancing through the model development lifecycle. What is the next step in the model development process?",
+   "options": [
+    "Use your model to run predictions on fresh customer input data.",
+    "Monitor your model performance, and make any adjustments needed.",
+    "Delineate what data will be used for testing and what will be used for training the model.",
+    "Test and evaluate your model on your curated data to determine how well the model performs."
+   ],
+   "answer": [
+    "Delineate what data will be used for testing and what will be used for training the model."
+   ],
+   "explanation": "C. Delineate what data will be used for testing and what will be used for training the model.The correct next step in the model development lifecycle is to delineate what data will be used for testing and what will be used for training the model. This step is crucial in order to assess the performance of the model accurately. By splitting the data into training and testing sets, you can train the model on one set and evaluate its performance on another set to ensure that the model generalizes well to new, unseen data.Why the other options are incorrect:A. Using your model to run predictions on fresh customer input data:While running predictions on fresh customer input data is an important step in deploying the model in a real-world scenario, it is not the immediate next step in the model development lifecycle. Before making predictions on new data, it is essential to evaluate the model‘s performance on a separate testing dataset.B. Monitoring your model performance, and making any adjustments needed:Monitoring model performance and making adjustments is an ongoing process in the model development lifecycle. However, before monitoring and adjusting the model, it is important to first test and evaluate the model on curated data to establish a baseline performance.D. Testing and evaluating your model on your curated data to determine how well the model performs:While testing and evaluating the model on curated data is an essential step in the model development lifecycle, it is not the immediate next step. Before testing and evaluating the model, it is crucial to delineate the data for training and testing to ensure an unbiased assessment of the model‘s performance."
+  },
+  {
+   "id": "test_15_q10",
+   "source": "test 15",
+   "question": "Scenario: To facilitate analysis by the data science team, a data pipeline needs to be developed to copy time-series transaction data into BigQuery. The dataset consists of thousands of transactions updated hourly with new statuses. The initial dataset size is 1.5 PB, expanding by 3 TB daily. The structured data will be used for constructing machine learning models. Which two strategies should be implemented to optimize performance and usability for the data science team? (Select two.)",
+   "options": [
+    "Denormalize the data as must as possible.",
+    "Preserve the structure of the data as much as possible.",
+    "Use BigQuery UPDATE to further reduce the size of the dataset.",
+    "Develop a data pipeline where status updates are appended to BigQuery instead of updated.",
+    "Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file. Use BigQuery‘s support for external data sources to query."
+   ],
+   "answer": [
+    "Denormalize the data as must as possible.",
+    "Develop a data pipeline where status updates are appended to BigQuery instead of updated."
+   ],
+   "explanation": "The correct strategies to adopt in this scenario are:A. Denormalize the data as much as possible.D. Develop a data pipeline where status updates are appended to BigQuery instead of updated.A. Denormalize the data as much as possible:– Denormalizing the data involves reducing the number of joins required to retrieve data and storing redundant data to improve query performance.– In a time-series transaction data scenario, denormalization can help optimize queries and improve the performance of machine learning models built by the data science team.– By denormalizing the data, you can reduce the complexity of queries and make it easier for the data science team to analyze the data efficiently.D. Develop a data pipeline where status updates are appended to BigQuery instead of updated:– In a scenario where thousands of transactions are updated with a new status every hour, appending updates to BigQuery instead of updating them directly can be more efficient.– Appending updates allows you to maintain a historical record of changes, which can be valuable for analysis and tracking trends over time.– This approach also aligns well with the growth pattern of the dataset (3 TB per day), as it minimizes the need to rewrite large portions of data with each update.Now, let‘s explain why the other options are incorrect:B. Preserve the structure of the data as much as possible:– Preserving the structure of the data may not be the most optimal strategy for maximizing performance and usability in this scenario.– Since the data is heavily structured, denormalizing it can help improve query performance and simplify data analysis for the data science team.C. Use BigQuery UPDATE to further reduce the size of the dataset:– Using BigQuery UPDATE to reduce the size of the dataset may not be the best approach, especially in a scenario where new status updates are added frequently.– Updating existing records can be resource-intensive and may not align well with the requirement to query the data efficiently for analysis.E. Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file. Use BigQuery‘s support for external data sources to query:– Storing daily snapshots of data in Cloud Storage and using external data sources in BigQuery for querying may introduce additional complexity and overhead.– This approach may not be as efficient as directly appending status updates to BigQuery, especially in a scenario where real-time analysis and machine learning models are critical.In conclusion, denormalizing the data and developing a data pipeline to append status updates to BigQuery are the most suitable strategies for maximizing performance and usability in this specific data pipeline scenario."
+  },
+  {
+   "id": "test_15_q13",
+   "source": "test 15",
+   "question": "Scenario: You work for a manufacturing company that sources up to 750 different components, each from a different supplier. You‘ve collected a labeled dataset that has on average 1000 examples for each unique component. Your team wants to implement an app to help warehouse workers recognize incoming components based on a photo of the component. What steps should you take to implement the first working version of this app (as Proof-Of-Concept) within a few working days?",
+   "options": [
+    "Use Cloud Vision AutoML with the existing dataset.",
+    "Use Cloud Vision AutoML, but reduce your dataset twice.",
+    "Use Cloud Vision API by providing custom labels as recognition hints.",
+    "Train your own image recognition model leveraging transfer learning techniques."
+   ],
+   "answer": [
+    "Use Cloud Vision AutoML with the existing dataset."
+   ],
+   "explanation": "A. Use Cloud Vision AutoML with the existing dataset.Using Cloud Vision AutoML with the existing dataset is the most suitable option in this scenario for the following reasons:1. AutoML Vision is a cloud-based tool that allows you to train custom machine learning models for image recognition without requiring deep knowledge of machine learning algorithms. This makes it easier and faster to develop an image recognition model.2. Since you already have a labeled dataset with an average of 1000 examples for each unique component, you have sufficient data to train a model using AutoML Vision.3. Implementing this solution will enable you to quickly create a working version of the app as a Proof-Of-Concept within a few working days, which aligns with your team‘s goal.Now, let‘s explain why the other options are incorrect:B. Use Cloud Vision AutoML, but reduce your dataset twice.Reducing the dataset size may result in loss of valuable information and could lead to a less accurate model. In this case, since you have a sufficient dataset, there is no need to reduce it.C. Use Cloud Vision API by providing custom labels as recognition hints.Cloud Vision API is a pre-trained model that may not be able to accurately recognize the specific components you are dealing with. Providing custom labels as hints may not be as effective as training a custom model with your dataset.D. Train your own image recognition model leveraging transfer learning techniques.While transfer learning can be beneficial for training image recognition models, it typically requires more time, expertise, and resources compared to using a tool like AutoML Vision. Given the time constraint and the availability of a labeled dataset, training your own model from scratch using transfer learning may not be the most efficient option for a quick Proof-Of-Concept implementation."
+  },
+  {
+   "id": "test_15_q16",
+   "source": "test 15",
+   "question": "Scenario: As a retailer, you aim to connect your online sales functions with various in-home assistants like Google Home. Your goal is to understand customer voice commands and send orders to the backend systems. What solutions would be most suitable for achieving this integration with different in-home assistants like Google Home?",
+   "options": [
+    "Speech-to-Text API",
+    "Cloud Natural Language API",
+    "Dialogflow Enterprise Edition",
+    "AutoML Natural Language"
+   ],
+   "answer": [
+    "Dialogflow Enterprise Edition"
+   ],
+   "explanation": "C. Dialogflow Enterprise Edition is the correct solution for integrating online sales capabilities with in-home assistants like Google Home.– Dialogflow is a natural language understanding platform that makes it easy to design and integrate a conversational user interface into mobile apps, web applications, devices, bots, and interactive voice response systems.– Dialogflow can interpret customer voice commands and process them to issue orders to backend systems.– The Enterprise Edition of Dialogflow provides advanced features and capabilities suitable for integrating with various in-home assistants and managing complex conversational interactions.Now, let‘s explain why the other options are incorrect:A. Speech-to-Text API:– The Speech-to-Text API is designed to convert spoken language into text. While this API can help in converting voice commands into text, it does not provide the capabilities needed to interpret and process the natural language commands for order processing.B. Cloud Natural Language API:– The Cloud Natural Language API provides powerful text analysis capabilities, such as sentiment analysis and entity recognition. However, it is not specifically designed for interpreting voice commands and processing orders like Dialogflow.D. AutoML Natural Language:– AutoML Natural Language is a tool for training custom machine learning models for natural language processing tasks. While it can be used to build custom models for specific language processing needs, it does not offer out-of-the-box conversational interface capabilities like Dialogflow for integrating with in-home assistants."
+  },
+  {
+   "id": "test_15_q25",
+   "source": "test 15",
+   "question": "Scenario: Working on a niche product in the image recognition domain, your team has developed a model heavily reliant on custom C++ TensorFlow ops for bulky matrix multiplications within the main training loop. Training the model currently takes several days, and you aim to reduce this time significantly while maintaining cost-effectiveness by leveraging an accelerator on Google Cloud. What steps should you take to achieve a significant reduction in training time and cost-effectiveness by utilizing an accelerator on Google Cloud for your image recognition model?",
+   "options": [
+    "Use Cloud TPUs without any additional adjustment to your code.",
+    "Use Cloud TPUs after implementing GPU kernel support for your customs ops.",
+    "Use Cloud GPUs after implementing GPU kernel support for your customs ops.",
+    "Stay on CPUs, and increase the size of the cluster you‘re training your model on."
+   ],
+   "answer": [
+    "Use Cloud GPUs after implementing GPU kernel support for your customs ops."
+   ],
+   "explanation": "“Use Cloud TPUs without any additional adjustment to your code.” Incorrect. TPU requires kernel support for your custom ops; you cannot just switch to TPUs without modification. “Use Cloud TPUs after implementing GPU kernel support for your customs ops.” Incorrect. TPU kernel support is different from GPU kernel support. GPU kernels won’t run on TPU. TPU requires TPU kernel implementations (often in XLA). “Use Cloud GPUs after implementing GPU kernel support for your customs ops.” Correct. To leverage GPUs effectively, you must implement GPU kernels for your custom ops so the workload offloads to GPU and speeds up training. “Stay on CPUs, and increase the size of the cluster you’re training your model on.” Incorrect / least efficient. Scaling CPUs may reduce time but not cost-effective and slower than using accelerators."
+  },
+  {
+   "id": "test_15_q28",
+   "source": "test 15",
+   "question": "Scenario: Working on a regression problem in the natural language processing domain, you have 100M labeled examples in your dataset. The data has been randomly shuffled and split into train and test samples in a 90/10 ratio. After training the neural network and evaluating the model on the test set, you notice that the root-mean-squared error (RMSE) of the model is twice as high on the train set as on the test set. How can you enhance the model‘s performance in this situation?",
+   "options": [
+    "Increase the share of the test sample in the train-test split.",
+    "Try to collect more data and increase the size of your dataset.",
+    "Try out regularization techniques (e.g., dropout of batch normalization) to avoid overfitting.",
+    "Increase the complexity of your model by, e.g., introducing an additional layer or increase sizing the size of vocabularies or n-grams used."
+   ],
+   "answer": [
+    "Increase the complexity of your model by, e.g., introducing an additional layer or increase sizing the size of vocabularies or n-grams used."
+   ],
+   "explanation": "Correct Option D. Increase the complexity of your model by, e.g., introducing an additional layer or increasing the size of vocabularies or n‑grams used. Reasoning: The RMSE being higher on the training set than on the test set indicates underfitting. The model is too simple to capture the complexity of the training data. To address underfitting, you need to increase model capacity (e.g., more layers, larger vocabularies, richer features). This allows the model to better learn patterns in the training data, reducing training error and improving overall performance. Incorrect Option A. Increase the share of the test sample in the train‑test split. Incorrect because changing the train/test ratio does not solve underfitting. It only alters evaluation size and does not improve model learning capacity. Option B. Try to collect more data and increase the size of your dataset. Incorrect because you already have 100M labeled examples, which is more than sufficient. The issue is not data scarcity but model complexity. Option C. Try out regularization techniques (e.g., dropout or batch normalization) to avoid overfitting. Incorrect because the problem is underfitting, not overfitting. Regularization would further restrict the model’s learning capacity, making the problem worse."
+  },
+  {
+   "id": "test_15_q37",
+   "source": "test 15",
+   "question": "Scenario: You are developing a linear regression model in BigQuery ML to forecast the probability of a customer buying your company‘s products. The model relies on a city name variable as a significant predictive factor. To effectively train and deploy the model, the data needs to be structured into columns. How can you organize your data with minimal coding effort while retaining the essential predictive variables for the model?",
+   "options": [
+    "Create a new view with BigQuery that does not include a column with city information.",
+    "Use SQL in BigQuery to transform the state column using a one-hot encoding method, and make each city a column with binary values.",
+    "Use TensorFlow to create a categorical variable with a vocabulary list. Create the vocabulary file and upload that as part of your model to BigQuery ML.",
+    "Use Cloud Data Fusion to assign each city to a region that is labeled as 1, 2, 3, 4, or 5, and then use that number to represent the city in the model."
+   ],
+   "answer": [
+    "Use SQL in BigQuery to transform the state column using a one-hot encoding method, and make each city a column with binary values."
+   ],
+   "explanation": "The correct answer is B. Use SQL in BigQuery to transform the state column using a one-hot encoding method and make each city a column with binary values.– One-hot encoding is a common technique used in machine learning to convert categorical data into a format that can be provided to machine learning algorithms. In this case, converting the city names into binary columns will allow the linear regression model to effectively use the city information as a predictive component.– By transforming the state column using one-hot encoding, each city will have its own column with binary values (0 or 1) indicating whether the customer is associated with that city or not. This approach maintains the predictive variables and prepares the data for training and serving the model in BigQuery ML.Why the other options are incorrect:A. Creating a new view with BigQuery that does not include a column with city information would result in losing important predictive information that could be valuable for the model.C. Using TensorFlow to create a categorical variable with a vocabulary list and uploading it as part of the model in BigQuery ML is unnecessary and overly complex for this scenario. One-hot encoding can be done directly in BigQuery using SQL.D. Using Cloud Data Fusion to assign each city to a region labeled as 1, 2, 3, 4, or 5 and representing the city with a numerical value may not capture the unique characteristics of each city effectively, potentially leading to a loss of predictive power in the model."
+  },
+  {
+   "id": "test_15_q43",
+   "source": "test 15",
+   "question": "Scenario: Working at a large real estate firm, you are getting ready to analyze 6 TB of home sales data using SQL to transform the data and BigQuery ML to build a machine learning model. The goal is to use this model for predictions on a raw dataset that has not been transformed. What steps should you take in setting up your workflow to avoid skew at the time of prediction?",
+   "options": [
+    "When creating your model, use BigQuery‘s TRANSFORM clause to define preprocessing steps. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.",
+    "When creating your model, use BigQuery‘s TRANSFORM clause to define preprocessing steps. Before requesting predictions, use a saved query to transform your raw input data, and then use ML.EVALUATE.",
+    "Use a BigQuery view to define your preprocessing logic. When creating your model, use the view as your model training data. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.",
+    "Preprocess all data using Dataflow. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any further transformations on the input data."
+   ],
+   "answer": [
+    "When creating your model, use BigQuery‘s TRANSFORM clause to define preprocessing steps. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data."
+   ],
+   "explanation": "The correct answer is A. When creating your model, use BigQuery‘s TRANSFORM clause to define preprocessing steps. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.– Using BigQuery‘s TRANSFORM clause when creating the model allows you to define preprocessing steps on the training data. This ensures that the model is trained on preprocessed data, which helps prevent skew at prediction time.– By not specifying any transformations on the raw input data during prediction with ML.EVALUATE, you ensure that the same preprocessing steps applied during training are not applied again during prediction. This helps maintain consistency and prevents skew in the predictions.Now, let‘s explain why the other options are incorrect:B. When creating your model, use BigQuery‘s TRANSFORM clause to define preprocessing steps. Before requesting predictions, use a saved query to transform your raw input data, and then use ML.EVALUATE.– This option involves manually transforming the raw input data before requesting predictions. This manual step introduces the risk of inconsistency between the preprocessing steps applied during training and prediction, potentially leading to skew in the predictions.C. Use a BigQuery view to define your preprocessing logic. When creating your model, use the view as your model training data. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.– While using a BigQuery view to define preprocessing logic can be helpful for organizing and reusing preprocessing steps, it does not ensure that the model is trained on preprocessed data. Additionally, not specifying any transformations on the raw input data during prediction may lead to inconsistencies and skew.D. Preprocess all data using Dataflow. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any further transformations on the input data.– Preprocessing all data using Dataflow can be a valid approach, but the key issue with this option is that it does not mention using BigQuery‘s TRANSFORM clause when creating the model. Without defining preprocessing steps in BigQuery, there is a risk of skew in the predictions due to inconsistencies between training and prediction data processing."
+  },
+  {
+   "id": "test_16_q24",
+   "source": "test 16",
+   "question": "Scenario: Your team is currently tackling a binary classification problem. You have utilized a support vector machine (SVM) classifier with default parameters and achieved an area under the Curve (AUC) of 0.87 on the validation set. To enhance the AUC of the model, what steps should you take next?",
+   "options": [
+    "Perform hyperparameter tuning",
+    "Train a classifier with deep neural networks, because neural networks would always beat SVMs",
+    "Deploy the model and measure the real-world AUC; it‘s always higher because of generalization",
+    "Scale predictions you get out of the model (tune a scaling factor as a hyperparameter) in order to get the highest AUC"
+   ],
+   "answer": [
+    "Perform hyperparameter tuning"
+   ],
+   "explanation": "The most impactful step to enhance the AUC of the SVM model is: Perform hyperparameter tuning Explanation: Hyperparameter Tuning: SVMs have several crucial hyperparameters that significantly influence their performance. These include: C: The penalty parameter for misclassification. Kernel: The type of kernel function (linear, RBF, polynomial, etc.). Gamma: Kernel coefficient for ‘rbf’, ‘poly’, and ‘sigmoid’. Degree: Degree for ‘poly’ kernel. By systematically exploring different combinations of these hyperparameters, you can find the optimal settings that maximize the model’s AUC on the validation set. Techniques like grid search, random search, or Bayesian optimization can be used for efficient hyperparameter tuning. Why other options are less suitable: Train a classifier with deep neural networks: While deep neural networks can achieve excellent results in many cases, they are not guaranteed to outperform SVMs. They often require more data and computational resources to train effectively. Deploy the model and measure the real-world AUC: Real-world performance might differ from validation set performance, but deploying the model without further optimization is not the best approach to improve AUC. Scale predictions: Scaling predictions might help in specific cases, but it’s not a general strategy for improving model performance and is unlikely to significantly impact AUC. By carefully tuning the SVM’s hyperparameters, you can likely achieve a substantial improvement in its AUC and overall performance."
+  },
+  {
+   "id": "test_16_q33",
+   "source": "test 16",
+   "question": "Scenario: You work for a shipping company that uses distribution centers with delivery lines to route packages. The company plans to install cameras on the lines to identify and monitor any visual damage to packages during transit. Which solution should you select to automate the detection of damaged packages and alert for human inspection in real time while the packages are en route?",
+   "options": [
+    "Use BigQuery machine learning to be able to train the model at scale, so you can analyze the packages in batches.",
+    "Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications.",
+    "Use the Cloud Vision API to detect for damage, and raise an alert through Cloud Functions. Integrate the package tracking applications with this function.",
+    "Use TensorFlow to create a model that is trained on your corpus of images. Create a Python notebook in Cloud Datalab that uses this model so you can analyze for damaged packages."
+   ],
+   "answer": [
+    "Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications."
+   ],
+   "explanation": "The correct solution for this scenario is option B: Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications.– Training an AutoML model on the corpus of images allows for the creation of a custom machine learning model specifically tailored to detect and track visual damage to packages. AutoML (Automated Machine Learning) simplifies the machine learning model creation process by automating tasks such as feature engineering, model selection, and hyperparameter tuning, making it easier and faster to build an accurate model.– Building an API around the trained AutoML model enables seamless integration with the package tracking applications, allowing for real-time automated detection of damaged packages while they are in transit. This integration ensures that any flagged damaged packages can be promptly reviewed by human operators.Why the other options are incorrect:– Option A suggests using BigQuery machine learning to train the model at scale for analyzing packages in batches. While BigQuery ML can be useful for analyzing large datasets, it may not be the most suitable tool for real-time detection and tracking of damaged packages during transit.– Option C recommends using the Cloud Vision API to detect damage and raise an alert through Cloud Functions. While Cloud Vision API is capable of detecting image content, it may not provide the level of customization and accuracy needed for detecting specific types of damage to packages.– Option D proposes using TensorFlow to create a model trained on the corpus of images and analyzing for damaged packages using a Python notebook in Cloud Datalab. While TensorFlow is a powerful deep learning framework, it may require more manual effort and time for model creation and integration compared to using AutoML, which automates much of the machine learning process."
+  },
+  {
+   "id": "test_16_q35",
+   "source": "test 16",
+   "question": "Scenario: You work for an advertising company and have developed a Spark ML model to predict click-through rates for advertisement blocks. Your company is migrating to Google Cloud from your on-premises data center, which is closing soon. The data will be migrated to BigQuery, including the data used for training your models. You need to quickly migrate your existing training pipelines to Google Cloud to continue periodic retraining of the Spark ML models. What steps should you take to migrate your existing training pipelines to Google Cloud for retraining the Spark ML models periodically?",
+   "options": [
+    "Use Vertex AI for training existing Spark ML models",
+    "Rewrite your models on TensorFlow, and start using Vertex AI",
+    "Use Dataproc for training existing Spark ML models, but start reading data directly from BigQuery",
+    "Spin up a Spark cluster on Compute Engine, and train Spark ML models on the data exported from BigQuery"
+   ],
+   "answer": [
+    "Use Dataproc for training existing Spark ML models, but start reading data directly from BigQuery"
+   ],
+   "explanation": "The correct answer is C. Use Dataproc for training existing Spark ML models, but start reading data directly from BigQuery.1. Using Dataproc: Dataproc is a managed Spark and Hadoop service on Google Cloud that allows you to easily run existing Spark ML pipelines without significant changes. This option ensures a smooth transition for your existing training pipelines.2. Reading data directly from BigQuery: Since your data will be migrated to BigQuery, it is efficient to read the data directly from BigQuery for training your Spark ML models. This approach eliminates the need to export data to other storage solutions, saving time and resources.Now, let‘s explain why the other options are incorrect:A. Using Vertex AI for training existing Spark ML models: Vertex AI is a machine learning platform that is more suitable for training models using TensorFlow and other Google Cloud-native tools. It is not the ideal solution for migrating and training existing Spark ML models.B. Rewriting your models on TensorFlow and using Vertex AI: This option suggests a significant overhaul of your existing Spark ML models by rewriting them in TensorFlow, which might require a substantial amount of time and effort. It is not the most efficient solution for a rapid lift-and-shift migration.D. Spinning up a Spark cluster on Compute Engine and training on data exported from BigQuery: This option involves unnecessary steps of exporting data from BigQuery to another storage solution before training the models. It adds complexity to the process and may not be the most efficient approach for your scenario."
+  },
+  {
+   "id": "test_16_q36",
+   "source": "test 16",
+   "question": "Scenario: You work for a global shipping company and aim to train a model on 40 TB of data to predict potential delivery delays caused by ships in different regions. The model will consider various attributes gathered from diverse sources, including telemetry data in GeoJSON format updated hourly from each ship. Which storage solution with native capabilities for prediction and geospatial processing should be selected for monitoring and identifying ships likely to cause delays within specific regions?",
+   "options": [
+    "BigQuery",
+    "Cloud Bigtable",
+    "Cloud Datastore",
+    "Cloud SQL for PostgreSQL"
+   ],
+   "answer": [
+    "BigQuery"
+   ],
+   "explanation": "A. BigQuery is the correct answer for this scenario.BigQuery is a fully managed, serverless, and highly scalable data warehouse that is suitable for analyzing large datasets using SQL queries. It has native functionality for prediction and geospatial processing, making it a suitable choice for training a model on a large amount of data to predict which ships are likely to cause delivery delays in each geographic region. BigQuery can handle large amounts of data efficiently and is well-suited for analytical workloads involving multiple attributes collected from various sources.Now, let‘s explain why the other options are incorrect:B. Cloud Bigtable: Cloud Bigtable is a NoSQL database service designed for large analytical and operational workloads. While it is good for storing and retrieving large amounts of data quickly, it does not have native functionality for prediction or geospatial processing. It is more suitable for high-throughput, low-latency applications rather than predictive modeling with geospatial analysis.C. Cloud Datastore: Cloud Datastore is a NoSQL document database for web and mobile applications. It is designed for storing and serving structured data for web applications, but it does not have native support for prediction or geospatial processing. It is more suitable for web application data storage rather than advanced analytics and machine learning tasks.D. Cloud SQL for PostgreSQL: Cloud SQL is a fully managed relational database service that supports multiple database engines, including PostgreSQL. While Cloud SQL for PostgreSQL is suitable for transactional workloads and relational data storage, it may not be the best choice for storing and processing large amounts of data for predictive modeling and geospatial analysis. It is more geared towards traditional relational database use cases rather than big data analytics and machine learning tasks."
+  }
+ ]
+}

@@ -1,0 +1,267 @@
+{
+ "topic": "3.3 Using a data lake",
+ "slug": "3-3-using-a-data-lake",
+ "question_count": 16,
+ "questions": [
+  {
+   "id": "test_1_q7",
+   "source": "test 1",
+   "question": "You are in the process of creating lifecycle policies to manage objects stored in Cloud storage. Which of the following are lifecycle conditions you can use in your policies? (Choose 3)",
+   "options": [
+    "File size",
+    "Age",
+    "Is Live",
+    "Matches Storage Class",
+    "File type"
+   ],
+   "answer": [
+    "Age",
+    "Is Live",
+    "Matches Storage Class"
+   ],
+   "explanation": "The correct answers are age, matches storage class, and is live. File type and file size are not conditions available in lifecycle management policies. See https://cloud.google.com/storage/docs/lifecycle",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_10_q43",
+    "test_12_q19"
+   ]
+  },
+  {
+   "id": "test_1_q43",
+   "source": "test 1",
+   "question": "A new workload has been deployed to Cloud Dataproc, which is configured with an autoscaling policy. You are noticing a FetchFailedException is occurring intermittently. What would be the most likely cause of this problem?",
+   "options": [
+    "The autoscaling policy is scaling down and shuffle data is lost when a node is decommissioned.",
+    "You are using a GCS bucket with improper access controls.",
+    "The autoscaling policy is adding nodes too fast and data is being dropped.",
+    "You are using Google Cloud Storage instead of local storage for persistent storage."
+   ],
+   "answer": [
+    "The autoscaling policy is scaling down and shuffle data is lost when a node is decommissioned."
+   ],
+   "explanation": "The FetchFailedException can occur when shuffle data is lost when a node is decommissioned. The autopolicy should be configured based on the longest running job in the cluster. Adding nodes will not cause a loss of data. Cloud Storage is the preferred persistent storage method for Dataproc clusters. While FetchFailedException can be caused by network issues, that is not likely to be a problem when using Cloud Storage for a Cloud Dataproc cluster. If the storage bucket had improper access controls then errors would occur consistently, not intermittently. See https://cloud.google.com/blog/topics/developers-practitioners/dataproc-best-practices-guide",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_12_q12",
+    "test_16_q18"
+   ]
+  },
+  {
+   "id": "test_2_q18",
+   "source": "test 2",
+   "question": "You are uploading several hundred files to Google Cloud using gsutil rsynch. The set of files fails to fully upload. You‘d rather not reload files that were successfully uploaded. What command would you use to resume the rsynch operation?",
+   "options": [
+    "The same command that was used initially. Gsutil rsynch will automatically resume.",
+    "The gsutil rsynch resume command",
+    "The same command that was used initially and the --resume parameter.",
+    "The same command that was used initially and the --upload parameter."
+   ],
+   "answer": [
+    "The same command that was used initially. Gsutil rsynch will automatically resume."
+   ],
+   "explanation": "The correct answer is: A. The same command that was used initially. Gsutil rsynch will automatically resume. When using gsutil rsynch to upload files to Google Cloud Storage, it automatically resumes failed uploads. This means that if the operation fails, you can simply run the same command again, and it will continue from where it left off. The other options are incorrect: B. The gsutil rsynch resume command: There is no specific resume command for gsutil rsynch. It automatically resumes failed uploads. C. The same command that was used initially and the –resume parameter: There is no --resume parameter for gsutil rsynch. It automatically resumes failed uploads. D. The same command that was used initially and the –upload parameter: The --upload parameter is not relevant in this context. It is used to specify the source directory or bucket for the upload.",
+   "also_appears_in": [
+    "test_11_q42",
+    "test_12_q25"
+   ]
+  },
+  {
+   "id": "test_3_q23",
+   "source": "test 3",
+   "question": "How can query performance be improved in BigQuery for analyzing geospatial trends in a package-tracking data table with ingest-date partitioning, originally sent to an Apache Kafka stream?",
+   "options": [
+    "Use clustering in BigQuery on the ingest date column",
+    "Use clustering in BigQuery on the package-tracking ID column.",
+    "Use external data source by tiering older data onto Cloud Storage files and creating a new table",
+    "Re-create the table using data partitioning on the package delivery date."
+   ],
+   "answer": [
+    "Use clustering in BigQuery on the package-tracking ID column."
+   ],
+   "explanation": "Correct Option B. Use clustering in BigQuery on the package‑tracking ID column Correct. Clustering improves query performance by organizing data based on frequently filtered or grouped columns. Since geospatial trend analysis is likely performed per package‑tracking ID, clustering on this column reduces scan costs and speeds up queries. Incorrect Option A. Clustering on ingest date column Incorrect. The table is already partitioned by ingest date. Clustering on the same column adds no benefit and does not improve query performance. Option C. Tiering older data to Cloud Storage and creating a new table Incorrect. External tables in Cloud Storage are slower to query compared to native BigQuery storage. This approach reduces performance rather than improving it. Option D. Partitioning on package delivery date Incorrect. While delivery date may be useful for analysis, partitioning is most effective on columns used for time‑based filtering. The ingest date partitioning already serves that purpose, and re‑partitioning would not directly improve geospatial query performance.",
+   "also_appears_in": [
+    "test_9_q24"
+   ]
+  },
+  {
+   "id": "test_5_q6",
+   "source": "test 5",
+   "question": "A shipping company has live package-tracking data that is sent to an Apache Kafka stream in real time. This is then loaded into BigQuery. Analysts in your company want to query the tracking data in BigQuery to analyze geospatial trends in the lifecycle of a package. The table was originally created with ingest-date partitioning. Over time, the query processing time has increased. You need to implement a change that would improve query performance in BigQuery. What should you do?",
+   "options": [
+    "Implement clustering in BigQuery on the ingest date column.",
+    "Implement clustering in BigQuery on the package-tracking ID column.",
+    "Tier older data onto Cloud Storage files, and leverage extended tables.",
+    "Re-create the table using data partitioning on the package delivery date."
+   ],
+   "answer": [
+    "Implement clustering in BigQuery on the package-tracking ID column."
+   ],
+   "explanation": "B. Implement clustering in BigQuery on the package-tracking ID column Here‘s why this approach is ideal: Geospatial Trends: Clustering based on the package-tracking ID groups together data points associated with the same package. Since queries for geospatial trends likely focus on individual package journeys, clustering on this column ensures data relevant to a specific package is physically stored closer together. This can significantly improve query speed when analyzing trends for specific packages.Other options and why they are less suitable: A. Ingest Date Clustering: While clustering on the ingest date might improve performance for queries focused on temporal trends (e.g., analyzing trends across different days), it wouldn‘t be as effective for geospatial analysis based on package IDs.C. Tiering & Extended Tables: Tiering older data to Cloud Storage and using BigQuery‘s external tables can be a good strategy for managing costs and reducing BigQuery storage usage. However, it wouldn‘t directly improve query performance on actively used data for geospatial analysis.D. Re-partitioning: Re-creating the table with data partitioning on the delivery date might be helpful if queries primarily focus on delivery trends. However, for geospatial analysis, clustering on the package-tracking ID provides a more targeted performance improvement.By clustering on the package-tracking ID column, BigQuery can optimize data storage and retrieval for queries that analyze geospatial trends associated with individual packages. This significantly reduces query processing time and enhances the responsiveness of your analytics."
+  },
+  {
+   "id": "test_7_q12",
+   "source": "test 7",
+   "question": "You are designing storage for very large text files for a data pipeline on Google Cloud. You want to support ANSI SQL queries. You also want to support compression and parallel load from the input locations using Google recommended practices. What should you do?",
+   "options": [
+    "Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query.",
+    "Transform text files to compressed Avro using Cloud Dataflow. Use Cloud Storage and BigQuery permanent linked tables for query.",
+    "Compress text files to gzip using the Grid Computing Tools. Use BigQuery for storage and query.",
+    "Compress text files to gzip using the Grid Computing Tools. Use Cloud Storage, and then import into Cloud Bigtable for query."
+   ],
+   "answer": [
+    "Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query."
+   ],
+   "explanation": "Let’s break down each option to determine the best approach for storing large text files for a data pipeline on Google Cloud, considering the requirements of ANSI SQL queries, compression, parallel loading, and Google’s recommended practices: A. Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query. This is a strong option. Avro is a row-based storage format that supports compression and is efficient for analytical queries. Cloud Dataflow can be used to perform the transformation and compression in parallel. BigQuery is excellent for ANSI SQL queries. This is a google recommended practice. B. Transform text files to compressed Avro using Cloud Dataflow. Use Cloud Storage and BigQuery permanent linked tables for query. While this allows querying Avro files in Cloud Storage using BigQuery external tables, it’s generally less efficient than storing the data directly in BigQuery. BigQuery storage is optimized for query performance. Also, external tables add overhead. C. Compress text files to gzip using the Grid Computing Tools. Use BigQuery for storage and query. BigQuery supports gzip-compressed text files, and it can load them in parallel. However, Avro is typically more efficient for analytical queries than text files, even when compressed. Also, Cloud dataflow is a better tool for this type of transformation. D. Compress text files to gzip using the Grid Computing Tools. Use Cloud Storage, and then import into Cloud Bigtable for query. Cloud Bigtable is a NoSQL wide-column store, not designed for ANSI SQL queries on large text files. It’s more suitable for low-latency, high-throughput applications, not analytical workloads. Considering the requirements: ANSI SQL queries: BigQuery is the best choice. Compression and parallel loading: Cloud Dataflow with Avro is highly efficient. Google’s recommended practices: Transforming to Avro and storing in BigQuery aligns with Google’s recommendations for analytical workloads. Therefore, the best option is: A. Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query."
+  },
+  {
+   "id": "test_13_q4",
+   "source": "test 13",
+   "question": "Scenario: Your organization employs a multi-cloud data storage approach by utilizing Cloud Storage and Amazon Web Services‘ (AWS) S3 storage buckets to store data within US regions. The goal is to access current data through BigQuery, irrespective of the cloud where the data is stored, while preventing users from directly accessing the data in the storage buckets. How can you enable users to query tables in BigQuery without granting them direct access to the data stored in the storage buckets?",
+   "options": [
+    "Setup a BigQuery Omni connection to the AWS S3 bucket data. Create BigLake tables over the Cloud Storage and S3 data and query the data using BigQuery directly.",
+    "Set up a BigQuery Omni connection to the AWS S3 bucket data. Create external tables over the Cloud Storage and S3 data and query the data using BigQuery directly.",
+    "Use the Storage Transfer Service to copy data from the AWS S3 buckets to Cloud Storage buckets. Create BigLake tables over the Cloud Storage data and query the data using BigQuery directly.",
+    "Use the Storage Transfer Service to copy data from the AWS S3 buckets to Cloud Storage buckets. Create external tables over the Cloud Storage data and query the data using BigQuery directly."
+   ],
+   "answer": [
+    "Setup a BigQuery Omni connection to the AWS S3 bucket data. Create BigLake tables over the Cloud Storage and S3 data and query the data using BigQuery directly."
+   ],
+   "explanation": "A. Setup a BigQuery Omni connection to the AWS S3 bucket data. Create BigLake tables over the Cloud Storage and S3 data and query the data using BigQuery directly.– Setting up a BigQuery Omni connection to AWS S3 bucket data allows seamless querying of data stored in both Cloud Storage and AWS S3 buckets using BigQuery.– Creating BigLake tables over the Cloud Storage and S3 data enables you to query the data using BigQuery directly without giving direct access to the storage buckets.– This solution leverages BigQuery Omni‘s multi-cloud capabilities to query data from different cloud providers without the need to move the data.Why the other options are incorrect:B. Set up a BigQuery Omni connection to the AWS S3 bucket data. Create external tables over the Cloud Storage and S3 data and query the data using BigQuery directly.– This option suggests using external tables, which would require direct access to the storage buckets. It does not provide the necessary abstraction layer to query the data without direct access.C. Use the Storage Transfer Service to copy data from the AWS S3 buckets to Cloud Storage buckets. Create BigLake tables over the Cloud Storage data and query the data using BigQuery directly.– This option involves unnecessary data movement from AWS S3 to Cloud Storage using the Storage Transfer Service. It adds complexity and additional costs without providing a direct solution to query data from both storage locations.D. Use the Storage Transfer Service to copy data from the AWS S3 buckets to Cloud Storage buckets. Create external tables over the Cloud Storage data and query the data using BigQuery directly.– Similar to option B, this approach involves copying data between storage services and using external tables, which does not meet the requirement of querying data without direct access to the storage buckets."
+  },
+  {
+   "id": "test_13_q30",
+   "source": "test 13",
+   "question": "Scenario: Your organization is modernizing its IT services and transitioning to Google Cloud. You are tasked with structuring the data for storage in Cloud Storage and BigQuery. Additionally, you need to implement a data mesh strategy to facilitate data sharing among the sales, product design, and marketing departments. What steps should you take to enable a data mesh approach for sharing data between the sales, product design, and marketing departments during the migration to Google Cloud?",
+   "options": [
+    "1. Create a project for storage of the data for each of your departments. 2. Enable each department to create Cloud Storage buckets and BigQuery datasets. 3. Create user groups for authorized readers for each bucket and dataset. 4. Enable the IT team to administer the user groups to add or remove users as the departments request.",
+    "1. Create multiple projects for storage of the data for each of your departments applications. 2. Enable each department to create Cloud Storage buckets and BigQuery datasets. 3. Publish the data that each department shared in Analytics Hub. 4. Enable all departments to discover and subscribe to the data they need in Analytics Hub.",
+    "1. Create a project for storage of the data for your organization. 2. Create a central Cloud Storage bucket with three folders to store the files for each department. 3. Create a central BigQuery dataset with tables prefixed with the department name. 4. Give viewer rights for the storage project for the users of your departments.",
+    "1. Create multiple projects for storage of the data for each of your departments applications. 2. Enable each department to create Cloud Storage buckets and BigQuery datasets. 3. In Dataplex, map each department to a data lake and the Cloud Storage buckets, and map the BigQuery datasets to zones. 4. Enable each department to own and share the data of their data lakes."
+   ],
+   "answer": [
+    "1. Create multiple projects for storage of the data for each of your departments applications. 2. Enable each department to create Cloud Storage buckets and BigQuery datasets. 3. In Dataplex, map each department to a data lake and the Cloud Storage buckets, and map the BigQuery datasets to zones. 4. Enable each department to own and share the data of their data lakes."
+   ],
+   "explanation": "Correct Option D. Dataplex with departmental data lakes Correct. A data mesh emphasizes decentralized ownership, domain‑oriented data products, and governance. Using Dataplex, each department can manage its own data lake (Cloud Storage + BigQuery zones) while still enabling sharing across the organization. This directly aligns with data mesh principles, ensuring departments own their data while still making it discoverable and shareable. Incorrect Option A. Projects + user groups managed by IT Incorrect. While technically feasible, this centralizes control with IT rather than giving departments ownership. This contradicts the data mesh principle of decentralized domain ownership. Option B. Analytics Hub publishing Incorrect. Analytics Hub is useful for data sharing, but it is not a full data mesh solution. It focuses on publishing/discovering datasets, not decentralized governance and ownership. Option C. Single project with central bucket/dataset Incorrect. This is a centralized data lake approach, not a data mesh. Departments would not own their data products, and governance would be centralized, which goes against the data mesh strategy."
+  },
+  {
+   "id": "test_13_q48",
+   "source": "test 13",
+   "question": "Scenario: You have set up an external table in Apache Hive for partitioned data stored in a Cloud Storage bucket, which consists of numerous files. Queries on this table are running slowly. How can you enhance the performance of these queries?",
+   "options": [
+    "Change the storage class of the Hive partitioned data objects from Coldline to Standard.",
+    "Create an individual external table for each Hive partition by using a common table name prefix. Use wildcard table queries to reference the partitioned data.",
+    "Upgrade the external table to a BigLake table. Enable metadata caching for the table.",
+    "Migrate the Hive partitioned data objects to a multi-region Cloud Storage bucket."
+   ],
+   "answer": [
+    "Upgrade the external table to a BigLake table. Enable metadata caching for the table."
+   ],
+   "explanation": "The correct answer is C. Upgrade the external table to a BigLake table and enable metadata caching for the table.Upgrading the external table to a BigLake table and enabling metadata caching can help improve the performance of queries against the partitioned data in the Cloud Storage bucket. BigLake tables are optimized for performance and efficiency in querying large datasets, which can result in faster query execution times. Enabling metadata caching helps reduce the metadata retrieval overhead, further enhancing query performance.Now, let‘s explain why the other options are incorrect:A. Changing the storage class of the Hive partitioned data objects from Coldline to Standard: Changing the storage class of the data objects will not necessarily improve query performance. The storage class mainly affects the cost and availability of the data, but it does not directly impact query execution times.B. Creating an individual external table for each Hive partition by using a common table name prefix and using wildcard table queries: Creating multiple tables for each partition can make the management complex and may not necessarily improve query performance. Using wildcard queries can help simplify querying multiple tables, but it may not address the underlying performance issues.D. Migrating the Hive partitioned data objects to a multi-region Cloud Storage bucket: Migrating the data to a multi-region bucket may improve data availability and durability but may not directly impact query performance. The location of the data in the Cloud Storage bucket is less likely to be the primary cause of slow query performance."
+  },
+  {
+   "id": "test_13_q50",
+   "source": "test 13",
+   "question": "Scenario: You have 100 GB of data stored in a BigQuery table, which is outdated and will be accessed infrequently for analytics using SQL. You need to store this data securely and immutably for backup purposes for 3 years while minimizing storage costs. What steps should be taken to achieve this goal?",
+   "options": [
+    "1. Create a BigQuery table clone. 2. Query the clone when you need to perform analytics.",
+    "1. Create a BigQuery table snapshot. 2. Restore the snapshot when you need to perform analytics.",
+    "1. Perform a BigQuery export to a Cloud Storage bucket with archive storage class. 2. Enable versioning on the bucket. 3. Create a BigQuery external table on the exported files.",
+    "1. Perform a BigQuery export to a Cloud Storage bucket with archive storage class. 2. Set a locked retention policy on the bucket. 3. Create a BigQuery external table on the exported files."
+   ],
+   "answer": [
+    "1. Perform a BigQuery export to a Cloud Storage bucket with archive storage class. 2. Set a locked retention policy on the bucket. 3. Create a BigQuery external table on the exported files."
+   ],
+   "explanation": "D is the correct answer for the given scenario because it provides the most cost-effective and efficient solution to store the outdated data in a BigQuery table, ensuring immutability for 3 years.Explanation of why Option D is correct:1. Perform a BigQuery export to a Cloud Storage bucket with archive storage class: Exporting the data to a Cloud Storage bucket with archive storage class is a cost-effective way to store the data for long-term retention. The archive storage class offers the lowest storage costs but with longer access times, which is suitable for data that is rarely accessed.2. Set a locked retention policy on the bucket: By setting a locked retention policy on the Cloud Storage bucket, you ensure that the data remains immutable for the specified period of 3 years. This prevents accidental or intentional deletion or modification of the data during the retention period.3. Create a BigQuery external table on the exported files: By creating a BigQuery external table on the exported files in Cloud Storage, you can still query the data using SQL in BigQuery without the need to keep the original data in a BigQuery table, thus reducing storage costs.Explanation of why the other options are incorrect:A. Creating a BigQuery table clone and querying the clone when needed:This option would require maintaining a duplicate copy of the data in BigQuery, leading to higher storage costs. Additionally, it does not provide the immutability required for long-term backup purposes.B. Creating a BigQuery table snapshot and restoring it when needed:BigQuery snapshots are not intended for long-term data retention or backup purposes. Snapshots are typically used for point-in-time recovery and do not provide the immutability required for the scenario.C. Performing a BigQuery export to a Cloud Storage bucket with archive storage class, enabling versioning, and creating a BigQuery external table:Enabling versioning on the Cloud Storage bucket would allow for multiple versions of the exported data to be stored, increasing storage costs. Additionally, versioning does not provide the same level of immutability as a locked retention policy, making it less suitable for long-term backup purposes."
+  },
+  {
+   "id": "test_13_q53",
+   "source": "test 13",
+   "question": "Scenario: In a healthcare organization, data is managed by different data owners across various storage services, leading to challenges in data discovery and management. How can a cost-optimized solution be quickly identified and implemented to address data management, discovery, lineage tracking, and quality validation within the organization?",
+   "options": [
+    "Use BigLake to convert the current solution into a data lake architecture.",
+    "Build a new data discovery tool on Google Kubernetes Engine that helps with new source onboarding and data lineage tracking.",
+    "Use BigQuery to track data lineage, and use Dataprep to manage data and perform data quality validation.",
+    "Use Dataplex to manage data, track data lineage, and perform data quality validation."
+   ],
+   "answer": [
+    "Use Dataplex to manage data, track data lineage, and perform data quality validation."
+   ],
+   "explanation": "The correct answer is D. Use Dataplex to manage data, track data lineage, and perform data quality validation.Dataplex is a platform designed for managing, analyzing, and monitoring data across various sources. It helps in organizing and governing data in a cost-effective manner while providing capabilities for data management, data lineage tracking, and data quality validation. By using Dataplex, the healthcare organization can address the challenges of a decentralized ecosystem and improve data management efficiency.Now, let‘s explain why the other options are incorrect:A. Use BigLake to convert the current solution into a data lake architecture.This option suggests using BigLake to convert the current solution into a data lake architecture. However, BigLake is not a known service or platform in the context of data management solutions. Data lakes are typically used for storing large volumes of raw data, but they may not provide the necessary features for data management, lineage tracking, and data quality validation.B. Build a new data discovery tool on Google Kubernetes Engine that helps with new source onboarding and data lineage tracking.While building a new data discovery tool on Google Kubernetes Engine may help with new source onboarding and data lineage tracking, it may not cover all the requirements mentioned in the scenario, such as data management and data quality validation. Additionally, building a custom tool may not be a cost-effective solution compared to using an existing platform like Dataplex.C. Use BigQuery to track data lineage, and use Dataprep to manage data and perform data quality validation.While BigQuery is a powerful tool for querying and analyzing data, it may not be the best choice for tracking data lineage comprehensively. Dataprep is primarily used for data preparation and cleaning tasks, rather than managing data and performing data quality validation. Using these tools separately may not provide a holistic solution for the organization‘s data management needs."
+  },
+  {
+   "id": "test_14_q2",
+   "source": "test 14",
+   "question": "Scenario: You are setting up a data mesh on Google Cloud with Dataplex to oversee data in BigQuery and Cloud Storage. You aim to streamline data asset permissions for a customer virtual lake with two distinct user groups: – Data engineers needing full access to the data lake, and – Analytic users requiring access to curated data. How can you assign access rights to these two user groups effectively?",
+   "options": [
+    "1. Grant the dataplex.dataOwner role to the data engineer group on the customer data lake. 2. Grant the dataplex.dataReader role to the analytic user group on the customer curated zone.",
+    "1. Grant the dataplex.dataReader role to the data engineer group on the customer data lake. 2. Grant the dataplex.dataOwner to the analytic user group on the customer curated zone.",
+    "1. Grant the bigquery.dataOwner role on BigQuery datasets and the storage.objectCreator role on Cloud Storage buckets to data engineers. 2. Grant the bigquery.dataViewer role on BigQuery datasets and the storage.objectViewer role on Cloud Storage buckets to analytic users.",
+    "1. Grant the bigquery.dataViewer role on BigQuery datasets and the storage.objectViewer role on Cloud Storage buckets to data engineers. 2. Grant the bigquery.dataOwner role on BigQuery datasets and the storage.objectEditor role on Cloud Storage buckets to analytic users."
+   ],
+   "answer": [
+    "1. Grant the dataplex.dataOwner role to the data engineer group on the customer data lake. 2. Grant the dataplex.dataReader role to the analytic user group on the customer curated zone."
+   ],
+   "explanation": "The correct answer is option A:1. Grant the dataplex.dataOwner role to the data engineer group on the customer data lake.2. Grant the dataplex.dataReader role to the analytic user group on the customer curated zone.– In a data mesh architecture using Dataplex on Google Cloud, the dataplex.dataOwner role provides full access to manage the data lake, which is suitable for data engineers who require full data lake access to perform their tasks efficiently.– The dataplex.dataReader role is appropriate for analytic users who only need access to curated data in the customer curated zone, allowing them to read the data without making any changes.Now, let‘s explain why the other options are incorrect:B. This option is incorrect because granting the dataplex.dataReader role to the data engineer group on the customer data lake would not provide them with the necessary full access they require. Similarly, granting the dataplex.dataOwner role to the analytic user group on the customer curated zone would give them unnecessary permissions to manage the curated data.C. This option is incorrect because it involves granting roles specific to BigQuery datasets and Cloud Storage buckets directly, which bypasses the Dataplex management layer. In a data mesh architecture using Dataplex, it is recommended to manage permissions through Dataplex roles for better governance and control.D. This option is incorrect because it assigns roles in BigQuery and Cloud Storage directly to the user groups, rather than utilizing Dataplex roles. In a data mesh design with Dataplex, it is best practice to manage permissions at the Dataplex level for improved data governance and security."
+  },
+  {
+   "id": "test_14_q37",
+   "source": "test 14",
+   "question": "Scenario: Your team is developing a data lake platform on Google Cloud, storing raw data in Cloud Storage. The daily data ingestion is around 25 GB, raising concerns about the rising storage costs for old data. The business requirements include the flexibility to delete old data at any time, no specified access pattern for old data, instant availability when accessed, and no charges for data retrieval. How can you optimize for cost given the scenario of storing old data in Cloud Storage with the specified business requirements?",
+   "options": [
+    "Create the bucket with the Autoclass storage class feature.",
+    "Create an Object Lifecycle Management policy to modify the storage class for data older than 30 days to nearline, 90 days to coldline, and 365 days to archive storage class. Delete old data as needed.",
+    "Create an Object Lifecycle Management policy to modify the storage class for data older than 30 days to coldline, 90 days to nearline, and 365 days to archive storage class. Delete old data as needed.",
+    "Create an Object Lifecycle Management policy to modify the storage class for data older than 30 days to nearline, 45 days to coldline, and 60 days to archive storage class. Delete old data as needed."
+   ],
+   "answer": [
+    "Create the bucket with the Autoclass storage class feature."
+   ],
+   "explanation": "The correct answer is A. Create the bucket with the Autoclass storage class feature.– By creating the bucket with the Autoclass storage class feature, the data in the bucket will automatically transition to the most cost-effective storage class based on usage patterns, reducing costs without the need for manual intervention.– This approach aligns with the business requirements as there are no charges for data retrieval, and the old data should be available instantly when accessed, without any predefined access pattern.– Since there is no need to define a specific lifecycle policy for transitioning data based on age, using the Autoclass storage class feature is the most efficient and cost-effective solution.Why the other options are incorrect:B. Creating an Object Lifecycle Management policy to modify the storage class for data older than 30 days to nearline, 90 days to coldline, and 365 days to archive storage class, and then deleting old data as needed:– This option requires manual configuration of lifecycle policies based on time intervals, which may not align with the changing access patterns of the data.– Also, this option does not guarantee instant availability of old data when accessed without charges.C. Creating an Object Lifecycle Management policy to modify the storage class for data older than 30 days to coldline, 90 days to nearline, and 365 days to archive storage class, and then deleting old data as needed:– Similar to option B, this approach involves manual configuration of lifecycle policies based on time intervals, which may not be optimal for changing access patterns.– The requirement of instant availability of old data when accessed without charges may not be met efficiently using this approach.D. Creating an Object Lifecycle Management policy to modify the storage class for data older than 30 days to nearline, 45 days to coldline, and 60 days to archive storage class, and then deleting old data as needed:– This option also involves manual configuration of lifecycle policies based on time intervals, which may not be suitable for the changing nature of data access patterns.– Additionally, the requirement of instant availability of old data when accessed without charges may not be effectively addressed through this method."
+  },
+  {
+   "id": "test_14_q45",
+   "source": "test 14",
+   "question": "Scenario: You are incorporating Cloud Storage into your data lake solution. The Cloud Storage bucket will store objects received from external systems. Each object will be received only once, and the access patterns for each object will be random. How can you minimize the expenses associated with storing and accessing these objects while ensuring that any cost-saving measures are not noticeable to users and applications?",
+   "options": [
+    "Create a Cloud Storage bucket with Autoclass enabled.",
+    "Create a Cloud Storage bucket with an Object Lifecycle Management policy to transition objects from Standard to Coldline storage class if an object age reaches 30 days.",
+    "Create a Cloud Storage bucket with an Object Lifecycle Management policy to transition objects from Standard to Coldline storage class if an object is not live.",
+    "Create two Cloud Storage buckets. Use the Standard storage class for the first bucket, and use the Coldline storage class for the second bucket. Migrate objects from the first bucket to the second bucket after 30 days."
+   ],
+   "answer": [
+    "Create a Cloud Storage bucket with Autoclass enabled."
+   ],
+   "explanation": "A. Create a Cloud Storage bucket with Autoclass enabled is the correct answer because enabling Auto Class will automatically optimize storage costs by moving objects to the most cost-effective storage class based on access patterns and frequency. This ensures that the objects are stored in the most cost-efficient manner without manual intervention, making cost optimization efforts transparent to users and applications.Now, let‘s explain why the other options are incorrect:B. Create a Cloud Storage bucket with an Object Lifecycle Management policy to transition objects from Standard to Coldline storage class if an object age reaches 30 days.This option suggests transitioning objects to Coldline storage after 30 days based on age. However, since the access patterns are random, object age may not necessarily correlate with the frequency of access. This approach may not be the most cost-effective for objects with random access patterns.C. Create a Cloud Storage bucket with an Object Lifecycle Management policy to transition objects from Standard to Coldline storage class if an object is not live.This option suggests transitioning objects to Coldline storage if they are not live. The definition of “live“ is not clear, and it may not accurately reflect the access patterns of the objects. This approach may not optimize costs effectively for objects with random access patterns.D. Create two Cloud Storage buckets. Use the Standard storage class for the first bucket, and use the Coldline storage class for the second bucket. Migrate objects from the first bucket to the second bucket after 30 days.This option involves manual migration of objects from the Standard storage class bucket to the Coldline storage class bucket after 30 days. This manual process is not cost-efficient, and it may not be transparent to users and applications. Additionally, it adds complexity to the data management process."
+  },
+  {
+   "id": "test_15_q27",
+   "source": "test 15",
+   "question": "Scenario: A shipping company utilizes live package‑tracking data sent to an Apache Kafka stream in real time, which is subsequently loaded into BigQuery. Analysts aim to analyze geospatial trends in the package lifecycle by querying the tracking data in BigQuery. The table was initially set up with ingest‑date partitioning. However, query processing time has risen. What steps should be taken to enhance query performance in BigQuery in this scenario? Option A. Implement clustering in BigQuery on the ingest date column. Option B. Implement clustering in BigQuery on the package‑tracking ID column. Option C. Tier older data onto Cloud Storage files and create a BigQuery table using Cloud Storage as an external data source. Option D. Re‑create the table using data partitioning on the package delivery date.",
+   "options": [
+    "Implement clustering in BigQuery on the ingest date column.",
+    "Implement clustering in BigQuery on the package-tracking ID column.",
+    "Tier older data onto Cloud Storage files and create a BigQuery table using Cloud Storage as an external data source.",
+    "Re-create the table using data partitioning on the package delivery date."
+   ],
+   "answer": [
+    "Implement clustering in BigQuery on the package-tracking ID column."
+   ],
+   "explanation": "Correct Option B. Implement clustering in BigQuery on the package‑tracking ID column. Reasoning: Clustering in BigQuery improves query performance by organizing data based on frequently filtered or grouped columns. Since analysts query geospatial trends tied to package‑tracking IDs, clustering on this column ensures queries scan fewer blocks, reducing processing time. Ingest‑date partitioning alone is not sufficient because queries are not primarily filtered by ingest date. Exam Focus: The exam expects you to recognize when clustering is more effective than partitioning, especially when queries target specific identifiers like tracking IDs. Incorrect Option A. Implement clustering in BigQuery on the ingest date column. Incorrect because the table is already partitioned by ingest date. Clustering on the same column adds little benefit since queries are not primarily filtered by ingest date. Option C. Tier older data onto Cloud Storage files and create a BigQuery table using Cloud Storage as an external data source. Incorrect because external tables in Cloud Storage increase query latency and cost. This does not improve performance for live analytical queries. Option D. Re‑create the table using data partitioning on the package delivery date. Incorrect because while delivery date partitioning could help in some scenarios, the main issue is query filtering by tracking ID, not delivery date. Partitioning by delivery date would not address the performance bottleneck."
+  },
+  {
+   "id": "test_15_q33",
+   "source": "test 15",
+   "question": "Scenario: You are setting up a data mesh on Google Cloud for various data engineering teams to create data products. The usual data curation process involves storing files in Cloud Storage, processing raw data in Cloud Storage and BigQuery, and saving the refined data product in BigQuery datasets. How can you configure Dataplex to grant each team access to the necessary assets for their data products and enable easy sharing of curated data products among teams?",
+   "options": [
+    "1. Create a single Dataplex virtual lake and create a single zone to contain landing, raw, and curated data. 2. Provide each data engineering team access to the virtual lake.",
+    "1. Create a single Dataplex virtual lake and create a single zone to contain landing, raw, and curated data. 2. Build separate assets for each data product within the zone. 3. Assign permissions to the data engineering teams at the zone level.",
+    "1. Create a Dataplex virtual lake for each data product, and create a single zone to contain landing, raw, and curated data. 2. Provide the data engineering teams with full access to the virtual lake assigned to their data product.",
+    "1. Create a Dataplex virtual lake for each data product, and create multiple zones for landing, raw, and curated data. 2. Provide the data engineering teams with full access to the virtual lake assigned to their data product."
+   ],
+   "answer": [
+    "1. Create a Dataplex virtual lake for each data product, and create multiple zones for landing, raw, and curated data. 2. Provide the data engineering teams with full access to the virtual lake assigned to their data product."
+   ],
+   "explanation": "The correct answer is option D.1. Creating a Dataplex virtual lake for each data product and multiple zones for landing, raw, and curated data allows for better organization and isolation of data assets for each data product. This ensures that each data engineering team can access only the assets needed to build their data products, as they are assigned full access to the virtual lake specific to their data product.2. By providing full access to the virtual lake assigned to their data product, teams can easily share the curated data product within their designated zone.Now, let‘s explain why the other options are incorrect:Option A:1. Creating a single Dataplex virtual lake and a single zone might lead to data sprawl and potential data access issues, as all data products are stored within the same zone.2. Providing each data engineering team access to the single virtual lake does not offer the necessary isolation required for each team to work independently on their data products.Option B:1. Although creating separate assets for each data product within the zone is a step in the right direction, assigning permissions at the zone level can still lead to potential data access issues and lack of isolation between data products.2. Building separate assets within the same zone might not provide the necessary level of isolation for each data engineering team to work on their specific data products.Option C:1. Creating a Dataplex virtual lake for each data product is a good approach, but placing all data products in a single zone can lead to potential data access issues and lack of isolation between data products.2. Providing full access to the virtual lake assigned to each data product is a step in the right direction, but it may not be sufficient to ensure that each team can easily share the curated data product within their designated zone."
+  }
+ ]
+}

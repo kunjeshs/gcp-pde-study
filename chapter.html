@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f17">
+  <title>Chapter · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=3">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="content" id="root">
+      <p class="muted">Loading…</p>
+    </main>
+  </div>
+  <script type="module">
+    import { boot, md } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+
+    if (boot()) {
+      const slug = new URLSearchParams(location.search).get("slug") || "";
+      Promise.all([Data.chapters(), Data.topicsManifest()]).then(([d, tm]) => {
+        const topic = tm.topics.find((t) => t.slug === slug);
+        const key = topic?.topic;
+        const ch = key ? d.chapters[key] : null;
+        const root = document.getElementById("root");
+        if (!ch) { root.innerHTML = `<div class="empty"><div class="big">∅</div>Chapter not found.</div>`; return; }
+
+        const esc = (s) => (s == null ? "" : String(s)).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const fmtItem = (x) => {
+          if (x == null) return "";
+          if (typeof x === "string") return esc(x);
+          if (typeof x !== "object") return esc(String(x));
+          // Common shapes: {phrase, answer} / {clue, answer} / {if, then} / {scenario, pick} / {service, when, why}
+          if (x.phrase && x.answer) return `<strong>${esc(x.phrase)}</strong> → ${esc(x.answer)}`;
+          if (x.clue && x.answer) return `<strong>${esc(x.clue)}</strong> → ${esc(x.answer)}`;
+          if (x.if && x.then) return `<strong>${esc(x.if)}</strong> → ${esc(x.then)}`;
+          if (x.scenario && (x.pick || x.answer)) return `<strong>${esc(x.scenario)}</strong> → ${esc(x.pick || x.answer)}`;
+          if (x.trap && x.fix) return `<strong>Trap:</strong> ${esc(x.trap)} <em>Fix:</em> ${esc(x.fix)}`;
+          if (x.pattern && x.solution) return `<strong>${esc(x.pattern)}</strong> → ${esc(x.solution)}`;
+          if (x.text) return esc(x.text);
+          // Generic: render key-value pairs inline
+          return Object.entries(x)
+            .filter(([, v]) => v != null && v !== "")
+            .map(([k, v]) => `<strong>${esc(k)}:</strong> ${typeof v === "object" ? esc(JSON.stringify(v)) : esc(v)}`)
+            .join(" · ");
+        };
+        const list = (xs) => Array.isArray(xs) && xs.length
+          ? `<ul>${xs.map((x) => `<li>${fmtItem(x)}</li>`).join("")}</ul>` : "";
+
+        const tableHtml = (rows) => {
+          if (!Array.isArray(rows) || !rows.length) return "";
+          const cols = Object.keys(rows[0]);
+          return `<table class="simple"><thead><tr>${cols.map((c) => `<th>${c}</th>`).join("")}</tr></thead>
+            <tbody>${rows.map((r) => `<tr>${cols.map((c) => `<td>${(r[c] ?? "").toString()}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+        };
+
+        const sections = [
+          ["What the exam tests", ch.what_the_exam_tests ? `<p>${ch.what_the_exam_tests}</p>` : ""],
+          ["Key services", list(ch.key_services)],
+          ["Must-know services", list(ch.must_know_services)],
+          ["Choose this when", list(ch.choose_this_when)],
+          ["Avoid this when", list(ch.avoid_this_when)],
+          ["Common gotchas", list(ch.common_gotchas)],
+          ["Common traps", list(ch.common_traps)],
+          ["Clue words", list(ch.clue_words)],
+          ["Decision table", tableHtml(ch.decision_table)],
+          ["Service decision table", tableHtml(ch.service_decision_table)],
+          ["Scenario patterns", list(ch.scenario_patterns)],
+          ["Exam pattern notes", list(ch.exam_pattern_notes)],
+          ["Reading", (() => {
+            const rc = ch.read_content;
+            if (!rc) return "";
+            if (typeof rc === "string") return `<div class="md">${md(rc)}</div>`;
+            if (Array.isArray(rc)) {
+              return rc.map((s) => {
+                if (typeof s === "string") return `<div class="md">${md(s)}</div>`;
+                const head = s.heading ? `<h3>${esc(s.heading)}</h3>` : "";
+                const body = s.body_html ? s.body_html : (s.body ? md(s.body) : "");
+                return `${head}<div class="md">${body}</div>`;
+              }).join("");
+            }
+            return `<div class="md">${md(JSON.stringify(rc, null, 2))}</div>`;
+          })()],
+        ];
+
+        const renderedSections = sections
+          .filter(([, body]) => body && body.trim())
+          .map(([title, body]) => `<section class="section"><div class="section-header"><h2>${title}</h2></div>${body}</section>`)
+          .join("");
+
+        root.innerHTML = `
+          <p><a class="card-link" href="chapters.html">← All chapters</a></p>
+          <p class="eyebrow">${ch.official_guide_section || "Chapter"}</p>
+          <h1>${key}</h1>
+          <p class="lead">
+            <span class="badge">${ch.exam_weight || ""}</span>
+            ${ch.official_guide_section ? `<span class="badge">${ch.official_guide_section}</span>` : ""}
+          </p>
+          ${renderedSections}
+          <div class="spacer"></div>
+          <div class="cta-row">
+            <a class="button primary" href="quiz.html?topic=${encodeURIComponent(slug)}">Drill this chapter →</a>
+            <a class="button" href="chapters.html">All chapters</a>
+          </div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>

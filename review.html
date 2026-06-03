@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f17">
+  <title>Review · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=3">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="content">
+      <p class="eyebrow">Re-drill</p>
+      <h1>Review</h1>
+      <p class="lead">Flagged + missed questions, in one place.</p>
+
+      <div class="cta-row">
+        <a class="button primary" id="start-flagged" href="#">Quiz flagged</a>
+        <a class="button" id="start-missed" href="#">Quiz missed</a>
+        <button class="button ghost" id="clear-attempts">Reset stats</button>
+      </div>
+
+      <div id="root">
+        <section class="section">
+          <div class="section-header">
+            <h2>Flagged <span class="badge" id="flag-count">0</span></h2>
+          </div>
+          <div id="flagged-list" class="cards"></div>
+        </section>
+        <section class="section">
+          <div class="section-header">
+            <h2>Missed <span class="badge" id="miss-count">0</span></h2>
+          </div>
+          <div id="missed-list" class="cards"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script type="module">
+    import { boot } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+    import { State } from "./assets/js/state.js";
+    import { Quiz } from "./assets/js/quiz.js";
+
+    const esc = (s) => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+    if (boot()) {
+      const all = await Data.allQuestions();
+      const byId = new Map(all.map((q) => [q.id, q]));
+
+      const flags = State.getFlags();
+      const attempts = State.getAttempts();
+      const flaggedIds = Object.keys(flags);
+      const missedIds = Object.entries(attempts).filter(([, a]) => a.tries > 0 && a.correct / a.tries < 1).map(([id]) => id);
+
+      const flaggedQs = flaggedIds.map((id) => byId.get(id)).filter(Boolean);
+      const missedQs = missedIds.map((id) => byId.get(id)).filter(Boolean);
+
+      document.getElementById("flag-count").textContent = flaggedQs.length;
+      document.getElementById("miss-count").textContent = missedQs.length;
+
+      const renderList = (slot, qs) => {
+        if (!qs.length) { slot.innerHTML = `<p class="muted"><small>Nothing here yet.</small></p>`; return; }
+        slot.innerHTML = qs.slice(0, 30).map((q) => `
+          <a class="card" href="quiz.html?topic=${encodeURIComponent(q.topicSlug)}">
+            <div class="card-top"><span class="badge">${esc(q.topic.match(/^\d+\.\d+/)?.[0] || "")}</span></div>
+            <p class="card-title">${esc((q.question || "").slice(0, 110))}…</p>
+            <p class="card-meta">${esc(q.topic)}</p>
+          </a>`).join("") + (qs.length > 30 ? `<p class="muted center" style="grid-column:1/-1;margin-top:6px"><small>+${qs.length - 30} more</small></p>` : "");
+      };
+      renderList(document.getElementById("flagged-list"), flaggedQs);
+      renderList(document.getElementById("missed-list"), missedQs);
+
+      function runQuiz(qs) {
+        if (!qs.length) { alert("Nothing to drill."); return; }
+        const root = document.getElementById("root");
+        root.innerHTML = `<div id="q"></div>`;
+        new Quiz(document.getElementById("q"), qs, { shuffle: true }).start();
+      }
+
+      document.getElementById("start-flagged").addEventListener("click", (e) => { e.preventDefault(); runQuiz(flaggedQs); });
+      document.getElementById("start-missed").addEventListener("click", (e) => { e.preventDefault(); runQuiz(missedQs); });
+      document.getElementById("clear-attempts").addEventListener("click", () => {
+        if (confirm("Reset all attempt stats? Flags and notes are kept.")) { State.resetAttempts(); location.reload(); }
+      });
+    }
+  </script>
+</body>
+</html>

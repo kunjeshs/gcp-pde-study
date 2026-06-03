@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+tools/codex-gen/gen.log
+tools/codex-gen/.venv/
+__pycache__/
+node_modules/

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f17">
+  <title>Exam Traps · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=3">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="content">
+      <p class="eyebrow">Pitfalls</p>
+      <h1>Exam traps</h1>
+      <p class="lead">Scenario drills — the pattern, the temptation, the correct call.</p>
+
+      <div class="row field-group" style="margin:18px 0">
+        <input id="search" type="search" placeholder="Search topic, clue, concept…" style="flex:2;min-width:200px">
+        <select id="topic-filter" style="flex:1;min-width:160px">
+          <option value="">All chapters</option>
+        </select>
+      </div>
+      <div id="list" class="stack"></div>
+    </main>
+  </div>
+  <script type="module">
+    import { boot, md } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+
+    const LETTERS = ["A","B","C","D","E","F"];
+    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+    if (boot()) {
+      const d = await Data.scenarios();
+      const drills = Array.isArray(d.drills) ? d.drills : [];
+      const list = document.getElementById("list");
+      const search = document.getElementById("search");
+      const tf = document.getElementById("topic-filter");
+
+      const topics = [...new Set(drills.map((x) => x.topic).filter(Boolean))].sort();
+      topics.forEach((t) => {
+        const o = document.createElement("option");
+        o.value = t; o.textContent = t;
+        tf.appendChild(o);
+      });
+
+      function render() {
+        const q = (search.value || "").toLowerCase().trim();
+        const ts = tf.value;
+        const filtered = drills.filter((x) => {
+          if (ts && x.topic !== ts) return false;
+          if (!q) return true;
+          const blob = JSON.stringify(x).toLowerCase();
+          return blob.includes(q);
+        });
+        if (!filtered.length) { list.innerHTML = `<div class="empty"><div class="big">∅</div>No drills match.</div>`; return; }
+        list.innerHTML = filtered.map((s, i) => renderCard(s, i)).join("");
+      }
+
+      function renderCard(s, i) {
+        const title = s.tested_concept || s.title || s.scenario || `Drill ${i + 1}`;
+        const correctIdx = (s.options || []).findIndex((o) => (o || "").trim() === (s.correct_answer || "").trim());
+        const opts = (s.options || []).map((o, oi) => `
+          <div class="opt ${oi === correctIdx ? "correct" : ""}">
+            <span class="letter">${LETTERS[oi]}.</span>
+            <span class="text">${esc(o)}</span>
+          </div>`).join("");
+        const cluePills = (s.clue_words || []).map((c) => `<span class="tag">${esc(c)}</span>`).join(" ");
+        const wrongList = (s.why_each_wrong_option_is_wrong || []).map((w) => `<li>${esc(w)}</li>`).join("");
+        const diffClass = (s.difficulty || "").toLowerCase() === "hard" ? "status-offline" :
+                          (s.difficulty || "").toLowerCase() === "easy" ? "status-live" : "";
+        return `
+          <details class="card">
+            <summary>
+              <div class="card-top">
+                ${s.topic ? `<span class="badge">${esc(s.topic)}</span>` : ""}
+                ${s.difficulty ? `<span class="badge ${diffClass}">${esc(s.difficulty)}</span>` : ""}
+              </div>
+              <p class="card-title" style="margin-top:8px;color:var(--text)">${esc(title)}</p>
+              ${s.official_guide_mapping ? `<p class="card-meta">${esc(s.official_guide_mapping)}</p>` : ""}
+            </summary>
+            <div class="body" style="margin-top:14px">
+              ${cluePills ? `<p style="margin:0 0 12px"><span class="muted" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;margin-right:6px">Clue words:</span>${cluePills}</p>` : ""}
+              ${s.scenario ? `<p style="font-size:1rem;line-height:1.6;color:var(--text)">${esc(s.scenario)}</p>` : ""}
+              ${opts ? `<div class="opt-list">${opts}</div>` : ""}
+              ${s.why_correct ? `<div class="explain"><h3>Why it's right</h3><div class="md">${md(s.why_correct)}</div></div>` : ""}
+              ${wrongList ? `<div class="explain"><h3>Why the others fail</h3><ul>${wrongList}</ul></div>` : ""}
+            </div>
+          </details>`;
+      }
+
+      let t; const debounce = (fn) => { clearTimeout(t); t = setTimeout(fn, 150); };
+      search.addEventListener("input", () => debounce(render));
+      tf.addEventListener("change", render);
+      render();
+    }
+  </script>
+</body>
+</html>

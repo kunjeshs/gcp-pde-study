@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f17">
+  <title>Chapters · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=3">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="content">
+      <p class="eyebrow">Contents</p>
+      <h1>All chapters</h1>
+      <p class="lead">19 sections from the official exam guide. Tap to read what the exam tests, must-know services, gotchas, and decision tables.</p>
+      <div class="spacer"></div>
+      <div class="cards" id="list"></div>
+    </main>
+  </div>
+  <script type="module">
+    import { boot } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+    if (boot()) {
+      Data.chapters().then((d) => {
+        const list = document.getElementById("list");
+        list.innerHTML = Object.entries(d.chapters).map(([key, ch]) => {
+          const slug = key.replace(/^(\d+)\.(\d+)\s+/, "$1-$2-").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+          return `
+            <a class="card" href="chapter.html?slug=${encodeURIComponent(slug)}">
+              <div class="card-top">
+                <span class="badge">${ch.exam_weight || "—"}</span>
+              </div>
+              <p class="card-title">${key}</p>
+              <p class="card-meta">${(ch.what_the_exam_tests || "").slice(0, 130)}…</p>
+              <span class="card-foot">Open →</span>
+            </a>`;
+        }).join("");
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,947 @@
+{
+ "topic": "3.2 Planning for using a data warehouse",
+ "slug": "3-2-planning-for-using-a-data-warehouse",
+ "question_count": 58,
+ "questions": [
+  {
+   "id": "test_1_q1",
+   "source": "test_1",
+   "question": "What are two recommended actions to ensure that existing applications can connect to the events data in Google BigQuery next month? The majority of the data analyzed is in a time-partitioned table called events_partitioned. To reduce query costs, a view named events was created that queries only the last 14 days of data and is described in legacy SQL.",
+   "options": [
+    "Create a new view over events using standard SQL.",
+    "Create a new partitioned table using a standard SQL query.",
+    "Create a new view over events_partitioned using standard SQL.",
+    "Create a service account for the ODBC connection to use for authentication.",
+    "Create a Google Cloud Identity and Access Management (Cloud IAM) role for the ODBC connection and shared events"
+   ],
+   "answer": [
+    "Create a new view over events_partitioned using standard SQL.",
+    "Create a service account for the ODBC connection to use for authentication."
+   ],
+   "explanation": "Create a new view over events_partitioned using standard SQL.\n\nThe current view events uses legacy SQL, which is being phased out. To ensure long-term compatibility and access to future BigQuery features, it’s crucial to migrate to standard SQL. Creating a new view based on the underlying time-partitioned table events_partitioned but written in standard SQL will provide a forward-compatible way for applications to query the data. This new view can replicate the logic of the existing events view (filtering for the last 14 days) or be adapted as needed.\n\n Create a service account for the ODBC connection to use for authentication.\n\nFor applications to connect to BigQuery programmatically (likely via ODBC or other client libraries), they need proper authentication. Using a service account is a recommended best practice for non-human entities. A service account provides a secure, non-interactive way for applications to authenticate to Google Cloud services like BigQuery. This ensures that the connection remains stable and manageable, independent of individual user accounts.\n\nIncorrect Options:\n\n\n Create a new view over events using standard SQL.\n\nThe existing view events is defined in legacy SQL. Creating a new view over this legacy SQL view in standard SQL might introduce complexities or limitations in query optimization and could still be subject to the eventual deprecation of legacy SQL. It’s better to directly query the underlying partitioned table using standard SQL.\n\n\n\n Create a new partitioned table using a standard SQL query.\n\nThe data is already stored in a time-partitioned table (events_partitioned), which is a good practice for cost and performance. Creating a new partitioned table would involve duplicating the data and potentially disrupting existing data ingestion pipelines. The goal is to ensure connectivity for existing applications, not to restructure the underlying data storage.\n\n\n\n Create a Google Cloud Identity and Access Management (Cloud IAM) role fo",
+   "how_to_think": "Two-part question: migrate legacy SQL views to standard SQL by creating a new view over events_partitioned, and set up a service account for ODBC authentication. Focus on forward-compatibility and programmatic access.",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_11_q8"
+   ]
+  },
+  {
+   "id": "test_10_q2",
+   "source": "test 10",
+   "question": "A manufacturer has successfully migrated several data warehouses to BigQuery and is using Cloud Storage for machine learning data. ML engineers and data analysts are having difficulty finding data sets they need. The CTO of the company has asked for your advice on how to reduce the workload on ML engineers and analysts when they need to find data sets. What would you recommend?",
+   "options": [
+    "Use Cloud Logging to track files uploaded to Cloud Storage and data sets to BigQuery.",
+    "Use Cloud Fusion to tracking both files uploaded to Cloud Storage and data sets loaded into BigQuery.",
+    "Use Cloud Data Catalog to automatically extract metadata from Cloud Storage objects and BigQuery data.",
+    "Query the metadata catalog of BigQuery and Cloud Storage and write the results to a BigQuery table where the ML engineers and data analysts can query the data with SQL."
+   ],
+   "answer": [
+    "Use Cloud Data Catalog to automatically extract metadata from Cloud Storage objects and BigQuery data."
+   ],
+   "explanation": "The correct answer is to use Cloud Data Catalog, which can automatically extract metadata from sources including Cloud Storage, BigQuery, Cloud Bigtable, Cloud Pub/Sub, and Google Sheets. Cloud Logging is used for recording data about events and is not the best way to collect metadata. Cloud Fusion is an ETL tool, not a metadata extraction tool. Developing your own metadata extraction tool, such as one that queries BigQuery metadata, requires more work and maintenance than using a managed service. See https://cloud.google.com/data-catalog/docs/concepts/overview",
+   "also_appears_in": [
+    "test_1_q8"
+   ]
+  },
+  {
+   "id": "test_11_q3",
+   "source": "test 11",
+   "question": "How can you query data for the past 30 days from the Firebase Analytics integration with Google BigQuery, where daily tables in the format app_events_YYYYMMDD are automatically created and the query is required to use legacy SQL?",
+   "options": [
+    "Use WHERE date BETWEEN YYYY-MM-DD AND YYYY-MM-DD.",
+    "Use the WHERE_PARTITIONTIME pseudo column.",
+    "Use the TABLE_DATE_RANGE function.",
+    "Use SELECT IF(date >= YYYY-MM-DD AND date <= YYYY-MM-DD."
+   ],
+   "answer": [
+    "Use the TABLE_DATE_RANGE function."
+   ],
+   "explanation": "https://cloud.google.com/bigquery/docs/reference/legacy-sql",
+   "also_appears_in": [
+    "test_1_q15"
+   ]
+  },
+  {
+   "id": "test_1_q44",
+   "source": "test 1",
+   "question": "You use materialized views in BigQuery. You are incurring higher than expected charges for BigQuery and suspect it may be related to materialized views. What materialized view characteristic could increase your BigQuery costs? (Choose 2)",
+   "options": [
+    "The datatypes used in materialized views",
+    "The frequency of materialized view refresh",
+    "The total volume of data stored in materialized views",
+    "The number of users with read access to the materialized view"
+   ],
+   "answer": [
+    "The frequency of materialized view refresh",
+    "The total volume of data stored in materialized views"
+   ],
+   "explanation": "The amount of data stored and the frequency of refresh jobs can increase the cost of maintaining materialized views. The data types used in the materialized view do not affect the cost. The number of users reading a materialized view does not affect cost but the total amount of data scanned would impact cost. See https://cloud.google.com/bigquery/docs/materialized-views-intro",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_11_q41"
+   ]
+  },
+  {
+   "id": "test_1_q49",
+   "source": "test 1",
+   "question": "You are migrating a data warehouse from on-premises to Google Cloud. Users of the data warehouse are concerned that they will not have access to highly performant, in memory analysis. What service would you suggest to have comparable features and performance in Google Cloud?",
+   "options": [
+    "BigQuery with Cloud Memorystore using Redis",
+    "BigQuery BI Engine",
+    "BigQuery Cloud Memorystore with memcached",
+    "Bigtable with BI Engine"
+   ],
+   "answer": [
+    "BigQuery BI Engine"
+   ],
+   "explanation": "BigQuery BI Engine is an in-memory analytics engine. Cloud Memorystore is a cache and better suited to storing key-value data for applications that need low latency access to data. There is no Bigtable BI Engine service. See https://cloud.google.com/bigquery/docs/bi-engine-intro",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_10_q47",
+    "test_16_q2"
+   ]
+  },
+  {
+   "id": "test_2_q20",
+   "source": "test 2",
+   "question": "Your BigQuery costs are higher than expected. You want to help data analysts using the BigQuery data warehouse reduce overall costs. Which of the following would you recommend? (choose 2)",
+   "options": [
+    "Avoid using SELECT *",
+    "Avoid using partitioned tables",
+    "Avoid using clustered tables",
+    "Use LIMIT only with clustered tables",
+    "Use the bq --estimate-bytes command to estimate the number of bytes read"
+   ],
+   "answer": [
+    "Avoid using SELECT *",
+    "Use the bq --estimate-bytes command to estimate the number of bytes read"
+   ],
+   "explanation": "Avoid using SELECT * BigQuery charges based on bytes scanned. SELECT * reads all columns, even those not needed. Instead, select only required columns to reduce scanned data and costs. Avoid using partitioned tables Wrong: Partitioned tables actually reduce costs when queries filter on partition columns. Partitioning is a best practice for cost optimization, not something to avoid. Avoid using clustered tables Wrong: Clustering helps reduce query costs by improving how data is read. Clustering is also a cost optimization technique. Use LIMIT only with clustered tables LIMIT alone does not reduce bytes scanned; BigQuery still reads all rows unless combined with partitioning/clustering. Misleading; not a general cost-reduction technique. Use bq --estimate-bytes Before running queries, you can estimate how much data will be scanned. Helps analysts avoid expensive queries and plan cost-effective queries. See https://cloud.google.com/bigquery/docs/best-practices-performance-overview",
+   "also_appears_in": [
+    "test_11_q25"
+   ]
+  },
+  {
+   "id": "test_2_q28",
+   "source": "test 2",
+   "question": "A data analyst currently has the bigquery.dataViewer role and can successfully query a materialized view. They also want to be able to refresh the materialized view. You want to use a predefined role but not grant them any more permissions than needed to refresh the materialized view. What predefined role would you grant to the user?",
+   "options": [
+    "bigquery.dataOwner",
+    "bigquery.admin",
+    "bigquery.dataEditor",
+    "bigquery.mvUpdater"
+   ],
+   "answer": [
+    "bigquery.mvUpdater"
+   ],
+   "explanation": "Correct Option D. bigquery.mvUpdater Correct because the bigquery.mvUpdater role is specifically designed to allow users to refresh materialized views. It grants only the minimal permissions required for this task, without giving broader access to modify datasets or tables. This aligns with the principle of least privilege, ensuring the analyst can refresh the view but not perform unnecessary administrative actions. Incorrect Option A. bigquery.dataOwner Incorrect because this role grants full control over datasets, including the ability to create, update, and delete tables and views. It provides far more permissions than needed, violating the principle of least privilege. Option B. bigquery.admin Incorrect because this is a broad administrative role that allows managing all BigQuery resources. It is excessive for simply refreshing a materialized view. Option C. bigquery.dataEditor Incorrect because this role allows editing and deleting tables and views within a dataset. While it provides more permissions than dataViewer, it still does not specifically grant the ability to refresh materialized views."
+  },
+  {
+   "id": "test_3_q32",
+   "source": "test 3",
+   "question": "As an employee of a global shipping company, you need to train a model on 40 TB of data to predict which ships in each geographic region are likely to cause delivery delays. The model will use various attributes collected from multiple sources, including telemetry data like location in GeoJSON format that is updated every hour. You need a storage solution that has native functionality for prediction and geospatial processing, and you also want a dashboard that displays which ships are likely to cause delays in a particular region. Which storage solution is the best fit for your needs?",
+   "options": [
+    "BigQuery",
+    "Cloud Bigtable",
+    "Cloud Datastore",
+    "Cloud SQL for PostgreSQL"
+   ],
+   "answer": [
+    "BigQuery"
+   ],
+   "explanation": "In a data warehouse like BigQuery, location information is very common. Many critical business decisions revolve around location data. For example, you may record the latitude and longitude of your delivery vehicles or packages over time. You may also record customer transactions and join the data to another table with store location data. You can use this type of location data to determine when a package is likely to arrive or to determine which customers should receive a mailer for a particular store location. Geospatial analytics let you analyze and visualize geospatial data in BigQuery by using geography data types and Google Standard SQL geography functions. Ref: https://cloud.google.com/bigquery/docs/geospatial-intro",
+   "also_appears_in": [
+    "test_9_q9"
+   ]
+  },
+  {
+   "id": "test_3_q35",
+   "source": "test 3",
+   "question": "How should you manage user permissions for a BigQuery data warehouse with multiple users where each team should only see certain tables based on their team membership?",
+   "options": [
+    "Grant data viewer access to the users/groups at the table level for each table.",
+    "Create SQL views for each team in the same dataset as the data and grant data viewer access to the SQL views for the users/groups.",
+    "Create authorized views for each team in the same dataset as the data and grant data viewer access to the authorized views for the users/groups.",
+    "Create authorized views for each team in datasets created for each team. Grant data viewer access to the authorized views for the dataset where the data resides, and grant data viewer access to the datasets where the authorized views reside for the users/groups"
+   ],
+   "answer": [
+    "Create authorized views for each team in datasets created for each team. Grant data viewer access to the authorized views for the dataset where the data resides, and grant data viewer access to the datasets where the authorized views reside for the users/groups"
+   ],
+   "explanation": "When we achieve requirement option A, my point of view is , Option D is the fool-proof method than option A. Ref: https://cloud.google.com/bigquery/docs/authorized-views",
+   "also_appears_in": [
+    "test_8_q4"
+   ]
+  },
+  {
+   "id": "test_3_q43",
+   "source": "test 3",
+   "question": "You are designing a data warehouse using BigQuery for your company‘s sales data. You migrated your on-premises sales data warehouse with a star schema to BigQuery, but you are experiencing performance issues when querying the data for the past 30 days. Which of the following Google-recommended practices should you adopt to speed up the query without increasing storage costs?",
+   "options": [
+    "DeNormalize the data",
+    "Divide the data by customer ID",
+    "Create views to materialize the dimensional data.",
+    "Partition the data by transaction date."
+   ],
+   "answer": [
+    "Partition the data by transaction date."
+   ],
+   "explanation": "This is a denormalized model, where a fact table collects metrics such as order amount, discount, and quantity, along with a group of keys. These keys belong to dimension tables such as customer, supplier, region, and so on. Graphically, the model resembles a star, with the fact table in the center surrounded by dimension tables. Star schema is already denormalized so partition makes more sense going with D Ref: https://cloud.google.com/bigquery/docs/migration/schema-data-overview#migrating_data_and_schema_from_on-premises_to_bigquery",
+   "also_appears_in": [
+    "test_9_q39"
+   ]
+  },
+  {
+   "id": "test_4_q18",
+   "source": "test 4",
+   "question": "You have a BigQuery dataset that contains critical data that needs to be highly available. What storage, backup, and recovery strategy should you use to minimize cost and ensure a recovery point objective (RPO) of 30 days?",
+   "options": [
+    "Set the BigQuery dataset to be regional. Use a point-in-time snapshot to recover the data in case of an emergency.",
+    "Set the BigQuery dataset to be regional. Create a scheduled query to copy the data to tables with timestamp suffixed. Use the backup copy in case of an emergency",
+    "Set the BigQuery dataset to be multi-regional. Use a point-in-time snapshot to recover the data in case of an emergency.",
+    "Set the BigQuery dataset to be multi-regional. Create a scheduled query to copy the data to tables with timestamp suffixed. Use the backup copy in case of an emergency"
+   ],
+   "answer": [
+    "Set the BigQuery dataset to be multi-regional. Create a scheduled query to copy the data to tables with timestamp suffixed. Use the backup copy in case of an emergency"
+   ],
+   "explanation": "Correct option D. Set the BigQuery dataset to be multi‑regional. Create a scheduled query to copy the data to tables with timestamp suffixed. Use the backup copy in case of an emergency. This is the correct answer. A multi‑regional dataset ensures high availability and durability by replicating data across multiple regions. This is critical for business‑critical datasets. To meet the RPO of 30 days, you need a backup strategy that maintains historical versions of the data. Scheduled queries that copy data into timestamp‑suffixed tables provide a rolling backup history. This approach minimizes cost compared to continuous snapshots, while still ensuring that you can recover data from any point within the last 30 days. Incorrect option A. Set the BigQuery dataset to be regional. Use a point‑in‑time snapshot to recover the data in case of an emergency. Incorrect because a regional dataset does not provide the same resiliency as multi‑regional storage. Point‑in‑time snapshots in BigQuery are limited and do not guarantee a 30‑day RPO. This option fails both the availability and recovery requirements. option B. Set the BigQuery dataset to be regional. Create a scheduled query to copy the data to tables with timestamp suffixed. Use the backup copy in case of an emergency. Incorrect because while scheduled queries provide backups, using a regional dataset does not maximize resiliency. If the region experiences an outage, the dataset may become unavailable, violating the high‑availability requirement. option C. Set the BigQuery dataset to be multi‑regional. Use a point‑in‑time snapshot to recover the data in case of an emergency. Incorrect because point‑in‑time snapshots alone do not provide a rolling 30‑day backup history. They are useful for short‑term recovery but do not meet the 30‑day RPO requirement.",
+   "also_appears_in": [
+    "test_9_q27"
+   ],
+   "needs_review": true
+  },
+  {
+   "id": "test_4_q22",
+   "source": "test 4",
+   "question": "You have a requirement to create a near real-time inventory dashboard that reads the main inventory tables in your BigQuery data warehouse. The historical inventory data is stored as inventory balances by item and location, and you have several thousand updates to inventory every hour. Your goal is to ensure that the data is accurate and the dashboard has maximum performance. Which of the following options should you choose?",
+   "options": [
+    "Use BigQuery UPDATE statements to update the inventory balances as they are changing.",
+    "Partition the inventory balance table by item to reduce the amount of data scanned with each inventory update.",
+    "Use the BigQuery streaming to stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly.",
+    "Use the BigQuery bulk loader to batch load inventory changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly."
+   ],
+   "answer": [
+    "Use the BigQuery streaming to stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly."
+   ],
+   "explanation": "Correct Option C: Use the BigQuery streaming to stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly. Streaming inserts allow near real-time ingestion of inventory changes into BigQuery. By maintaining a movement table for updates and joining it with the historical balance table via a view, you ensure the dashboard reflects the latest changes without rewriting the entire balance table constantly. Nightly updates to the balance table consolidate data for long-term storage and performance optimization. This approach balances real-time accuracy with efficient maintenance. Incorrect Option A: Use BigQuery UPDATE statements to update the inventory balances as they are changing. Frequent UPDATE operations in BigQuery are expensive and inefficient. BigQuery is optimized for append-only workloads, not row-level updates. This would degrade performance and increase costs. Option B: Partition the inventory balance table by item to reduce the amount of data scanned with each inventory update. Partitioning helps with query efficiency but does not solve the problem of frequent updates. It does not provide a mechanism for near real-time ingestion or dashboard accuracy. Alone, this option is insufficient. Option D: Use the BigQuery bulk loader to batch load inventory changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly. Bulk loading is efficient for large batch jobs, but not suitable for near real-time requirements. Since updates occur several thousand times per hour, waiting for daily batch loads would cause delays in dashboard accuracy. This fails the requirement for near real-time performance.",
+   "also_appears_in": [
+    "test_9_q51"
+   ]
+  },
+  {
+   "id": "test_4_q33",
+   "source": "test 4",
+   "question": "In a report-only data warehouse using BigQuery‘s streaming API, what is the best way to design data loading with both staging and production tables to ensure only one master dataset and no performance impact on ingestion or reporting?",
+   "options": [
+    "Use an append-only staging table and update the production table every three hours with the changes",
+    "Use an append-only staging table and update the production table every ninety minutes with the changes",
+    "Move staged data to the production table and delete the staging table contents every three hours",
+    "Move staged data to the production table and delete the staging table contents every thirty minutes."
+   ],
+   "answer": [
+    "Move staged data to the production table and delete the staging table contents every three hours"
+   ],
+   "explanation": "The best approach is to move the staged data over to the production table and delete the staging table contents every three hours (Option C). Ref: https://cloud.google.com/blog/products/data-analytics/moving-a-publishing-workflow-to-bigquery-for-new-data-insights",
+   "also_appears_in": [
+    "test_9_q55"
+   ]
+  },
+  {
+   "id": "test_4_q35",
+   "source": "test 4",
+   "question": "How should you structure the data when migrating an application that tracks library books and information about each book, such as author or year published, from an on-premises data warehouse to BigQuery, to ensure optimal speed of queries about the author of each book that has been borrowed, while following Google‘s recommended practice for schema design?",
+   "options": [
+    "Keep the schema the same, maintain the different tables for the book and each of the attributes, and query as you are doing today",
+    "Create a table that is wide and includes a column for each attribute, including the author‘s first name, last name, date of birth, etc",
+    "Create a table that includes information about the books and authors, but nest the author fields inside the author column",
+    "Keep the schema the same, create a view that joins all of the tables, and always query the view."
+   ],
+   "answer": [
+    "Create a table that includes information about the books and authors, but nest the author fields inside the author column"
+   ],
+   "explanation": "Best practice: Use nested and repeated fields to denormalize data storage and increase query performance. Denormalization is a common strategy for increasing read performance for relational datasets that were previously normalized. The recommended way to denormalize data in BigQuery is to use nested and repeated fields. It‘s best to use this strategy when the relationships are hierarchical and frequently queried together, such as in parent-child relationships. Ref: https://cloud.google.com/bigquery/docs/best-practices-performance-nested",
+   "also_appears_in": [
+    "test_9_q54"
+   ]
+  },
+  {
+   "id": "test_4_q37",
+   "source": "test 4",
+   "question": "You have a BigQuery table and you run a query with a WHERE clause that filters the data based on a timestamp and ID column. However, after using the bq query “-dry_run“ command, you discover that the query triggers a full scan of the table, even though the filter only selects a small fraction of the data. You want to minimize the amount of data scanned by BigQuery while keeping your SQL queries intact. Which approach should you take?",
+   "options": [
+    "Create a separate table for each ID",
+    "Use the LIMIT keyword to reduce the number of rows returned",
+    "Recreate the table with a partitioning column and clustering column",
+    "Use the bq query --maximum_bytes_billed flag to restrict the number of bytes billed"
+   ],
+   "answer": [
+    "Recreate the table with a partitioning column and clustering column"
+   ],
+   "explanation": "Option C is the right choice : https://cloud.google.com/bigquery/docs/partitioned-tables A partitioned table is a special table that is divided into segments, called partitions, that make it easier to manage and query your data. By dividing a large table into smaller partitions, you can improve query performance, and you can control costs by reducing the number of bytes read by a query. https://cloud.google.com/bigquery/docs/clustered-tables Clustered tables in BigQuery are tables that have a user-defined column sort order using clustered columns. Clustered tables can improve query performance and reduce query costs.",
+   "also_appears_in": [
+    "test_8_q51"
+   ]
+  },
+  {
+   "id": "test_4_q50",
+   "source": "test 4",
+   "question": "How can you design a storage and processing platform for a petabyte of analytics data in Google Cloud, to perform data warehouse-style analytics on the data and expose the dataset as files for batch analysis tools in other cloud providers. (Choose the best option among the following)?",
+   "options": [
+    "Store and process the entire dataset in BigQuery",
+    "Store and process the entire dataset in Bigtable.",
+    "Store the full dataset in BigQuery, and store a compressed copy of the data in a Cloud Storage bucket",
+    "Store the warm data as files in Cloud Storage, and store the active data in BigQuery. Maintain the ratio of 80% warm data and 20% active data"
+   ],
+   "answer": [
+    "Store the full dataset in BigQuery, and store a compressed copy of the data in a Cloud Storage bucket"
+   ],
+   "explanation": "The best option for this scenario would be option C: Store the full dataset in BigQuery, and store a compressed copy of the data in a Cloud Storage bucket. This option allows for data warehouse-style analytics on the entire dataset in BigQuery, which is optimized for handling large datasets and performing complex queries. Additionally, storing a batch analysis tools in other cloud providers. Option A (Store and process the entire dataset in BigQuery) may be feasible for smaller datasets, but with a petabyte of data, it may not be cost-effective or practical to process everything in BigQuery alone. Option B (Store and process the entire dataset in Bigtable) may be suitable for real-time data processing, but it is not optimized for complex analytics queries. Option D (Store the warm data as files in Cloud Storage, and store the active data in BigQuery) may be a good option for datasets with varying levels of activity, but it doesn‘t address the need to perform data warehouse-style analytics on the entire dataset.",
+   "also_appears_in": [
+    "test_9_q22"
+   ]
+  },
+  {
+   "id": "test_4_q55",
+   "source": "test 4",
+   "question": "What are two recommended steps for a company migrating its on-premises data warehousing solutions to BigQuery to optimize CDC performance and reduce compute overhead while ensuring that changes to the source systems are available in near-real-time in the BigQuery reporting table (Choose two.)?",
+   "options": [
+    "Replicate each individual CDC record in real-time using DML INSERT, UPDATE, or DELETE operations directly on the reporting table",
+    "Insert each new CDC record and its corresponding operation type in real-time to a staging table",
+    "Periodically delete outdated records from the reporting table.",
+    "Use DML MERGE periodically to perform several DML INSERT, UPDATE, and DELETE operations at the same time on the reporting table.",
+    "Insert each new CDC record and its corresponding operation type in real-time to the reporting table, and use a materialized view to expose only the latest version of each unique record"
+   ],
+   "answer": [
+    "Insert each new CDC record and its corresponding operation type in real-time to a staging table",
+    "Use DML MERGE periodically to perform several DML INSERT, UPDATE, and DELETE operations at the same time on the reporting table."
+   ],
+   "explanation": "Delta tables contain all change events for a particular table since the initial load. Having all change events available can be valuable for identifying trends, the state of the entities that a table represents at a particular moment, or change frequency. The best way to merge data frequently and consistently is to use a MERGE statement, which lets you combine multiple INSERT, UPDATE, and DELETE statements into a single atomic operation Ref: https://cloud.google.com/architecture/database-replication-to-bigquery-using-change-data-capture#overview_of_cdc_data_replication",
+   "also_appears_in": [
+    "test_9_q30"
+   ]
+  },
+  {
+   "id": "test_5_q7",
+   "source": "test 5",
+   "question": "Which methods can be used to reduce the number of rows processed by BigQuery?",
+   "options": [
+    "Splitting tables into multiple tables; putting data in partitions",
+    "Splitting tables into multiple tables; putting data in partitions; using the LIMIT clause",
+    "Putting data in partitions; using the LIMIT clause",
+    "Splitting tables into multiple tables; using the LIMIT clause"
+   ],
+   "answer": [
+    "Splitting tables into multiple tables; putting data in partitions"
+   ],
+   "explanation": "If you split a table into multiple tables (such as one table for each day), then you can limit your query to the data in specific tables (such as for particular days). A better method is to use a partitioned table, as long as your data can be separated by the day. If you use the LIMIT clause, BigQuery will still process the entire table. Reference: https://cloud.google.com/bigquery/docs/partitioned-tables"
+  },
+  {
+   "id": "test_5_q8",
+   "source": "test 5",
+   "question": "Your company is using WILDCARD tables to query data across multiple tables with similar names. The SQL statement is currently failing with the following error: Which table name will make the SQL statement work correctly?",
+   "options": [
+    "'bigquery-public-data.noaa_gsod.gsod'",
+    "bigquery-public-data.noaa_gsod.gsod*",
+    "'bigquery-public-data.noaa_gsod.gsod'*",
+    "'bigquery-public-data.noaa_gsod.gsod*`"
+   ],
+   "answer": [
+    "'bigquery-public-data.noaa_gsod.gsod*`"
+   ],
+   "explanation": "Reference: https://cloud.google.com/bigquery/docs/wildcard-tables"
+  },
+  {
+   "id": "test_5_q11",
+   "source": "test 5",
+   "question": "You need to create a near real-time inventory dashboard that reads the main inventory tables in your BigQuery data warehouse. Historical inventory data is stored as inventory balances by item and location. You have several thousand updates to inventory every hour. You want to maximize performance of the dashboard and ensure that the data is accurate. What should you do?",
+   "options": [
+    "Leverage BigQuery UPDATE statements to update the inventory balances as they are changing.",
+    "Partition the inventory balance table by item to reduce the amount of data scanned with each inventory update.",
+    "Use the BigQuery streaming the stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly.",
+    "Use the BigQuery bulk loader to batch load inventory changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly."
+   ],
+   "answer": [
+    "Use the BigQuery streaming the stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly."
+   ],
+   "explanation": "The best approach to create a near real-time inventory dashboard with high performance and accuracy is: C. Use the BigQuery streaming insert to stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly. Here’s why: Streaming Inserts: BigQuery streaming insert allows you to ingest high-volume, real-time data efficiently. This minimizes latency and ensures that inventory changes are captured quickly. Inventory Movement Table: Creating a separate table to capture all inventory movements (receipts, shipments, adjustments) provides a granular history of all changes. This improves data traceability and auditing capabilities. Balance Calculation View: A view that calculates the current inventory balances by joining the historical inventory balances with the daily inventory movements provides a real-time representation of inventory levels. Views are virtual tables that don’t consume storage, making them efficient for querying. Nightly Update: Updating the main inventory balance table nightly ensures data consistency and allows for batch processing of any complex calculations or aggregations. Why other options are less suitable: A. Leverage BigQuery UPDATE statements to update the inventory balances as they are changing. Frequent updates to a large table can lead to performance bottlenecks and increased write amplification. B. Partition the inventory balance table by item to reduce the amount of data scanned with each inventory update. While partitioning can improve query performance, it doesn’t address the real-time data ingestion and processing requirements. D. Use the BigQuery bulk loader to batch load inventory changes into a daily inventory movement table. Bulk loading is suitable for batch processing, not for near real-time data ingestion. By implementing this approach, you can create a highly performant and accurate inventory dashboard that provides near real-time insights into your inventory levels, enabling better decision-making and improved operational efficiency. https://cloud.google.com/blog/products/data-analytics/dml-without-limits-now-in-bigquery"
+  },
+  {
+   "id": "test_5_q20",
+   "source": "test 5",
+   "question": "Which of these operations can you perform from the BigQuery Web UI?",
+   "options": [
+    "Upload a file in SQL format.",
+    "Load data with nested and repeated fields.",
+    "Upload a 20 MB file.",
+    "Upload multiple files using a wildcard."
+   ],
+   "answer": [
+    "Load data with nested and repeated fields.",
+    "Upload a 20 MB file."
+   ],
+   "explanation": "Correct Option B: Load data with nested and repeated fields. The Logic: BigQuery natively supports complex data structures (STRUCTs and ARRAYs). The Web UI allows you to load files (like JSON or Avro) that contain these nested and repeated schemas. You can either let BigQuery auto-detect the schema or manually define it in the JSON schema section of the load job interface. Option C: Upload a 20 MB file. The Logic: The BigQuery Web UI supports direct file uploads from your local machine. The current limit for local file uploads via the console is 100 MB. Since 20 MB falls well within this limit, this is a valid operation. Note: For files larger than 100 MB, you must first upload them to Google Cloud Storage (GCS) and then load them into BigQuery. Incorrect Option A: Upload a file in SQL format. Reasoning: You cannot “upload” an .sql file to execute it in the Web UI like a data import. You must open the SQL file locally, copy the text, and paste it into the Query Editor. While you can save queries to “Saved Queries,” there is no direct “Upload SQL File” button for execution. Option D: Upload multiple files using a wildcard. Reasoning: Wildcard support (e.g., gs://my-bucket/data-*.csv) is available when loading data from Google Cloud Storage. However, the Web UI’s “Upload” source (which refers to local files) only allows you to select one specific file at a time from your local file picker. Batching multiple local files with a wildcard is a function of the bq command-line tool or GCS-based loads."
+  },
+  {
+   "id": "test_5_q24",
+   "source": "test 5",
+   "question": "You have enabled the free integration between Firebase Analytics and Google BigQuery. Firebase now automatically creates a new table daily in BigQuery in the format app_events_YYYYMMDD. You want to query all of the tables for the past 30 days in legacy SQL. What should you do?",
+   "options": [
+    "Use the TABLE_DATE_RANGE function",
+    "Use the WHERE_PARTITIONTIME pseudo column",
+    "Use WHERE date BETWEEN YYYY-MM-DD AND YYYY-MM-DD",
+    "Use SELECT IF.(date >= YYYY-MM-DD AND date <= YYYY-MM-DD"
+   ],
+   "answer": [
+    "Use the TABLE_DATE_RANGE function"
+   ],
+   "explanation": "https://cloud.google.com/blog/products/gcp/using-bigquery-and-firebase-analytics-to-understand-your-mobile-app?hl=am"
+  },
+  {
+   "id": "test_5_q28",
+   "source": "test 5",
+   "question": "You are building new real-time data warehouse for your company and will use Google BigQuery streaming inserts. There is no guarantee that data will only be sent in once but you do have a unique ID for each row of data and an event timestamp. You want to ensure that duplicates are not included while interactively querying data. Which query type should you use?",
+   "options": [
+    "Include ORDER BY DESK on timestamp column and LIMIT to 1.",
+    "Use GROUP BY on the unique ID column and timestamp column and SUM on the values.",
+    "Use the LAG window function with PARTITION by unique ID along with WHERE LAG IS NOT NULL.",
+    "Use the ROW_NUMBER window function with PARTITION by unique ID along with WHERE row equals 1."
+   ],
+   "answer": [
+    "Use the ROW_NUMBER window function with PARTITION by unique ID along with WHERE row equals 1."
+   ],
+   "explanation": "Explanation: https://www.youtube.com/watch?v=ysArdMImULo&list=PLQMsfKRZZviSLraRoqXulcMKFvIXQkHdA&index=3"
+  },
+  {
+   "id": "test_5_q30",
+   "source": "test 5",
+   "question": "You need to set access to BigQuery for different departments within your company. Your solution should comply with the following requirements: ? Each department should have access only to their data. Each department will have one or more leads who need to be able to create and update tables and provide them to their team. ? Each department has data analysts who need to be able to query but not modify data. How should you set access to the data in BigQuery?",
+   "options": [
+    "Create a dataset for each department. Assign the department leads the role of OWNER, and assign the data analysts the role of WRITER on their dataset.",
+    "Create a dataset for each department. Assign the department leads the role of WRITER, and assign the data analysts the role of READER on their dataset.",
+    "Create a table for each department. Assign the department leads the role of Owner, and assign the data analysts the role of Editor on the project the table is in.",
+    "Create a table for each department. Assign the department leads the role of Editor, and assign the data analysts the role of Viewer on the project the table is in."
+   ],
+   "answer": [
+    "Create a dataset for each department. Assign the department leads the role of WRITER, and assign the data analysts the role of READER on their dataset."
+   ],
+   "explanation": "B: By default, granting access to a project also grants access to datasets within it. Default access can be overridden on a per-dataset basis. Primitive roles apply at the dataset level: https://cloud.google.com/bigquery/docs/access-control-primitive-roles"
+  },
+  {
+   "id": "test_5_q46",
+   "source": "test 5",
+   "question": "Which of these statements about BigQuery caching is true?",
+   "options": [
+    "By default, a query‘s results are not cached.",
+    "BigQuery caches query results for 48 hours.",
+    "Query results are cached even if you specify a destination table.",
+    "There is no charge for a query that retrieves its results from cache."
+   ],
+   "answer": [
+    "There is no charge for a query that retrieves its results from cache."
+   ],
+   "explanation": "When query results are retrieved from a cached results table, you are not charged for the query. BigQuery caches query results for 24 hours, not 48 hours. Query results are not cached if you specify a destination table. A query‘s results are always cached except under certain conditions, such as if you specify a destination table. Reference: https://cloud.google.com/bigquery/querying-data#query-caching"
+  },
+  {
+   "id": "test_6_q17",
+   "source": "test 6",
+   "question": "You have a query that filters a BigQuery table using a WHERE clause on timestamp and ID columns. By using bq query ““ -dry_run you learn that the query triggers a full scan of the table, even though the filter on timestamp and ID select a tiny fraction of the overall data. You want to reduce the amount of data scanned by BigQuery with minimal changes to existing SQL queries. What should you do?",
+   "options": [
+    "Create a separate table for each ID.",
+    "Use the LIMIT keyword to reduce the number of rows returned.",
+    "Recreate the table with a partitioning column and clustering column.",
+    "Use the bq query - -maximum_bytes_billed flag to restrict the number of bytes billed."
+   ],
+   "answer": [
+    "Recreate the table with a partitioning column and clustering column."
+   ],
+   "explanation": "Correct option C. Partition + cluster table Timestamp partition + ID clustering prunes data. Incorrect option A. ID tables Management overhead. option B. LIMIT Output limit only. option D. bytes flag Billing cap; no scan reduction."
+  },
+  {
+   "id": "test_6_q21",
+   "source": "test 6",
+   "question": "Which of the following statements about Legacy SQL and Standard SQL is not true?",
+   "options": [
+    "Standard SQL is the preferred query language for BigQuery.",
+    "If you write a query in Legacy SQL, it might generate an error if you try to run it with Standard SQL.",
+    "One difference between the two query languages is how you specify fully-qualified table names (i.e. table names that include their associated project name).",
+    "You need to set a query language for each dataset and the default is Standard SQL."
+   ],
+   "answer": [
+    "You need to set a query language for each dataset and the default is Standard SQL."
+   ],
+   "explanation": "Correct Option D. This statement is not true. Query language in BigQuery is set per query, not per dataset. You can choose whether to run a query in Legacy SQL or Standard SQL when executing it. The default query language is Standard SQL, but this applies at the query execution level, not at the dataset level. Therefore, the claim that you must set a query language for each dataset is incorrect. Incorrect Option A. True. Standard SQL is indeed the preferred query language for BigQuery because it is ANSI-compliant, more powerful, and supports modern features like window functions and better joins. Option B. True. Queries written in Legacy SQL may fail if run under Standard SQL because of syntax differences and unsupported constructs. Option C. True. One key difference between Legacy SQL and Standard SQL is how fully-qualified table names are specified. Legacy SQL uses the format [project:dataset.table]. Standard SQL uses the format `project.dataset.table`."
+  },
+  {
+   "id": "test_6_q25",
+   "source": "test 6",
+   "question": "You are migrating your data warehouse to BigQuery. You have migrated all of your data into tables in a dataset. Multiple users from your organization will be using the data. They should only see certain tables based on their team membership. How should you set user permissions?",
+   "options": [
+    "Assign the users/groups data viewer access at the table level for each table",
+    "Create SQL views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the SQL views",
+    "Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views",
+    "Create authorized views for each team in datasets created for each team. Assign the authorized views data viewer access to the dataset in which the data resides. Assign the users/groups data viewer access to the datasets in which the authorized views reside"
+   ],
+   "answer": [
+    "Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views"
+   ],
+   "explanation": "Correct Option C: Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views The Logic: An Authorized View allows you to restrict access at a granular level (rows or columns) or to specific tables within a dataset. By “authorizing” the view, you give the view permission to read the source data. The users only need the BigQuery Data Viewer role on the view itself, not the source tables. Best Practice: This approach ensures that team members only see the specific data permitted by the view logic, satisfying the “team membership” requirement while maintaining security. Incorrect Option A: Assign the users/groups data viewer access at the table level for each table Reasoning: While BigQuery supports table-level permissions, managing this for “multiple users” across “multiple teams” becomes an administrative nightmare. It is not as scalable or secure as using views, and it doesn’t allow for row-level or column-level filtering if those needs arise later. Option B: Create SQL views… and assign data viewer access to the SQL views Reasoning: A standard SQL view (not “Authorized”) requires the user to have read permissions on the underlying source tables. If you give users access to the source tables so they can use the view, they will be able to see all tables in that dataset, which violates the requirement that they “should only see certain tables.” Option D: Create authorized views for each team in datasets created for each team… Reasoning: This option describes a highly complex architecture of cross-dataset authorization. While technically possible, the prompt specifically mentions the data has been migrated into a dataset (singular). Option C is the most direct and “best practice” way to handle the requirement within the existing structure without over-engineering the dataset hierarchy."
+  },
+  {
+   "id": "test_6_q43",
+   "source": "test 6",
+   "question": "Which SQL keyword can be used to reduce the number of columns processed by BigQuery?",
+   "options": [
+    "BETWEEN",
+    "WHERE",
+    "SELECT",
+    "LIMIT"
+   ],
+   "answer": [
+    "SELECT"
+   ],
+   "explanation": "SELECT allows you to query specific columns rather than the whole table. LIMIT, BETWEEN, and WHERE clauses will not reduce the number of columns processed by BigQuery. Reference: https://cloud.google.com/bigquery/launch-checklist#architecture_design_and_development_checklist"
+  },
+  {
+   "id": "test_7_q2",
+   "source": "test 7",
+   "question": "You use a dataset in BigQuery for analysis. You want to provide third-party companies with access to the same dataset. You need to keep the costs of data sharing low and ensure that the data is current. Which solution should you choose?",
+   "options": [
+    "Create an authorized view on the BigQuery table to control data access, and provide third-party companies with access to that view.",
+    "Use Cloud Scheduler to export the data on a regular basis to Cloud Storage, and provide third-party companies with access to the bucket.",
+    "Create a separate dataset in BigQuery that contains the relevant data to share, and provide third-party companies with access to the new dataset.",
+    "Create a Cloud Dataflow job that reads the data in frequent time intervals, and writes it to the relevant BigQuery dataset or Cloud Storage bucket for third-party companies to use."
+   ],
+   "answer": [
+    "Create an authorized view on the BigQuery table to control data access, and provide third-party companies with access to that view."
+   ],
+   "explanation": "https://cloud.google.com/bigquery/docs/share-access-views BigQuery is a petabyte-scale analytics data warehouse that you can use to run SQL queries over vast amounts of data in near realtime. Giving a view access to a dataset is also known as creating an authorized view in BigQuery. An authorized view allows you to share query results with particular users and groups without giving them access to the underlying tables. You can also use the view‘s SQL query to restrict the columns (fields) the users are able to query. When you create the view, it must be created in a dataset separate from the source data queried by the view. Because you can assign access controls only at the dataset level, if the view is created in the same dataset as the source data, your data analysts would have access to both the view and the data."
+  },
+  {
+   "id": "test_7_q11",
+   "source": "test 7",
+   "question": "You launched a new gaming app almost three years ago. You have been uploading log files from the previous day to a separate Google BigQuery table with the table name format LOGS_yyyymmdd. You have been using table wildcard functions to generate daily and monthly reports for all time ranges. Recently, you discovered that some queries that cover long date ranges are exceeding the limit of 1,000 tables and failing. How can you resolve this issue?",
+   "options": [
+    "Convert all daily log tables into date-partitioned tables",
+    "Convert the sharded tables into a single partitioned table",
+    "Enable query caching so you can cache data from previous months",
+    "Create separate views to cover each month, and query from these views"
+   ],
+   "answer": [
+    "Convert the sharded tables into a single partitioned table"
+   ],
+   "explanation": "Let’s analyze each option to determine the best solution: A. Convert all daily log tables into date-partitioned tables: This is a strong option. By converting the daily tables into a single date-partitioned table, you eliminate the need to query numerous separate tables. BigQuery’s partitioning allows you to query specific partitions efficiently, significantly reducing the number of tables scanned. This is a very efficient way to solve the 1000 table limit problem. B. Convert the sharded tables into a single partitioned table: This is the most efficient and recommended solution. By converting the sharded tables into a single partitioned table, you are able to query the data as if it was in one table, and BigQuery will only scan the partitions that are needed for the query. This is the optimal way to handle large datasets that are separated by date. C. Enable query caching so you can cache data from previous months: Query caching can improve performance for repeated queries, but it doesn’t solve the underlying issue of exceeding the 1,000-table limit. The initial query that populates the cache will still fail if it exceeds the limit. D. Create separate views to cover each month, and query from these views: While views can simplify queries, they don’t fundamentally address the 1,000-table limit. When you query a view, BigQuery still needs to access the underlying tables, and if those tables exceed the limit, the query will fail. Therefore, the best solution is B. https://cloud.google.com/bigquery/docs/creating-partitioned-tables#converting_date-sharded_tables_into_ingestion-time_partitioned_tables"
+  },
+  {
+   "id": "test_7_q16",
+   "source": "test 7",
+   "question": "You are designing storage for 20 TB of text files as part of deploying a data pipeline on Google Cloud. Your input data is in CSV format. You want to minimize the cost of querying aggregate values for multiple users who will query the data in Cloud Storage with multiple engines. Which storage service and schema design should you use?",
+   "options": [
+    "Use Cloud Bigtable for storage. Install the HBase shell on a Compute Engine instance to query the Cloud Bigtable data.",
+    "Use Cloud Bigtable for storage. Link as permanent tables in BigQuery for query.",
+    "Use Cloud Storage for storage. Link as permanent tables in BigQuery for query.",
+    "Use Cloud Storage for storage. Link as temporary tables in BigQuery for query."
+   ],
+   "answer": [
+    "Use Cloud Storage for storage. Link as permanent tables in BigQuery for query."
+   ],
+   "explanation": "Correct Option C. Use Cloud Storage for storage. Link as permanent tables in BigQuery for query. Correct because storing the 20 TB of CSV files in Cloud Storage is cost‑effective, and linking them as permanent external tables in BigQuery allows multiple users and engines to query aggregate values efficiently. This design minimizes cost since the data remains in Cloud Storage, while BigQuery provides scalable querying without requiring full data ingestion into BigQuery storage. Incorrect Option A. Use Cloud Bigtable for storage. Install the HBase shell on a Compute Engine instance to query the Cloud Bigtable data. Incorrect because Cloud Bigtable is optimized for low‑latency, high‑throughput workloads such as time‑series or IoT data, not for ad‑hoc aggregate queries on large CSV datasets. Using HBase shell adds unnecessary complexity and cost. Option B. Use Cloud Bigtable for storage. Link as permanent tables in BigQuery for query. Incorrect because BigQuery does not natively query Cloud Bigtable data in the same way it queries Cloud Storage files. This setup would require additional integration steps and is not cost‑efficient for aggregate queries on CSV data. Option D. Use Cloud Storage for storage. Link as temporary tables in BigQuery for query. Incorrect because temporary tables are session‑based and not reusable across multiple users or queries. For a production pipeline with multiple users, permanent external tables are required to ensure consistent access and minimize repeated setup overhead."
+  },
+  {
+   "id": "test_7_q32",
+   "source": "test 7",
+   "question": "You have spent a few days loading data from comma-separated values (CSV) files into the Google BigQuery table CLICK_STREAM. The column DT stores the epoch time of click events. For convenience, you chose a simple schema where every field is treated as the STRING type. Now, you want to compute web session durations of users who visit your site, and you want to change its data type to the TIMESTAMP. You want to minimize the migration effort without making future queries computationally expensive. What should you do?",
+   "options": [
+    "Delete the table CLICK_STREAM, and then re-create it such that the column DT is of the TIMESTAMP type. Reload the data.",
+    "Add a column TS of the TIMESTAMP type to the table CLICK_STREAM, and populate the numeric values from the column TS for each row. Reference the column TS instead of the column DT from now on.",
+    "Create a view CLICK_STREAM_V, where strings from the column DT are cast into TIMESTAMP values. Reference the view CLICK_STREAM_V instead of the table CLICK_STREAM from now on.",
+    "Add two columns to the table CLICK STREAM: TS of the TIMESTAMP type and IS_NEW of the BOOLEAN type. Reload all data in append mode. For each appended row, set the value of IS_NEW to true. For future queries, reference the column TS instead of the column DT, with the WHERE clause ensuring that the value of IS_NEW must be true.",
+    "Construct a query to return every row of the table CLICK_STREAM, while using the built-in function to cast strings from the column DT into TIMESTAMP values. Run the query into a destination table NEW_CLICK_STREAM, in which the column TS is the TIMESTAMP type. Reference the table NEW_CLICK_STREAM instead of the table CLICK_STREAM from now on. In the future, new data is loaded into the table NEW_CLICK_STREAM."
+   ],
+   "answer": [
+    "Construct a query to return every row of the table CLICK_STREAM, while using the built-in function to cast strings from the column DT into TIMESTAMP values. Run the query into a destination table NEW_CLICK_STREAM, in which the column TS is the TIMESTAMP type. Reference the table NEW_CLICK_STREAM instead of the table CLICK_STREAM from now on. In the future, new data is loaded into the table NEW_CLICK_STREAM."
+   ],
+   "explanation": "E : Export and load data into a new table You can also change a column‘s data type by exporting your table data to Cloud Storage, and then loading the data into a new table with a schema definition that specifies the correct data type for the column. You can also use the load job to overwrite the existing table. Advantages You are not charged for the export job or the load job. Currently, BigQuery load and export jobs are free. If you use the load job to overwrite the original table, you incur storage costs for one table instead of two, but you lose the original data. Disadvantages If you load the data into a new table, you incur storage costs for the original table and the new table (unless you delete the old one). You incur costs for storing the exported data in Cloud Storage."
+  },
+  {
+   "id": "test_7_q33",
+   "source": "test 7",
+   "question": "You designed a database for patient records as a pilot project to cover a few hundred patients in three clinics. Your design used a single database table to represent all patients and their visits, and you used self-joins to generate reports. The server resource utilization was at 50%. Since then, the scope of the project has expanded. The database must now store 100 times more patient records. You can no longer run the reports, because they either take too long or they encounter errors with insufficient compute resources. How should you adjust the database design?",
+   "options": [
+    "Add capacity (memory and disk space) to the database server by the order of 200.",
+    "Shard the tables into smaller ones based on date ranges, and only generate reports with prespecified date ranges.",
+    "Normalize the master patient-record table into the patient table and the visits table, and create other necessary tables to avoid self-join.",
+    "Partition the table into smaller tables, with one for each clinic. Run queries against the smaller table pairs, and use unions for consolidated reports."
+   ],
+   "answer": [
+    "Normalize the master patient-record table into the patient table and the visits table, and create other necessary tables to avoid self-join."
+   ],
+   "explanation": "C is correct because this option provides the least amount of inconvenience over using pre-specified date ranges or one table per clinic while also increasing performance due to avoiding self-joins. A is not correct because adding additional compute resources is not a recommended way to resolve database schema problems. B is not correct because this will reduce the functionality of the database and make running reports more difficult. D is not correct because this will likely increase the number of tables so much that it will be more difficult to generate reports vs. the correct option. https://cloud.google.com/bigquery/docs/best-practices-performance-patterns https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#explicit-alias-visibility"
+  },
+  {
+   "id": "test_7_q37",
+   "source": "test 7",
+   "question": "Suppose you have a table that includes a nested column called “city“ inside a column called “person“, but when you try to submit the following query in BigQuery, it gives you an error.SELECT person FROM ′project1.example.table1′ WHERE city = “London“How would you correct the error?",
+   "options": [
+    "Add “, UNNEST(person)“ before the WHERE clause.",
+    "Change “person“ to “person.city“.",
+    "Change “person“ to “city.person“.",
+    "Add “, UNNEST(city)“ before the WHERE clause."
+   ],
+   "answer": [
+    "Add “, UNNEST(person)“ before the WHERE clause."
+   ],
+   "explanation": "To access the person.city column, you need to “UNNEST(person)“ and JOIN it to table1 using a comma. Reference: https://cloud.google.com/bigquery/docs/reference/standard-sql/migrating-from-legacy-sql#nested_repeated_results"
+  },
+  {
+   "id": "test_7_q40",
+   "source": "test 7",
+   "question": "What are two of the benefits of using denormalized data structures in BigQuery?",
+   "options": [
+    "Reduces the amount of data processed, reduces the amount of storage required",
+    "Increases query speed, makes queries simpler",
+    "Reduces the amount of storage required, increases query speed",
+    "Reduces the amount of data processed, increases query speed"
+   ],
+   "answer": [
+    "Increases query speed, makes queries simpler"
+   ],
+   "explanation": "Denormalization increases query speed for tables with billions of rows because BigQuery‘s performance degrades when doing JOINs on large tables, but with a denormalized data structure, you don‘t have to use JOINs, since all of the data has been combined into one table. Denormalization also makes queries simpler because you do not have to use JOIN clauses. Denormalization increases the amount of data processed and the amount of storage required because it creates redundant data. Reference: https://cloud.google.com/solutions/bigquery-data-warehouse#denormalizing_data"
+  },
+  {
+   "id": "test_8_q31",
+   "source": "test 8",
+   "question": "Which of these is not a supported method of putting data into a partitioned table?",
+   "options": [
+    "If you have existing data in a separate file for each day, then create a partitioned table and upload each file into the appropriate partition.",
+    "Run a query to get the records for a specific day from an existing table and for the destination table, specify a partitioned table ending with the day in the format “$YYYYMMDD“.",
+    "Create a partitioned table and stream new records to it every day.",
+    "Use ORDER BY to put a table‘s rows into chronological order and then change the table‘s type to “Partitioned“."
+   ],
+   "answer": [
+    "Use ORDER BY to put a table‘s rows into chronological order and then change the table‘s type to “Partitioned“."
+   ],
+   "explanation": "You cannot change an existing table into a partitioned table. You must create a partitioned table from scratch. Then you can either stream data into it every day and the data will automatically be put in the right partition, or you can load data into a specific partition by using “$YYYYMMDD“ at the end of the table name. Reference: https://cloud.google.com/bigquery/docs/partitioned-tables"
+  },
+  {
+   "id": "test_8_q43",
+   "source": "test 8",
+   "question": "What are two methods that can be used to denormalize tables in BigQuery?",
+   "options": [
+    "1) Split table into multiple tables; 2) Use a partitioned table",
+    "1) Join tables into one table; 2) Use nested repeated fields",
+    "1) Use a partitioned table; 2) Join tables into one table",
+    "1) Use nested repeated fields; 2) Use a partitioned table"
+   ],
+   "answer": [
+    "1) Join tables into one table; 2) Use nested repeated fields"
+   ],
+   "explanation": "The conventional method of denormalizing data involves simply writing a fact, along with all its dimensions, into a flat table structure. For example, if you are dealing with sales transactions, you would write each individual fact to a record, along with the accompanying dimensions such as order and customer information. The other method for denormalizing data takes advantage of BigQuerys native support for nested and repeated structures in JSON or Avro input data. Expressing records using nested and repeated structures can provide a more natural representation of the underlying data. In the case of the sales order, the outer part of a JSON structure would contain the order and customer information, and the inner part of the structure would contain the individual line items of the order, which would be represented as nested, repeated elements. Reference: https://cloud.google.com/solutions/bigquery-data-warehouse#denormalizing_data"
+  },
+  {
+   "id": "test_9_q16",
+   "source": "test 9",
+   "question": "You have a table in BigQuery containing information about purchases made across several store locations. You need to choose the best data model for optimal query performance. The table includes information such as the time of the transaction, items purchased, the store ID, and the city and state in which the store is located. You often run queries to view the sales of each item over the past 30 days and to analyze purchasing trends by state, city, and individual store. How would you model this table for the best query performance?",
+   "options": [
+    "Cluster the table by state, city, and then store ID without partitioning",
+    "Cluster the table by store ID, city, and then state without partitioning",
+    "Partition the table by transaction time and cluster it by state, city, and then store ID",
+    "Partition the table by transaction time and cluster it by store ID, city, and then state"
+   ],
+   "answer": [
+    "Partition the table by transaction time and cluster it by state, city, and then store ID"
+   ],
+   "explanation": "Partitioning by transaction time will help with filtering data by the date of the transaction, which is a common use case. Clustering by state, city, and store ID in that order will help with grouping data by geographic regions and allow for efficient filtering and aggregation. This approach will also be helpful for analyzing trends by state, city, and store, as well as for identifying which products are selling better in different regions So Partitioning is obvious Clustering is already mentioned in the option A. So we need to both to achieve the best performance.",
+   "also_appears_in": [
+    "test_3_q25"
+   ]
+  },
+  {
+   "id": "test_12_q26",
+   "source": "test 12",
+   "question": "A BigQuery data warehouse needs to access some data in Cloud Storage using external tables. Which of the following is not a supported file format for external tables based on files in Cloud Storage?",
+   "options": [
+    "Avro",
+    "ORC",
+    "Firestore export files",
+    "Excel xlsx format"
+   ],
+   "answer": [
+    "Excel xlsx format"
+   ],
+   "explanation": "The Excel xlsx file format is not supported for files stored in Cloud Storage. Avro, CSV, newline-delimited JSON, Datastore export files, Firestore export files, ORC, and Parquet files are supported. See https://cloud.google.com/bigquery/external-data-sources"
+  },
+  {
+   "id": "test_13_q8",
+   "source": "test 13",
+   "question": "Scenario: You need to access data from a large BigQuery table multiple times daily. The table is several petabytes in size, but you want to streamline your queries for faster results and simpler aggregations for other users. How can you optimize your BigQuery queries to improve query speed and provide more timely insights?",
+   "options": [
+    "Run a scheduled query to pull the necessary data at specific intervals dally.",
+    "Use a cached query to accelerate time to results.",
+    "Limit the query columns being pulled in the final result.",
+    "Create a materialized view based off of the query being run."
+   ],
+   "answer": [
+    "Create a materialized view based off of the query being run."
+   ],
+   "explanation": "D. Create a materialized view based off of the query being run:Creating a materialized view is the best option in this scenario because materialized views store the results of a query in a separate table, which can be queried much faster than running the original query each time. This approach is ideal for situations where you need to access the same data multiple times a day while reducing the query time and providing up-to-date insights.Why the other options are incorrect:A. Run a scheduled query to pull the necessary data at specific intervals daily:This option involves running the query each time data is needed, which can be time-consuming and inefficient, especially for large datasets. It does not optimize query performance or provide up-to-date insights quicker.B. Use a cached query to accelerate time to results:Caching query results can help improve query performance for repeated queries, but it may not be the most efficient solution for querying a table that is several petabytes in size. Cached results can become stale and may not provide the most up-to-date insights.C. Limit the query columns being pulled in the final result:Limiting the query columns can help reduce the data transfer and processing time, but it may not significantly improve query performance for a table that is several petabytes in size. It does not address the need for faster query execution and up-to-date insights."
+  },
+  {
+   "id": "test_13_q12",
+   "source": "test 13",
+   "question": "Scenario: Your company’s customer_order table in BigQuery stores the order history for 10 million customers, with a table size of 10 PB. You need to create a dashboard for the support team to view the order history. Question: How should you redesign the BigQuery table to support faster access for the dashboard with country_name and username filters?",
+   "options": [
+    "Cluster the table by country and username fields.",
+    "Cluster the table by country field, and partition by username field.",
+    "Partition the table by country and username fields.",
+    "Partition the table by _PARTITIONTIME."
+   ],
+   "answer": [
+    "Cluster the table by country and username fields."
+   ],
+   "explanation": "A. Cluster the table by country and username fields. Clustering the table by the country and username fields is the correct approach to support faster access for the given scenario. Clustering in BigQuery helps organize the data within the table based on the values of one or more columns. By clustering the table on the country and username fields, rows with similar values in these columns will be stored together physically, which can significantly improve the performance of queries that filter or group by these columns. Why the other options are incorrect: B. Cluster the table by country field, and partition by username field. This option suggests clustering the table only by the country field and partitioning by the username field. However, partitioning by username alone may not provide significant performance improvements, especially when filtering on both country and username. Clustering by both country and username is more effective in this case. C. Partition the table by country and username fields. Partitioning by country and username fields alone does not address the issue of slow query performance when filtering on these columns. Partitioning helps with managing data within partitions but does not necessarily improve query performance for filtering operations. D. Partition the table by _PARTITIONTIME. Partitioning the table by _PARTITIONTIME is useful for managing time-based data and querying based on time ranges. However, in this scenario where filtering is primarily based on country and username fields, partitioning by _PARTITIONTIME alone may not provide the desired performance improvements for the dashboard queries."
+  },
+  {
+   "id": "test_13_q17",
+   "source": "test 13",
+   "question": "Scenario: You are transitioning your on-premises data warehouse to BigQuery. One of the data sources is a MySQL database located in your on-premises data center without public IP addresses. How can you securely ingest data from this MySQL database into BigQuery without using the public internet?",
+   "options": [
+    "Update your existing on-premises ETL tool to write to BigQuery by using the BigQuery Open Database Connectivity (ODBC) driver. Set up the proxy parameter in the simba.googlebigqueryodbc.ini file to point to your data centers NAT gateway.",
+    "Use Datastream to replicate data from your on-premises MySQL database to BigQuery. Set up Cloud Interconnect between your on-premises data center and Google Cloud. Use Private connectivity as the connectivity method and allocate an IP address range within your VPC network to the Datastream connectivity configuration. Use Server-only as the encryption type when setting up the connection profile in Datastream.",
+    "Use Datastream to replicate data from your on-premises MySQL database to BigQuery. Use Forward-SSH tunnel as the connectivity method to establish a secure tunnel between Datastream and your on-premises MySQL database through a tunnel server in your on-premises data center. Use None as the encryption type when setting up the connection profile in Datastream.",
+    "Use Datastream to replicate data from your on-premises MySQL database to BigQuery. Gather Datastream public IP addresses of the Google Cloud region that will be used to set up the stream. Add those IP addresses to the firewall allowlist of your on-premises data center. Use IP Allowlisting as the connectivity method and Server-only as the encryption type when setting up the connection profile in Datastream."
+   ],
+   "answer": [
+    "Use Datastream to replicate data from your on-premises MySQL database to BigQuery. Set up Cloud Interconnect between your on-premises data center and Google Cloud. Use Private connectivity as the connectivity method and allocate an IP address range within your VPC network to the Datastream connectivity configuration. Use Server-only as the encryption type when setting up the connection profile in Datastream."
+   ],
+   "explanation": "The correct answer is B.Option B suggests using Datastream to replicate data from the on-premises MySQL database to BigQuery. By setting up Cloud Interconnect between the on-premises data center and Google Cloud, you can establish a private connection that does not go through the public internet. Using Private connectivity ensures that the data ingestion is done securely and does not expose the data to the public internet. Allocating an IP address range within your VPC network to the Datastream connectivity configuration further enhances security. Setting the encryption type to Server-only ensures that the connection is encrypted for secure data transfer.Now, let‘s explain why the other options are incorrect:A. This option suggests updating the existing on-premises ETL tool to write to BigQuery using the ODBC driver. While this approach might work, it does not address the requirement of ensuring secure data ingestion without going through the public internet. Setting up a proxy parameter in the ODBC driver configuration file to point to the data center‘s NAT gateway does not provide a secure private connection.C. This option suggests using Datastream to replicate data from the on-premises MySQL database to BigQuery but using a Forward-SSH tunnel as the connectivity method. While SSH tunnels can provide secure communication, it still involves data transfer over the public internet, which goes against the requirement of ensuring secure data ingestion without going through the public internet.D. This option suggests using Datastream to replicate data from the on-premises MySQL database to BigQuery but relies on IP allowlisting and adding Datastream public IP addresses to the on-premises data center‘s firewall allowlist. While IP allowlisting can provide some level of security, it still involves data transfer over the public internet, which does not meet the requirement of securely ingesting data without going through the public internet."
+  },
+  {
+   "id": "test_13_q25",
+   "source": "test 13",
+   "question": "Scenario: You work for a farming company that has a BigQuery table named sensors, which is 500 MB in size and holds information on 5000 sensors, including id, name, and location. The table is updated hourly, and each sensor produces a metric every 30 seconds with a timestamp that needs to be stored in BigQuery. To monitor the data weekly and reduce costs, you need to determine the appropriate data model. What data model would be most suitable for storing sensor metrics in BigQuery to allow for weekly analytical queries while minimizing costs?",
+   "options": [
+    "1. Create a metrics column in the sensors table. 2. Set RECORD type and REPEATED mode for the metrics column. 3. Use an UPDATE statement every 30 seconds to add new metrics.",
+    "1. Create a metrics column in the sensors table. 2. Set RECORD type and REPEATED mode for the metrics column. 3. Use an INSERT statement every 30 seconds to add new metrics.",
+    "1. Create a metrics table partitioned by timestamp. 2. Create a sensorId column in the metrics table, that points to the id column in the sensors table. 3. Use an INSERT statement every 30 seconds to append new metrics to the metrics table. 4. Join the two tables, if needed, when running the analytical query.",
+    "1. Create a metrics table partitioned by timestamp. 2. Create a sensorId column in the metrics table, which points to the id column in the sensors table. 3. Use an UPDATE statement every 30 seconds to append new metrics to the metrics table. 4. Join the two tables, if needed, when running the analytical query."
+   ],
+   "answer": [
+    "1. Create a metrics table partitioned by timestamp. 2. Create a sensorId column in the metrics table, that points to the id column in the sensors table. 3. Use an INSERT statement every 30 seconds to append new metrics to the metrics table. 4. Join the two tables, if needed, when running the analytical query."
+   ],
+   "explanation": "Correct Option C. Create a metrics table partitioned by timestamp, include sensorId, and use INSERT statements This is the best practice for time-series data in BigQuery. Partitioning by timestamp ensures queries only scan relevant weekly partitions, reducing cost and improving performance. Separate metrics table avoids bloating the sensors table and keeps schema normalized. INSERT statements are appropriate for appending new metrics every 30 seconds. Analytical queries can join metrics with sensors when needed, ensuring flexibility and scalability. This approach meets the exam requirement of minimizing cost while supporting weekly queries. Incorrect Option A. Add a metrics column in the sensors table, use RECORD type and REPEATED mode, UPDATE every 30 seconds Incorrect because using UPDATE every 30 seconds is inefficient and costly in BigQuery. Updates rewrite entire rows, which increases storage and compute costs. Embedding metrics in the sensors table bloats the table and makes queries slower. Option B. Add a metrics column in the sensors table, use RECORD type and REPEATED mode, INSERT every 30 seconds Incorrect because although INSERT is better than UPDATE, storing metrics inside the sensors table is still inefficient. It mixes static sensor metadata with dynamic time-series metrics, leading to poor query performance and higher costs. Partitioning cannot be applied effectively to nested repeated fields in this design. Option D. Create a metrics table partitioned by timestamp, include sensorId, but use UPDATE every 30 seconds Incorrect because UPDATE is not suitable for streaming time-series data. Updates are expensive and unnecessary when metrics should be appended."
+  },
+  {
+   "id": "test_14_q23",
+   "source": "test 14",
+   "question": "Scenario: You need ads data for AI models and historical data for analytics. Identifying longtail and outlier data points is crucial. The data must be cleansed in near-real time before being used in AI models. What steps should be taken to cleanse the data before running it through AI models?",
+   "options": [
+    "Use Cloud Storage as a data warehouse, shell scripts for processing, and BigQuery to create views for desired datasets.",
+    "Use Dataflow to identify longtail and outlier data points programmatically, with BigQuery as a sink.",
+    "Use BigQuery to ingest, prepare, and then analyze the data, and then run queries to create views.",
+    "Use Cloud Composer to identify longtail and outlier data points, and then output a usable dataset to BigQuery."
+   ],
+   "answer": [
+    "Use Dataflow to identify longtail and outlier data points programmatically, with BigQuery as a sink."
+   ],
+   "explanation": "The correct answer is B. Use Dataflow to identify longtail and outlier data points programmatically, with BigQuery as a sink.– Dataflow is a service on Google Cloud that allows for real-time data processing and analysis. It can be used to programmatically identify longtail and outlier data points in near-real time.– BigQuery is a serverless, highly scalable, and cost-effective multi-cloud data warehouse for analytics. Using BigQuery as a sink means that the cleaned data can be stored in BigQuery for further analysis or serving AI models.– By using Dataflow to identify longtail and outlier data points and then storing the cleansed data in BigQuery, you can efficiently prepare the data for analytics and AI model training.Now, let‘s explain why the other options are incorrect:A. Using Cloud Storage as a data warehouse, shell scripts for processing, and BigQuery to create views for desired datasets is not the most efficient way to identify longtail and outlier data points in near-real time. Cloud Storage is not ideal for real-time data processing.C. Using BigQuery to ingest, prepare, and then analyze the data, and then run queries to create views is a valid approach for data analysis but may not be suitable for identifying longtail and outlier data points in near-real time.D. Using Cloud Composer to identify longtail and outlier data points and then outputting a usable dataset to BigQuery can be a feasible solution, but Dataflow is more commonly used for real-time data processing and analysis tasks compared to Cloud Composer."
+  },
+  {
+   "id": "test_14_q28",
+   "source": "test 14",
+   "question": "Scenario: You are looking to transfer your current Teradata data warehouse to BigQuery. The goal is to transfer the historical data to BigQuery using the most efficient method with minimal programming. However, your existing data warehouse has limited local storage space. What steps should you take in this situation?",
+   "options": [
+    "Use BigQuery Data Transfer Service by using the Java Database Connectivity (JDBC) driver with FastExport connection.",
+    "Create a Teradata Parallel Transporter (TPT) export script to export the historical data, and import to BigQuery by using the bq command-line tool.",
+    "Use BigQuery Data Transfer Service with the Teradata Parallel Transporter (TPT) tbuild utility.",
+    "Create a script to export the historical data, and upload in batches to Cloud Storage. Set up a BigQuery Data Transfer Service instance from Cloud Storage to BigQuery."
+   ],
+   "answer": [
+    "Use BigQuery Data Transfer Service by using the Java Database Connectivity (JDBC) driver with FastExport connection."
+   ],
+   "explanation": "Correct Option A. Use BigQuery Data Transfer Service by using the JDBC driver with FastExport connection. Correct because the BigQuery Data Transfer Service (DTS) supports Teradata migration using JDBC and FastExport. This method avoids the need for large local storage, streams data efficiently, and requires minimal custom programming. It is the recommended approach for migrating historical Teradata data directly into BigQuery. Incorrect Option B. Create a Teradata Parallel Transporter (TPT) export script to export the historical data, and import to BigQuery by using the bq command-line tool. Incorrect because this approach requires significant scripting and local storage space to stage the data before loading. The scenario specifies limited local storage and minimal programming, so this option does not meet the requirements. Option C. Use BigQuery Data Transfer Service with the Teradata Parallel Transporter (TPT) tbuild utility. Incorrect because DTS does not integrate directly with Teradata’s tbuild utility. This option is not supported and would require additional manual steps. Option D. Create a script to export the historical data, and upload in batches to Cloud Storage. Set up a BigQuery Data Transfer Service instance from Cloud Storage to BigQuery. Incorrect because while Cloud Storage can be used as a staging area, this method requires custom scripting and batch management. It introduces more programming effort than necessary, violating the requirement for minimal programming."
+  },
+  {
+   "id": "test_14_q40",
+   "source": "test 14",
+   "question": "Scenario: You are tasked with designing a data warehouse in BigQuery to analyze sales data for a telecommunication service provider. The data model needs to include customers, products, and subscriptions, with the requirement to maintain a historical record of all data that can be updated monthly. The visualization layer will be used for both current and historical reporting. What steps should you take to ensure that the data model is simple, user-friendly, and cost-effective for analyzing sales data in BigQuery?",
+   "options": [
+    "Create a normalized model with tables for each entity. Use snapshots before updates to track historical data.",
+    "Create a normalized model with tables for each entity. Keep all input files in a Cloud Storage bucket to track historical data.",
+    "Create a denormalized model with nested and repeated fields. Update the table and use snapshots to track historical data.",
+    "Create a denormalized, append-only model with nested and repeated fields. Use the ingestion timestamp to track historical data."
+   ],
+   "answer": [
+    "Create a denormalized, append-only model with nested and repeated fields. Use the ingestion timestamp to track historical data."
+   ],
+   "explanation": "The correct answer is D: Create a denormalized, append-only model with nested and repeated fields. Use the ingestion timestamp to track historical data.– In this scenario, it is important to maintain a historical record of all data while keeping the data model simple, easy-to-use, and cost-effective.– Creating a denormalized, append-only model with nested and repeated fields allows for a simpler data structure that is easier to query and analyze.– Using the ingestion timestamp to track historical data enables you to easily identify the point in time when each record was added to the data warehouse, thus maintaining a historical record of data changes.Now, let‘s explain why the other options are incorrect:A. Create a normalized model with tables for each entity. Use snapshots before updates to track historical data.– Normalized models with separate tables for each entity can be complex and may require joining tables for analysis, which can be less efficient.– Using snapshots before updates to track historical data can be cumbersome and may not be as straightforward as using an append-only model.B. Create a normalized model with tables for each entity. Keep all input files in a Cloud Storage bucket to track historical data.– Storing input files in a Cloud Storage bucket may not be an efficient way to track historical data within a data warehouse.– Normalized models may not be the best choice for maintaining historical records while ensuring simplicity and cost-effectiveness.C. Create a denormalized model with nested and repeated fields. Update the table and use snapshots to track historical data.– While using a denormalized model with nested and repeated fields is a step in the right direction for simplicity, using snapshots to track historical data may not be as efficient as using an append-only model with ingestion timestamps.– Updating the table directly may overwrite previous data, making it challenging to maintain an accurate historical record."
+  },
+  {
+   "id": "test_14_q47",
+   "source": "test 14",
+   "question": "Scenario: Your business users, who are not very tech-savvy, require a user-friendly tool to clean and prepare data for analysis using graphical interfaces. They also prefer to conduct analysis directly in a spreadsheet after data transformation. What solution would you recommend for your less technically savvy business users to clean, prepare data, and perform analysis directly in a spreadsheet?",
+   "options": [
+    "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.",
+    "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Looker Studio.",
+    "Use Dataflow to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.",
+    "Use Dataflow to clean the data, and write the results to BigQuery. Analyze the data by using Looker Studio."
+   ],
+   "answer": [
+    "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets."
+   ],
+   "explanation": "A. Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.– Dataprep is a data preparation tool that allows users to visually explore, clean, and prepare data without needing to write code. This is suitable for business users who are less technically savvy and prefer working with graphical user interfaces.– BigQuery is a serverless, highly scalable, and cost-effective data warehouse for storing and analyzing large datasets. Writing the cleaned data to BigQuery ensures that the transformed data is stored securely and can be easily accessed for analysis.– Connected Sheets is a feature in Google Sheets that allows users to analyze BigQuery data directly within a spreadsheet environment. This is ideal for business users who want to perform their analysis directly in a spreadsheet without needing to switch between different tools.Why the other options are incorrect:B. Using Looker Studio for analysis is not ideal for less technically savvy business users who prefer graphical user interfaces. Looker Studio is a business intelligence platform that may require more technical knowledge to use effectively.C. Dataflow is a tool for processing and transferring data in real-time, but it may be too technical for business users who prefer graphical user interfaces. Connecting Dataflow to Connected Sheets directly is not a straightforward process for less technically savvy users.D. Similar to option C, using Looker Studio for analysis may be too complex for business users who are less technically savvy and prefer graphical user interfaces. Dataflow for data cleaning may also be overly technical for their needs."
+  },
+  {
+   "id": "test_14_q52",
+   "source": "test 14",
+   "question": "Scenario: You use a SQL-based tool to visualize data stored in BigQuery, requiring outer joins and analytic functions. The visualizations need to be based on data at least 4 hours old. Business users are unhappy with the slow generation of visualizations. How can you enhance the performance of visualization queries while reducing the maintenance burden of the data preparation pipeline?",
+   "options": [
+    "Create materialized views with the allow_non_incremental_definition option set to true for the visualization queries. Specify the max_staleness parameter to 4 hours and the enable_refresh parameter to true. Reference the materialized views in the data visualization tool.",
+    "Create views for the visualization queries. Reference the views in the data visualization tool.",
+    "Create a Cloud Function instance to export the visualization query results as parquet files to a Cloud Storage bucket. Use Cloud Scheduler to trigger the Cloud Function every 4 hours. Reference the parquet files in the data visualization tool.",
+    "Create materialized views for the visualization queries. Use the incremental updates capability of BigQuery materialized views to handle changed data automatically. Reference the materialized views in the data visualization tool."
+   ],
+   "answer": [
+    "Create materialized views with the allow_non_incremental_definition option set to true for the visualization queries. Specify the max_staleness parameter to 4 hours and the enable_refresh parameter to true. Reference the materialized views in the data visualization tool."
+   ],
+   "explanation": "A. Create materialized views with the allow_non_incremental_definition option set to true for the visualization queries. Specify the max_staleness parameter to 4 hours and the enable_refresh parameter to true. Reference the materialized views in the data visualization tool.Creating materialized views with the allow_non_incremental_definition option set to true allows you to refresh the data in the materialized views without having to rely on incremental updates. By setting the max_staleness parameter to 4 hours, you ensure that the data in the materialized views is no less than 4 hours old, as required. Enabling the refresh parameter ensures that the materialized views are automatically refreshed at the specified interval. This approach improves query performance by precomputing and storing the results of the visualization queries, thereby reducing the query processing time when generating the visualizations.Why the other options are incorrect:B. Creating views for the visualization queries does not address the performance issue caused by the slow generation of visualizations. Views do not store precomputed results and will still require processing the underlying data each time the visualization is generated, leading to slow performance.C. Exporting query results as parquet files using Cloud Functions and Cloud Scheduler introduces unnecessary complexity to the data visualization process. This approach requires additional steps to export, store, and manage the data files, which could increase maintenance overhead and may not necessarily improve query performance.D. While creating materialized views for visualization queries is a step in the right direction, relying on the incremental updates capability of BigQuery materialized views may not be the most efficient solution in this case. Incremental updates require tracking changes in the underlying data, which could introduce complexity and potentially impact performance. Using the approach in option A provides a simpler and more straightforward solution for improving query performance while meeting the data freshness requirement."
+  },
+  {
+   "id": "test_15_q4",
+   "source": "test 15",
+   "question": "Scenario: Your company is transitioning from on-premises data warehousing solutions to BigQuery. The current data warehouse utilizes trigger-based change data capture (CDC) to incorporate updates from various transactional databases daily. The goal now is to enhance CDC processes in BigQuery, allowing real-time access to changes from source systems through log-based CDC streams. The objective is to optimize performance in applying these changes to the data warehouse. To achieve minimal latency in making changes available in the BigQuery reporting table and reduce compute overhead, what are the two recommended steps that should be implemented? (Choose two.)",
+   "options": [
+    "Perform a DML INSERT, UPDATE, or DELETE to replicate each individual CDC record in real time directly on the reporting table.",
+    "Insert each new CDC record and corresponding operation type to a staging table in real time.",
+    "Periodically DELETE outdated records from the reporting table.",
+    "Periodically use a DML MERGE to perform several DML INSERT, UPDATE, and DELETE operations at the same time on the reporting table.",
+    "Insert each new CDC record and corresponding operation type in real time to the reporting table, and use a materialized view to expose only the newest version of each unique record."
+   ],
+   "answer": [
+    "Insert each new CDC record and corresponding operation type to a staging table in real time.",
+    "Periodically use a DML MERGE to perform several DML INSERT, UPDATE, and DELETE operations at the same time on the reporting table."
+   ],
+   "explanation": "BD is the correct answer for the question.– Option B: Inserting each new CDC record and corresponding operation type to a staging table in real time allows for minimal latency as changes are captured immediately. This approach helps reduce compute overhead by processing changes in batches rather than individually, optimizing performance.– Option D: Periodically using a DML MERGE to perform several DML INSERT, UPDATE, and DELETE operations at the same time on the reporting table helps manage changes efficiently and reduce compute overhead by consolidating multiple operations into a single transaction.Explanation of why the other options are incorrect:– Option A: Performing a DML INSERT, UPDATE, or DELETE to replicate each individual CDC record in real time directly on the reporting table can lead to high compute overhead and increased latency, as each record is processed individually.– Option C: Periodically deleting outdated records from the reporting table can introduce latency and additional processing overhead, especially if the deletion process is not optimized for performance.– Option E: Inserting each new CDC record and corresponding operation type in real time to the reporting table and using a materialized view to expose only the newest version of each unique record may not be the most efficient approach for minimizing latency and reducing compute overhead, as it involves additional steps and complexity in managing the data."
+  },
+  {
+   "id": "test_15_q6",
+   "source": "test 15",
+   "question": "Scenario: You are tasked with setting access to BigQuery for various departments in your company. The solution should adhere to specific criteria: – Each department should access only their data. – Each department will have one or more leads who can create and update tables for their team. – Each department includes data analysts who can query data but not modify it. How would you configure access to the data in BigQuery to meet the specified requirements?",
+   "options": [
+    "Create a dataset for each department. Assign the department leads the role of OWNER, and assign the data analysts the role of WRITER on their dataset.",
+    "Create a dataset for each department. Assign the department leads the role of WRITER, and assign the data analysts the role of READER on their dataset.",
+    "Create a table for each department. Assign the department leads the role of Owner, and assign the data analysts the role of Editor on the project the table is in.",
+    "Create a table for each department. Assign the department leads the role of Editor, and assign the data analysts the role of Viewer on the project the table is in."
+   ],
+   "answer": [
+    "Create a dataset for each department. Assign the department leads the role of WRITER, and assign the data analysts the role of READER on their dataset."
+   ],
+   "explanation": "The correct answer is option B: Create a dataset for each department. Assign the department leads the role of WRITER, and assign the data analysts the role of READER on their dataset.1. Creating a dataset for each department allows you to segregate the data and provide access control at a more granular level.2. Assigning the department leads the role of WRITER allows them to create and update tables within their dataset, which aligns with the requirement that they should be able to provide data to their team.3. Assigning the data analysts the role of READER ensures that they can query the data but not modify it, meeting the requirement that they should be able to query but not modify data.Now, let‘s explain why the other options are incorrect:A. Create a dataset for each department. Assign the department leads the role of OWNER, and assign the data analysts the role of WRITER on their dataset.– Assigning the department leads the role of OWNER would give them full control over the dataset, including the ability to modify access control settings, which is not necessary based on the requirements.– Assigning the data analysts the role of WRITER would allow them to modify the data, which is not in line with the requirement that they should only be able to query the data.C. Create a table for each department. Assign the department leads the role of Owner, and assign the data analysts the role of Editor on the project the table is in.– Creating a table for each department does not provide the necessary level of segregation required by the departments.– Assigning the department leads the role of OWNER would give them unnecessary permissions, as they only need to be able to create and update tables.– Assigning the data analysts the role of EDITOR on the project would allow them to modify the data, which is not in line with the requirement that they should only be able to query the data.D. Create a table for each department. Assign the department leads the role of Editor, and assign the data analysts the role of Viewer on the project the table is in.– Similar to option C, creating tables for each department does not provide the necessary level of segregation required by the departments.– Assigning the department leads the role of EDITOR would give them unnecessary permissions, as they only need to be able to create and update tables.– Assigning the data analysts the role of VIEWER would restrict them from querying the data, which is not in line with the requirement that they should be able to query the data."
+  },
+  {
+   "id": "test_15_q9",
+   "source": "test 15",
+   "question": "Scenario: You have opted to utilize Cloud Datastore for processing real-time vehicle telemetry data. You aim to establish a storage solution that can handle the continuous data expansion efficiently without incurring high expenses. Additionally, you intend to generate periodic snapshots of the data to facilitate point-in-time recovery and data cloning for Cloud Datastore across diverse environments. Your objective is to archive these snapshots for an extended duration. Which two approaches can fulfill the requirements mentioned above in managing the data snapshots effectively for Cloud Datastore? (Choose Two)",
+   "options": [
+    "Use managed export, and store the data in a Cloud Storage bucket using Nearline or Coldline class.",
+    "Use managed export, and then import to Cloud Datastore in a separate project under a unique namespace reserved for that export.",
+    "Use managed export, and then import the data into a BigQuery table created just for that export, and delete temporary export files.",
+    "Write an application that uses Cloud Datastore client libraries to read all the entities. Treat each entity as a BigQuery table row via BigQuery streaming insert. Assign an export timestamp for each export, and attach it as an extra column for each row. Make sure that the BigQuery table is partitioned using the export timestamp column.",
+    "Write an application that uses Cloud Datastore client libraries to read all the entities. Format the exported data into a JSON file. Apply compression before storing the data in Cloud Source Repositories."
+   ],
+   "answer": [
+    "Use managed export, and store the data in a Cloud Storage bucket using Nearline or Coldline class.",
+    "Use managed export, and then import to Cloud Datastore in a separate project under a unique namespace reserved for that export."
+   ],
+   "explanation": "Option A (Use managed export, and store the data in a Cloud Storage bucket using Nearline or Coldline class) is the correct answer for the question. This method allows you to export snapshots of the data from Cloud Datastore and store them in a Cloud Storage bucket using Nearline or Coldline storage classes. Nearline and Coldline are cost-effective storage classes designed for data that is accessed less frequently but needs to be retained for long-term archival purposes. By using managed export and storing the data in a Cloud Storage bucket, you can achieve both long-term data retention and cost-effectiveness.Option B (Use managed export, and then import to Cloud Datastore in a separate project under a unique namespace reserved for that export) is correct because importing the data back into Cloud Datastore in a separate project with a unique namespace is a suitable method for creating snapshots for long-term archival purposes.Now, let‘s explain why the other options are incorrect:Option C (Use managed export, and then import the data into a BigQuery table created just for that export, and delete temporary export files) is incorrect because importing the data into a BigQuery table is not an appropriate method for creating snapshots of the data for long-term archival purposes. BigQuery is a data warehouse solution, not a storage solution for long-term data retention.Option D (Write an application that uses Cloud Datastore client libraries to read all the entities and treat each entity as a BigQuery table row) is incorrect because this option involves converting the data into BigQuery tables and partitioning them, which is not necessary for creating snapshots for long-term data archival. This method introduces unnecessary complexity and does not align with the requirements.Option E (Write an application that uses Cloud Datastore client libraries to read all the entities, format the exported data into a JSON file, and store the data in Cloud Source Repositories) is incorrect because storing the data in Cloud Source Repositories is not intended for long-term data archival. Cloud Source Repositories is primarily used for source code version control, not for storing large amounts of data for archival purposes."
+  },
+  {
+   "id": "test_15_q41",
+   "source": "test 15",
+   "question": "Scenario: You are migrating a table to BigQuery and considering the data model. The table contains data on purchases made at various store locations, including transaction time, items purchased, store ID, and store location details like city and state. Queries are often run to analyze item sales over the last 30 days and to examine purchasing trends by state, city, and store. How should you structure the table to optimize query performance for analyzing item sales and purchasing trends by state, city, and individual store in BigQuery?",
+   "options": [
+    "Partition by transaction time; cluster by state first, then city, then store ID.",
+    "Partition by transaction time; cluster by store ID first, then city, then state.",
+    "Top-level cluster by state first, then city, then store ID.",
+    "Top-level cluster by store ID first, then city, then state."
+   ],
+   "answer": [
+    "Partition by transaction time; cluster by state first, then city, then store ID."
+   ],
+   "explanation": "A. Partition by transaction time; cluster by state first, then city, then store ID is the correct answer for the best query performance in this scenario.– Partitioning by transaction time will help in organizing the data based on time intervals, making it easier to query and analyze data for specific time periods.– Clustering by state first, then city, then store ID will group similar data together physically on disk, which can significantly improve query performance for common queries that involve filtering by state, city, and store ID.Why the other options are incorrect:B. Partition by transaction time; cluster by store ID first, then city, then state:– Clustering by store ID first may not be as effective for the given query patterns because most queries are based on analyzing trends by state, city, and individual store. This clustering order may not optimize the performance for such queries.C. Top-level cluster by state first, then city, then store ID:– Clustering at the top-level by state, city, and store ID without partitioning by transaction time may not be efficient for time-based queries. It is important to partition the data by transaction time to optimize query performance for time-based analysis.D. Top-level cluster by store ID first, then city, then state:– Similar to option B, clustering by store ID first may not be the best approach for queries that involve analyzing trends by state, city, and individual store. This clustering order may not provide optimal performance for the given query patterns."
+  },
+  {
+   "id": "test_15_q47",
+   "source": "test 15",
+   "question": "Scenario: Your company is transitioning to BigQuery for a data warehouse project and you are in charge of designing the data model. After migrating your on-premises sales data warehouse with a star data schema to BigQuery, you encounter performance challenges when querying data from the last 30 days. Following Google‘s best practices, how can you enhance query performance without raising storage expenses?",
+   "options": [
+    "Denormalize the data.",
+    "Shard the data by customer ID.",
+    "Materialize the dimensional data in views.",
+    "Partition the data by transaction date."
+   ],
+   "answer": [
+    "Partition the data by transaction date."
+   ],
+   "explanation": "The correct answer is D. Partition the data by transaction date.Partitioning the data by transaction date in BigQuery allows you to divide the data into smaller, manageable parts based on the transaction date. This helps in optimizing query performance as BigQuery can scan only the relevant partitions when querying data for a specific date range. By partitioning the data, you can speed up the query without increasing storage costs.Now let‘s discuss why the other options are incorrect:A. Denormalize the data:Denormalizing the data involves combining tables and duplicating data to reduce the number of joins required in queries. While denormalization can improve query performance in some cases, it may not be the most efficient solution in this scenario. Denormalization can lead to increased storage costs and complexity in maintaining the data model.B. Shard the data by customer ID:Sharding the data by customer ID involves splitting the data based on customer IDs to distribute the data across multiple nodes. While sharding can help in scaling out data storage and processing, it may not directly address the performance issues related to querying data for the past 30 days. Sharding by customer ID is more suitable for scenarios where you need to distribute data across multiple servers for scalability.C. Materialize the dimensional data in views:Materializing the dimensional data in views involves pre-computing and storing the results of complex queries in views. While materialized views can improve query performance by reducing the need to recompute results each time a query is run, it may not be the most effective solution for speeding up queries related to the past 30 days of data. Materialized views can also increase storage costs and maintenance overhead.In conclusion, partitioning the data by transaction date is the recommended approach in this scenario to speed up queries without increasing storage costs in BigQuery."
+  },
+  {
+   "id": "test_15_q52",
+   "source": "test 15",
+   "question": "Scenario: You are transferring an application that manages library books and their details like author and year of publication from an on-premises data warehouse to BigQuery. In the existing relational database, author information is stored in a separate table and linked to book information through a common key. According to Google‘s schema design best practices, how should you organize the data to guarantee fast query performance for retrieving information about the authors of borrowed books?",
+   "options": [
+    "Keep the schema the same, maintain the different tables for the book and each of the attributes, and query as you are doing today.",
+    "Create a table that is wide and includes a column for each attribute, including the author‘s first name, last name, date of birth, etc.",
+    "Create a table that includes information about the books and authors, but nest the author fields inside the author column.",
+    "Keep the schema the same, create a view that joins all of the tables, and always query the view."
+   ],
+   "answer": [
+    "Create a table that includes information about the books and authors, but nest the author fields inside the author column."
+   ],
+   "explanation": "C is the correct answer for the question. By creating a table that includes information about both the books and authors and nesting the author fields inside the author column, you can ensure optimal speed of queries about the author of each book that has been borrowed in BigQuery. This denormalized approach is recommended by Google for BigQuery schema design as it reduces the need for joins, which can slow down query performance in a distributed system like BigQuery.Now, let‘s explain why the other options are incorrect:A. Keeping the schema the same and maintaining separate tables for books and authors would require performing joins in queries, which can be less efficient in a distributed system like BigQuery. This approach would not ensure optimal speed of queries about the author of each book.B. Creating a wide table with a column for each attribute, including author details, would result in redundant data storage and could lead to data inconsistency if author details change. This approach is not recommended as it does not follow best practices for schema design in BigQuery.D. Keeping the schema the same and creating a view that joins all the tables would still require performing joins in queries, which can impact query performance in BigQuery. Views can also introduce additional complexity and overhead to query processing. This approach would not ensure optimal speed of queries about the author of each book."
+  },
+  {
+   "id": "test_15_q56",
+   "source": "test 15",
+   "question": "Scenario: In a report-only data warehouse, data is streamed into BigQuery through the streaming API. To adhere to Google‘s best practices, there are separate staging and production tables for the data. How should the data loading be designed to maintain a single master dataset without impacting performance in either the ingestion or reporting aspects?",
+   "options": [
+    "Have a staging table that is an append-only model, and then update the production table every three hours with the changes written to staging.",
+    "Have a staging table that is an append-only model, and then update the production table every ninety minutes with the changes written to staging.",
+    "Have a staging table that moves the staged data over to the production table and deletes the contents of the staging table every three hours.",
+    "Have a staging table that moves the staged data over to the production table and deletes the contents of the staging table every thirty minutes."
+   ],
+   "answer": [
+    "Have a staging table that moves the staged data over to the production table and deletes the contents of the staging table every three hours."
+   ],
+   "explanation": "The correct answer is C: Have a staging table that moves the staged data over to the production table and deletes the contents of the staging table every three hours.– By moving the staged data over to the production table and deleting the contents of the staging table every three hours, you ensure that the production table always contains the most up-to-date data without affecting performance. This approach allows for a consistent and efficient data loading process.Why the other options are incorrect:A. Having a staging table that is an append-only model and updating the production table every three hours with the changes would result in potential performance issues, as updating the production table frequently can impact query performance.B. Updating the production table every ninety minutes with the changes written to staging may be too frequent and could lead to performance degradation on both the ingestion and reporting pieces.D. Deleting the contents of the staging table every thirty minutes is too frequent and may result in data loss or inconsistency if there are any issues during the data loading process. This approach could also impact performance due to the high frequency of data movements."
+  },
+  {
+   "id": "test_15_q58",
+   "source": "test 15",
+   "question": "Scenario: Your new customer needs daily reports to track their net consumption of Google Cloud compute resources and identify the users utilizing the resources. How can you efficiently and promptly create the required daily reports for your customer?",
+   "options": [
+    "Do daily exports of Cloud Logging data to BigQuery. Create views filtering by project, log type, resource, and user.",
+    "Filter data in Cloud Logging by project, resource, and user; then export the data in CSV format.",
+    "Filter data in Cloud Logging by project, log type, resource, and user, then import the data into BigQuery.",
+    "Export Cloud Logging data to Cloud Storage in CSV format. Cleanse the data using Dataprep, filtering by project, resource, and user."
+   ],
+   "answer": [
+    "Do daily exports of Cloud Logging data to BigQuery. Create views filtering by project, log type, resource, and user."
+   ],
+   "explanation": "A. Do daily exports of Cloud Logging data to BigQuery. Create views filtering by project, log type, resource, and user.– By exporting Cloud Logging data to BigQuery, you can efficiently store and analyze the data in a scalable and cost-effective manner.– Creating views in BigQuery allows you to filter the data based on specific criteria such as project, log type, resource, and user, which is essential for generating the daily reports requested by the customer.– BigQuery‘s querying capabilities enable you to process large datasets quickly and provide insights into resource consumption and usage.Why the other options are incorrect:B. Filter data in Cloud Logging by project, resource, and user; then export the data in CSV format.– This approach may not be efficient for generating daily reports as it involves manual filtering and exporting data in CSV format, which may not scale well for large datasets.– Exporting data in CSV format may limit your ability to perform advanced analytics and filtering compared to using a data warehouse like BigQuery.C. Filter data in Cloud Logging by project, log type, resource, and user, then import the data into BigQuery.– This option involves unnecessary steps of filtering and importing data into BigQuery manually, which can be time-consuming and less efficient compared to directly exporting data to BigQuery.D. Export Cloud Logging data to Cloud Storage in CSV format. Cleanse the data using Dataprep, filtering by project, resource, and user.– This option introduces additional complexity by exporting data to Cloud Storage, then cleansing and filtering the data using Dataprep before generating reports.– Using BigQuery directly for filtering and analysis would be more straightforward and efficient for the task at hand."
+  },
+  {
+   "id": "test_16_q28",
+   "source": "test 16",
+   "question": "Scenario: You have migrated all your data into tables in a dataset in BigQuery for the data warehouse migration. Multiple users from your organization will access the data and should only see specific tables based on their team membership. How should you configure user permissions to achieve this in BigQuery?",
+   "options": [
+    "Assign the users/groups data viewer access at the table level for each table",
+    "Create SQL views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the SQL views",
+    "Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views",
+    "Create authorized views for each team in datasets created for each team. Assign the authorized views data viewer access to the dataset in which the data resides. Assign the users/groups data viewer access to the datasets in which the authorized views reside"
+   ],
+   "answer": [
+    "Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views"
+   ],
+   "explanation": "Correct Option C. Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views Correct. In BigQuery, authorized views allow you to restrict access to specific subsets of data. You grant the view access to the underlying dataset, and then assign users/groups access to the view. This ensures that users only see the data exposed through the authorized view, not the entire dataset. Incorrect Option A. Assign data viewer access at the table level Incorrect. While you can grant table‑level permissions, this approach is not scalable for multiple teams and does not provide fine‑grained control over subsets of data. Authorized views are the recommended method. Option B. Create SQL views and assign access Incorrect. Standard SQL views alone do not enforce security. Users with access to the view must also have access to the underlying tables. Without authorized views, this does not restrict data properly. Option D. Create authorized views in separate datasets and assign access Incorrect. While technically possible, this adds unnecessary complexity. You don’t need separate datasets per team; authorized views within the same dataset are sufficient and best practice."
+  }
+ ]
+}

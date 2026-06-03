@@ -1,0 +1,293 @@
+{
+ "topic": "1.2 Designing for reliability and fidelity",
+ "slug": "1-2-designing-for-reliability-and-fidelity",
+ "question_count": 18,
+ "questions": [
+  {
+   "id": "test_1_q11",
+   "source": "test 1",
+   "question": "You are tasked with selecting a NoSQL database to handle telemetry data from millions of IoT devices. The volume of data is increasing at a rate of 100 TB per year, and each data entry has approximately 100 attributes. The data processing pipeline does not require ACID compliance, but high availability and low latency are crucial. You need to query individual fields in the data for analysis. Which three databases are suitable for this purpose. (Choose three from the following options)?",
+   "options": [
+    "Redis",
+    "HBase",
+    "MySQL",
+    "MongoDB",
+    "Cassandra",
+    "HDFS with Hive"
+   ],
+   "answer": [
+    "HBase",
+    "MongoDB",
+    "Cassandra"
+   ],
+   "explanation": "The three NoSQL databases suitable for handling telemetry data from millions of IoT devices, given the volume, attributes, and requirements, are: MongoDB: Flexible schema: MongoDB’s flexible schema model allows for easy addition and modification of attributes, which is crucial for handling evolving IoT data. High availability: MongoDB provides high availability through replication and sharding, ensuring that data is always accessible even in the event of failures. Scalability: MongoDB can scale horizontally to handle large volumes of data and high throughput. Querying individual fields: MongoDB supports efficient querying of individual fields, making it suitable for data analysis. Cassandra: High availability and scalability: Cassandra is designed for high availability and scalability, making it suitable for handling large-scale IoT data. Distributed data: Cassandra distributes data across multiple nodes, ensuring high availability and fault tolerance. Querying individual fields: Cassandra supports efficient querying of individual fields, making it suitable for data analysis. HBase: Column-oriented storage: HBase is a column-oriented NoSQL database, which is efficient for storing and querying large datasets with many attributes. Scalability: HBase can scale horizontally to handle large volumes of data. High availability: HBase provides high availability through replication and sharding. Querying individual fields: HBase supports efficient querying of individual fields, making it suitable for data analysis. Redis is not suitable for this purpose because it is primarily a key-value store and is not designed for handling large volumes of structured data. MySQL is a relational database and is not suitable for handling large-scale IoT data due to its limitations in scalability and performance. HDFS with Hive is suitable for batch processing of large datasets, but it may not be as efficient for real-time data processing and querying individual fields as MongoDB, Cassandra, or HBase. Ref: https://cloud.google.com/storage-transfer/docs/on-prem-overview#requirements",
+   "answer_source": "browser_verified",
+   "also_appears_in": [
+    "test_10_q18"
+   ]
+  },
+  {
+   "id": "test_3_q7",
+   "source": "test 3",
+   "question": "How can you design an ACID-compliant database system that requires minimal human intervention in the event of a failure. (Choose one option from the following:)?",
+   "options": [
+    "Configure a Cloud SQL for MySQL instance with point-in-time recovery enabled.",
+    "Configure a Cloud SQL for PostgreSQL instance with high availability enabled.",
+    "Configure a Bigtable instance with more than one cluster.",
+    "Configure a BigQuery table with a multi-region configuration."
+   ],
+   "answer": [
+    "Configure a Cloud SQL for PostgreSQL instance with high availability enabled."
+   ],
+   "explanation": "Configuring a Cloud SQL for PostgreSQL instance with high availability ensures minimal human intervention in case of a failure as it provides automatic failover to a standby replica instance in a different zone. This option also ensures that the database remains ACID-compliant. The other options do not provide automatic failover and may require human intervention in case of a failure. Option A does not provide cross-zone replication for high availability, Option C does not provide automatic failover, and Option D is not an ACID-compliant database as it is a data warehouse.",
+   "also_appears_in": [
+    "test_9_q21"
+   ]
+  },
+  {
+   "id": "test_5_q18",
+   "source": "test 5",
+   "question": "You have a data stored in BigQuery. The data in the BigQuery dataset must be highly available. You need to define a storage, backup, and recovery strategy of this data that minimizes cost. How should you configure the BigQuery table?",
+   "options": [
+    "Set the BigQuery dataset to be regional. In the event of an emergency, use a point-in-time snapshot to recover the data.",
+    "Set the BigQuery dataset to be regional. Create a scheduled query to make copies of the data to tables suffixed with the time of the backup. In the event of an emergency, use the backup copy of the table.",
+    "Set the BigQuery dataset to be multi-regional. In the event of an emergency, use a point-in-time snapshot to recover the data.",
+    "Set the BigQuery dataset to be multi-regional. Create a scheduled query to make copies of the data to tables suffixed with the time of the backup. In the event of an emergency, use the backup copy of the table."
+   ],
+   "answer": [
+    "Set the BigQuery dataset to be multi-regional. In the event of an emergency, use a point-in-time snapshot to recover the data."
+   ],
+   "explanation": "Correct Option C. Set the BigQuery dataset to be multi-regional. In the event of an emergency, use a point-in-time snapshot to recover the data. Correct because: Multi-regional datasets in BigQuery automatically replicate data across multiple regions, ensuring high availability and disaster recovery. Point-in-time recovery (PITR) allows you to restore data to a previous state without needing manual backups. This approach minimizes cost compared to creating scheduled query backups, since PITR is built-in and multi-regional storage ensures resilience without extra overhead. Incorrect Option A. Set the BigQuery dataset to be regional. In the event of an emergency, use a point-in-time snapshot to recover the data. Incorrect because while PITR works, a regional dataset does not provide the same level of high availability as multi-regional. Regional storage is cheaper but does not meet the requirement for high availability across multiple regions. Option B. Set the BigQuery dataset to be regional. Create a scheduled query to make copies of the data to tables suffixed with the time of the backup. In the event of an emergency, use the backup copy of the table. Incorrect because this approach increases cost and complexity. Scheduled query backups consume additional storage and require ongoing maintenance. It does not leverage BigQuery’s built-in multi-regional replication and PITR, making it less efficient. Option D. Set the BigQuery dataset to be multi-regional. Create a scheduled query to make copies of the data to tables suffixed with the time of the backup. In the event of an emergency, use the backup copy of the table. Incorrect because while multi-regional storage ensures availability, adding scheduled query backups is unnecessary and costly. PITR already provides recovery capabilities, so scheduled backups duplicate functionality and increase costs."
+  },
+  {
+   "id": "test_7_q3",
+   "source": "test 7",
+   "question": "You plan to deploy Cloud SQL using MySQL. You need to ensure high availability in the event of a zone failure. What should you do?",
+   "options": [
+    "Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region.",
+    "Create a Cloud SQL instance in one zone, and create a read replica in another zone within the same region.",
+    "Create a Cloud SQL instance in one zone, and configure an external read replica in a zone in a different region.",
+    "Create a Cloud SQL instance in a region, and configure automatic backup to a Cloud Storage bucket in the same region."
+   ],
+   "answer": [
+    "Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region."
+   ],
+   "explanation": "The correct answer is: A. Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region. This will ensure high availability in the event of a zone failure. If the primary Cloud SQL instance becomes unavailable due to a zone failure, the failover replica can be automatically promoted to become the new primary instance, ensuring minimal downtime. Here’s why the other options are not as suitable: B. Create a Cloud SQL instance in one zone, and create a read replica in another zone within the same region: While this provides read redundancy, it does not guarantee high availability in the event of a zone failure. If the primary instance becomes unavailable, the read replica cannot be promoted to become the new primary. C. Create a Cloud SQL instance in one zone, and configure an external read replica in a zone in a different region: While this provides read redundancy and disaster recovery, it does not guarantee high availability in the event of a zone failure within the same region. If the primary instance becomes unavailable due to a zone failure, the external read replica may not be able to take over immediately. D. Create a Cloud SQL instance in a region, and configure automatic backup to a Cloud Storage bucket in the same region: While automatic backups are important for data recovery, they do not provide high availability in the event of a zone failure. If the primary instance becomes unavailable, there may be a delay in restoring from the backup. Therefore, creating a Cloud SQL instance with a failover replica in a different zone within the same region is the most effective way to ensure high availability for your MySQL database."
+  },
+  {
+   "id": "test_7_q34",
+   "source": "test 7",
+   "question": "You are choosing a NoSQL database to handle telemetry data submitted from millions of Internet-of-Things (IoT) devices. The volume of data is growing at 100TB per year, and each data entry has about 100 attributes. The data processing pipeline does not require atomicity, consistency, isolation, and durability (ACID).However, high availability and low latency are required.You need to analyze the data by querying against individual fields. Which three databases meet your requirements? (Choose three.)",
+   "options": [
+    "Redis",
+    "HBase",
+    "MySQL",
+    "MongoDB",
+    "Cassandra",
+    "HDFS with Hive"
+   ],
+   "answer": [
+    "HBase",
+    "MongoDB",
+    "Cassandra"
+   ],
+   "explanation": "Answer is BDE – A. Redis – Redis is an in-memory non-relational key-value store. Redis is a great choice for implementing a highly available in-memory cache to decrease data access latency, increase throughput, and ease the load off your relational or NoSQL database and application. Since the question does not ask cache, A is discarded. B. HBase – Meets reqs C. MySQL – they do not need ACID, so not needed. D. MongoDB – Meets reqs E. Cassandra – Apache Cassandra is an open source NoSQL distributed database trusted by thousands of companies for scalability and high availability without compromising performance. Linear scalability and proven fault-tolerance on commodity hardware or cloud infrastructure make it the perfect platform for mission-critical data. F. HDFS with Hive – Hive allows users to read, write, and manage petabytes of data using SQL. Hive is built on top of Apache Hadoop, which is an open-source framework used to efficiently store and process large datasets. As a result, Hive is closely integrated with Hadoop, and is designed to work quickly on petabytes of data. HIVE IS NOT A DATABSE."
+  },
+  {
+   "id": "test_8_q10",
+   "source": "test 8",
+   "question": "What is the recommended way to ensure high availability in the event of a zone failure when deploying Cloud SQL using MySQL?",
+   "options": [
+    "Create a Cloud SQL instance in one zone, and create a read replica in another zone within the same region",
+    "Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region.",
+    "Create a Cloud SQL instance in one zone, and configure an external read replica in a zone in a different region",
+    "Create a Cloud SQL instance in a region, and configure automatic backup to a Cloud Storage bucket in the same region."
+   ],
+   "answer": [
+    "Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region."
+   ],
+   "explanation": "The recommended way to ensure high availability in the event of a zone failure when deploying Cloud SQL using MySQL is to create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region (Option A). T his provides automatic failover to the replica instance in the event of an outage in the primary zone, minimizing downtime and ensuring data is highly available. Additionally this setup also provides regional redundancy to guard against an outage in the entire region."
+  },
+  {
+   "id": "test_10_q19",
+   "source": "test 10",
+   "question": "You have uploaded 5 years of log data to Cloud Storage. A user reported that some data points in the log data are outside of their expected ranges, indicating errors. You need to fix this issue and ensure that the original data is retained for compliance reasons. What should you do?",
+   "options": [
+    "Use a Dataflow workflow to read the data from Cloud Storage, identify and correct values outside the expected range, and write the updated data to a new dataset in Cloud Storage",
+    "Import the data from Cloud Storage to BigQuery, create a new table, and remove the rows with errors",
+    "Use a Dataflow workflow to read the data from Cloud Storage, identify and correct values outside the expected range, and overwrite the original dataset in Cloud Storage.",
+    ". Create a new copy of the data in Cloud Storage using a Compute Engine instance, and remove the rows with errors"
+   ],
+   "answer": [
+    "Use a Dataflow workflow to read the data from Cloud Storage, identify and correct values outside the expected range, and write the updated data to a new dataset in Cloud Storage"
+   ],
+   "explanation": "The correct answer is: Use a Dataflow workflow to read the data from Cloud Storage, identify and correct values outside the expected range, and write the updated data to a new dataset in Cloud Storage. Here’s why: Dataflow workflow: This is a scalable and managed service that can efficiently process large amounts of data. It’s well-suited for tasks like reading, transforming, and writing data to Cloud Storage. Identify and correct errors: You can use Dataflow to write code that identifies data points outside the expected range and corrects them based on your defined rules or logic. New dataset: By writing the updated data to a new dataset, you preserve the original data for compliance purposes while also having a corrected dataset for analysis. The other options are not as suitable: Importing to BigQuery: While BigQuery can be used for data analysis, it might not be the most efficient or cost-effective solution for this specific task, especially if you need to process large amounts of data. Overwriting original dataset: Overwriting the original dataset would destroy the historical data, which is required for compliance. Using Compute Engine: While this approach might be possible, it would involve managing infrastructure and could be less scalable and efficient than using a managed service like Dataflow. By using a Dataflow workflow, you can efficiently identify and correct errors in your log data while preserving the original data for compliance purposes."
+  },
+  {
+   "id": "test_11_q11",
+   "source": "test 11",
+   "question": "As a database administrator, you are finding that a Cloud SQL database using PostgreSQL is not meeting read operation SLAs. You want to improve performance with minimal changes to database applications. What would you try first to improve read performance?",
+   "options": [
+    "Use Cloud Memorystore to cache data to be read.",
+    "Use change data capture to keep a second database in a different region in synch with the primary database while having read operations sent to the secondary database.",
+    "Use PostgreSQL‘s explain plan feature to analyze queries and rewrite them to improve performance.",
+    "Create a read replica."
+   ],
+   "answer": [
+    "Create a read replica."
+   ],
+   "explanation": "The correct answer is to create a read replica for read operations. Using a cache could improve read performance but would require changes to database applications. Using a secondary database would require changes to the application to read from the secondary database instead of the primary. Using explain plan could help with query optimization but that also requires changes to database applications. See https://cloud.google.com/sql/docs/mysql/replication"
+  },
+  {
+   "id": "test_11_q28",
+   "source": "test 11",
+   "question": "As the architect of a seismic data analysis system that utilizes an Apache Hadoop cluster for its ETL process, you encounter an issue where the ETL process takes several days to process a data set due to the computational complexity of some steps. After investigating the issue, you discover that the sensor calibration step has been omitted. To ensure that sensor calibration is carried out systematically in the future, which of the following actions should you take?",
+   "options": [
+    "Develop an algorithm that uses simulation to predict the variance of the data output from the last MapReduce job based on calibration factors, and then apply the correction to all data",
+    "Append sensor calibration data to the output of the ETL process, and provide documentation for users to apply sensor calibration themselves",
+    "Modify the existing MapReduce jobs to apply sensor calibration before anything else is done.",
+    "Add a new MapReduce job to apply sensor calibration to the raw data, and ensure that all other MapReduce jobs are chained after this step."
+   ],
+   "answer": [
+    "Add a new MapReduce job to apply sensor calibration to the raw data, and ensure that all other MapReduce jobs are chained after this step."
+   ],
+   "explanation": "Correct Option D: text Add a new MapReduce job to apply sensor calibration to the raw data, and ensure that all other MapReduce jobs are chained after this step. Explanation: This is the best practice. Calibration should be applied up front to raw data so that all downstream jobs operate on corrected values. By chaining calibration as the first MapReduce job, you ensure consistency and accuracy across the pipeline. Incorrect Option A: text Develop an algorithm that uses simulation to predict the variance of the data output from the last MapReduce job based on calibration factors, and then apply the correction to all data. Explanation: This is overly complex and reactive. Applying calibration after the last job means all intermediate results are based on uncalibrated data, which undermines accuracy. Option B: text Append sensor calibration data to the output of the ETL process, and provide documentation for users to apply sensor calibration themselves. Explanation: Offloading calibration to end users is not reliable. Calibration should be automated and enforced within the pipeline. Option C: text Modify the existing MapReduce jobs to apply sensor calibration before anything else is done. Explanation: While it sounds reasonable, modifying all jobs individually is inefficient and error‑prone. A dedicated calibration job at the start of the chain (Option D) is cleaner and more maintainable"
+  },
+  {
+   "id": "test_13_q11",
+   "source": "test 13",
+   "question": "Scenario: In a production environment, there is a Standard Tier Memorystore for Redis instance deployed. What steps should be taken to simulate a Redis instance failover in a disaster recovery situation accurately without impacting production data?",
+   "options": [
+    "Create a Standard Tier Memorystore for Redis instance in the development environment. Initiate a manual failover by using the limited-data-loss data protection mode.",
+    "Create a Standard Tier Memorystore for Redis instance in a development environment. Initiate a manual failover by using the force-data-loss data protection mode.",
+    "Increase one replica to Redis instance in production environment. Initiate a manual failover by using the force-data-loss data protection mode.",
+    "Initiate a manual failover by using the limited-data-loss data protection mode to the Memorystore for Redis instance in the production environment."
+   ],
+   "answer": [
+    "Create a Standard Tier Memorystore for Redis instance in a development environment. Initiate a manual failover by using the force-data-loss data protection mode."
+   ],
+   "explanation": "The correct answer is B: Create a Standard Tier Memorystore for Redis instance in a development environment. Initiate a manual failover by using the force-data-loss data protection mode.– Creating a Standard Tier Memorystore for Redis instance in a development environment allows you to simulate a failover scenario without impacting your production data. This ensures that any potential issues or complications can be identified and resolved in a controlled environment.– Initiating a manual failover using the force-data-loss data protection mode ensures that the failover process will proceed even if it results in data loss. This is important in a disaster recovery situation where ensuring the availability of the service is a higher priority than preserving data integrity.Now, let‘s explain why the other options are incorrect:A. Creating a Standard Tier Memorystore for Redis instance in the development environment and initiating a manual failover using the limited-data-loss data protection mode does not accurately simulate a disaster recovery situation where data loss may be unavoidable. This option may not provide a realistic test for a failover scenario in a production environment.C. Increasing the number of replicas in the production environment and initiating a manual failover using the force-data-loss data protection mode may impact the production data integrity. Additionally, adding more replicas does not necessarily guarantee a successful failover without data loss.D. Initiating a manual failover using the limited-data-loss data protection mode in the production environment may not accurately simulate a real disaster recovery scenario where data loss could occur. This option may not be the best practice for ensuring a smooth failover process without impacting production data."
+  },
+  {
+   "id": "test_13_q19",
+   "source": "test 13",
+   "question": "Scenario: You have a Cloud SQL for PostgreSQL instance in Region‘ with one read replica in Region2 and another read replica in Region3. An unexpected event in Region‘ requires that you perform disaster recovery by promoting a read replica in Region2. What steps should you take to ensure that your application has the same database capacity available before switching over the connections?",
+   "options": [
+    "Enable zonal high availability on the primary instance. Create a new read replica in a new region.",
+    "Create a cascading read replica from the existing read replica in Region3.",
+    "Create two new read replicas from the new primary instance, one in Region3 and one in a new region.",
+    "Create a new read replica in Region1, promote the new read replica to be the primary instance, and enable zonal high availability."
+   ],
+   "answer": [
+    "Create two new read replicas from the new primary instance, one in Region3 and one in a new region."
+   ],
+   "explanation": "The correct answer is C. Create two new read replicas from the new primary instance, one in Region3 and one in a new region.To ensure that your application has the same database capacity available before switching over the connections, you need to create new read replicas from the promoted read replica in Region2. By creating two new read replicas from the new primary instance, one in Region3 and one in a new region, you distribute the load and ensure that the database capacity is maintained.Now, let‘s explain why the other options are incorrect:A. Enable zonal high availability on the primary instance. Create a new read replica in a new region.This option does not address the need to maintain the same database capacity before switching over the connections. Enabling zonal high availability and creating a new read replica in a new region does not distribute the load as required.B. Create a cascading read replica from the existing read replica in Region3.Creating a cascading read replica from the existing read replica in Region3 does not address the need to promote a read replica in Region2 for disaster recovery. This option does not ensure the same database capacity is available before switching over the connections.D. Create a new read replica in Region1, promote the new read replica to be the primary instance, and enable zonal high availability.This option involves creating a new read replica in Region1 and promoting it to be the primary instance, which does not align with the requirement of promoting a read replica in Region2 for disaster recovery. Additionally, enabling zonal high availability does not distribute the load as effectively as creating new read replicas in different regions."
+  },
+  {
+   "id": "test_13_q24",
+   "source": "test 13",
+   "question": "Scenario – You are tasked with designing a highly available and fault-tolerant architecture for a web application on Google Cloud Platform. Which architectural choices should you consider to achieve these goals?",
+   "options": [
+    "Deploy the web application on a single Compute Engine instance in a single zone.",
+    "Use Cloud Load Balancing to distribute incoming traffic across multiple Compute Engine instances in the same zone.",
+    "Utilize Cloud CDN to cache and deliver content closer to users, reducing latency and improving availability.",
+    "Store application data in a single Cloud SQL instance with automated backups enabled."
+   ],
+   "answer": [
+    "Use Cloud Load Balancing to distribute incoming traffic across multiple Compute Engine instances in the same zone.",
+    "Utilize Cloud CDN to cache and deliver content closer to users, reducing latency and improving availability."
+   ],
+   "explanation": "Deploy the web application on a single Compute Engine instance in a single zone. This is not highly available or fault tolerant because if that instance or zone fails, the application goes down. Incorrect for HA/FT. Use Cloud Load Balancing to distribute incoming traffic across multiple Compute Engine instances in the same zone. Using load balancing helps distribute traffic, but if all instances are in the same zone, zone failure can cause downtime. It’s better than option 1, but still not fully fault-tolerant or highly available across zones. This is partially correct, but ideally instances should be spread across multiple zones. Utilize Cloud CDN to cache and deliver content closer to users, reducing latency and improving availability. Cloud CDN improves latency and availability for static content and cached assets. It supports high availability from the edge, so this is a good architectural choice for HA and performance. This is correct for improving availability, especially for content delivery. Store application data in a single Cloud SQL instance with automated backups enabled. A single Cloud SQL instance is a single point of failure, even with backups. Automated backups help with recovery but do not provide high availability or fault tolerance. Cloud SQL High Availability (HA) configurations with failover replicas are recommended instead. This is incorrect for HA/FT."
+  },
+  {
+   "id": "test_13_q58",
+   "source": "test 13",
+   "question": "Scenario: Working for a large ecommerce company, you use Pub/Sub to ingest clickstream data to Google Cloud for analytics. You notice that new subscribers connecting to an existing topic cannot subscribe to older data. With an upcoming yearly sale event in two months, you require a solution that allows new subscribers to access the last 30 days of data once implemented. What steps should be taken to enable any new subscriber to read the last 30 days of data for the upcoming yearly sale event in two months, considering the issue with existing subscribers not being able to subscribe to older data?",
+   "options": [
+    "Create a new topic, and publish the last 30 days of data each time a new subscriber connects to an existing topic.",
+    "Set the topic retention policy to 30 days.",
+    "Set the subscriber retention policy to 30 days.",
+    "Ask the source system to re-push the data to Pub/Sub, and subscribe to it."
+   ],
+   "answer": [
+    "Set the topic retention policy to 30 days."
+   ],
+   "explanation": "The correct answer is B. Set the topic retention policy to 30 days.By setting the topic retention policy to 30 days, Pub/Sub will retain messages in the topic for 30 days. This means that any new subscriber connecting to the topic will be able to read the last 30 days of data. This solution ensures that new subscribers can access the necessary historical data without the need for manual intervention or data re-publishing.Now, let‘s discuss why the other options are incorrect:A. Creating a new topic and publishing the last 30 days of data each time a new subscriber connects is not a scalable solution. It would require manual effort to republish data each time a new subscriber joins, which is not efficient and could lead to data inconsistencies.C. Setting the subscriber retention policy to 30 days does not address the issue at hand. Subscriber retention policy controls how long a subscription will be retained in Pub/Sub. It does not affect the retention of messages in the topic.D. Asking the source system to re-push the data to Pub/Sub and subscribing to it is a manual and error-prone process. It introduces complexity and potential data inconsistencies, especially when dealing with large volumes of data.In conclusion, setting the topic retention policy to 30 days is the most appropriate solution as it ensures new subscribers can access the last 30 days of data without manual intervention or data re-publishing."
+  },
+  {
+   "id": "test_14_q14",
+   "source": "test 14",
+   "question": "Scenario: You are developing a system that necessitates an ACID-compliant database. It is crucial that the system minimizes the need for human intervention in the event of a failure. What steps should be taken to achieve this goal?",
+   "options": [
+    "Configure a Cloud SQL for MySQL instance with point-in-time recovery enabled.",
+    "Configure a Cloud SQL for PostgreSQL instance with high availability enabled.",
+    "Configure a Bigtable instance with more than one cluster.",
+    "Configure a BigQuery table with a multi-region configuration."
+   ],
+   "answer": [
+    "Configure a Cloud SQL for PostgreSQL instance with high availability enabled."
+   ],
+   "explanation": "The correct answer is B. Configure a Cloud SQL for PostgreSQL instance with high availability enabled.1. ACID-compliance: ACID stands for Atomicity, Consistency, Isolation, and Durability. PostgreSQL is known for its robust support for ACID compliance, making it a suitable choice for systems that require data integrity and consistency.2. High availability: Enabling high availability in a Cloud SQL for PostgreSQL instance ensures that the database is replicated across multiple zones within a region, providing redundancy and fault tolerance. In case of a failure in one zone, the system automatically fails over to another zone, minimizing human intervention and ensuring continuous operation.Now, let‘s discuss why the other options are incorrect:A. Configure a Cloud SQL for MySQL instance with point-in-time recovery enabled:While point-in-time recovery can help in restoring a database to a specific point in time, it does not guarantee high availability or automatic failover in case of a failure. MySQL, while a popular database system, may not offer the same level of ACID compliance and high availability features as PostgreSQL.C. Configure a Bigtable instance with more than one cluster:Bigtable is a NoSQL database that is optimized for high throughput and scalability, but it does not provide the same level of ACID compliance as relational databases like PostgreSQL. Having multiple clusters in Bigtable can improve performance but does not directly address the need for an ACID-compliant database with minimal human intervention in case of a failure.D. Configure a BigQuery table with a multi-region configuration:BigQuery is a serverless, highly scalable data warehouse, but it is not a traditional ACID-compliant database system. While a multi-region configuration can help with data redundancy and availability, BigQuery does not offer the same level of transactional support and data integrity as PostgreSQL.In conclusion, option B is the correct choice as it combines the ACID-compliance of PostgreSQL with the high availability features of Cloud SQL to meet the requirements of the system with minimal human intervention in case of a failure."
+  },
+  {
+   "id": "test_14_q39",
+   "source": "test 14",
+   "question": "Scenario: You have important legal hold documents stored in a Cloud Storage bucket. What steps should you take to prevent these documents from being deleted or modified?",
+   "options": [
+    "Set a retention policy. Lock the retention policy.",
+    "Set a retention policy. Set the default storage class to Archive for long-term digital preservation.",
+    "Enable the Object Versioning feature. Add a lifecycle rule.",
+    "Enable the Object Versioning feature. Create a copy in a bucket in a different region."
+   ],
+   "answer": [
+    "Set a retention policy. Lock the retention policy."
+   ],
+   "explanation": "A. Set a retention policy. Lock the retention policy.Setting a retention policy on the Cloud Storage bucket ensures that the documents are not deleted or modified for a specific period of time. Locking the retention policy prevents any changes or deletions to the documents until the retention period expires. This option is the correct answer because it directly addresses the requirement to ensure that the documents are not deleted or modified.Now, let‘s explain why the other options are incorrect:B. Set a retention policy. Set the default storage class to Archive for long-term digital preservation.This option involves setting the default storage class to Archive, which is used for long-term storage at a lower cost but does not prevent deletion or modification of the documents. It does not directly address the requirement to ensure that the documents are not deleted or modified.C. Enable the Object Versioning feature. Add a lifecycle rule.Enabling object versioning allows you to retain multiple versions of an object in the bucket, but it does not prevent the deletion or modification of the documents. Adding a lifecycle rule can help manage object retention based on certain conditions, but it does not provide the same level of protection as setting a retention policy with locking.D. Enable the Object Versioning feature. Create a copy in a bucket in a different region.Enabling object versioning and creating a copy in a different region can help with data redundancy and disaster recovery, but it does not prevent the deletion or modification of the original documents in the bucket. This option does not directly address the requirement to ensure that the documents are not deleted or modified.In conclusion, option A is the correct answer as it directly addresses the requirement to ensure that the legal hold documents are not deleted or modified by setting a retention policy and locking it."
+  },
+  {
+   "id": "test_14_q58",
+   "source": "test 14",
+   "question": "Scenario: You are migrating a MySQL database workload to Cloud SQL. The database needs to scale to accommodate multiple readers from different geographic locations and maintain high availability with low RTO and RPO, especially during a regional outage. How can you minimize interruptions for readers during a database failover in this scenario?",
+   "options": [
+    "Create a highly available Cloud SQL instance in region Create a highly available read replica in region B. Scale up read workloads by creating cascading read replicas in multiple regions. Backup the Cloud SQL instances to a multi-regional Cloud Storage bucket. Restore the Cloud SQL backup to a new instance in another region when Region A is down.",
+    "Create a highly available Cloud SQL instance in region A. Scale up read workloads by creating read replicas in multiple regions. Promote one of the read replicas when region A is down.",
+    "Create a highly available Cloud SQL instance in region A. Create a highly available read replica in region B. Scale up read workloads by creating cascading read replicas in multiple regions. Promote the read replica in region B when region A is down.",
+    "Create a highly available Cloud SQL instance in region A. Scale up read workloads by creating read replicas in the same region. Failover to the standby Cloud SQL instance when the primary instance fails."
+   ],
+   "answer": [
+    "Create a highly available Cloud SQL instance in region A. Create a highly available read replica in region B. Scale up read workloads by creating cascading read replicas in multiple regions. Promote the read replica in region B when region A is down."
+   ],
+   "explanation": "The correct answer is C: Create a highly available Cloud SQL instance in region A. Create a highly available read replica in region B. Scale up read workloads by creating cascading read replicas in multiple regions. Promote the read replica in region B when region A is down.1. Creating a highly available Cloud SQL instance in region A ensures that the primary database is highly available within the same region.2. Creating a highly available read replica in region B ensures that there is a standby database in a different region for disaster recovery purposes.3. Scaling up read workloads by creating cascading read replicas in multiple regions allows for distributing read traffic across different regions, providing better performance and scalability.4. Promoting the read replica in region B when region A is down ensures minimal interruptions to the readers during a failover scenario.Now, let‘s explain why the other options are incorrect:A. Creating a highly available Cloud SQL instance in region A and a read replica in the same region does not provide geographic redundancy in case of a regional outage. Restoring the Cloud SQL backup to a new instance in another region may result in longer RTO and RPO times.B. Creating a highly available Cloud SQL instance in region A and read replicas in multiple regions do not provide a clear failover strategy in case of a regional outage. Promoting one of the read replicas may not be as straightforward as promoting a dedicated read replica in a different region.D. Creating a highly available Cloud SQL instance in region A and read replicas in the same region do not provide geographic redundancy. Failing over to a standby Cloud SQL instance in the same region may not be sufficient in case of a regional outage.In conclusion, option C is the most appropriate solution for ensuring high availability, low RTO and RPO, and minimal interruptions to readers during a database failover in a multi-region deployment scenario."
+  },
+  {
+   "id": "test_15_q36",
+   "source": "test 15",
+   "question": "Scenario: You have uploaded 5 years of log data to Cloud Storage. A user reported that some data points in the log data are outside of their expected ranges, which indicates errors. What steps should you take to address the issue of log data errors and ensure the ability to rerun the process in the future while maintaining the original data for compliance purposes?",
+   "options": [
+    "Import the data from Cloud Storage into BigQuery. Create a new BigQuery table, and skip the rows with errors.",
+    "Create a Compute Engine instance and create a new copy of the data in Cloud Storage. Skip the rows with errors.",
+    "Create a Dataflow workflow that reads the data from Cloud Storage, checks for values outside the expected range, sets the value to an appropriate default, and writes the updated records to a new dataset in Cloud Storage.",
+    "Create a Dataflow workflow that reads the data from Cloud Storage, checks for values outside the expected range, sets the value to an appropriate default, and writes the updated records to the same dataset in Cloud Storage."
+   ],
+   "answer": [
+    "Create a Dataflow workflow that reads the data from Cloud Storage, checks for values outside the expected range, sets the value to an appropriate default, and writes the updated records to a new dataset in Cloud Storage."
+   ],
+   "explanation": "The correct answer is C: Create a Dataflow workflow that reads the data from Cloud Storage, checks for values outside the expected range, sets the value to an appropriate default, and writes the updated records to a new dataset in Cloud Storage.Creating a Dataflow workflow allows for a scalable and automated way to process and transform the log data to address the errors. By implementing a Dataflow workflow, you can read the data from Cloud Storage, perform data validation to check for values outside the expected range, replace erroneous values with appropriate defaults, and write the cleaned and corrected data to a new dataset in Cloud Storage. This approach ensures that the original data is preserved for compliance reasons while addressing the data quality issues.Now, let‘s explain why the other options are incorrect:A. Import the data from Cloud Storage into BigQuery. Create a new BigQuery table, and skip the rows with errors.This option suggests importing the data into BigQuery and skipping rows with errors. However, this approach does not address the data quality issues within the log data. Skipping rows with errors may lead to potential data loss and does not provide a systematic way to handle and correct erroneous values.B. Create a Compute Engine instance and create a new copy of the data in Cloud Storage. Skip the rows with errors.Creating a Compute Engine instance to create a new copy of the data and skipping rows with errors is not an efficient solution for handling data quality issues. This approach involves manual intervention and does not offer a scalable and automated way to address errors in the log data.D. Create a Dataflow workflow that reads the data from Cloud Storage, checks for values outside the expected range, sets the value to an appropriate default, and writes the updated records to the same dataset in Cloud Storage.This option suggests writing the updated records back to the same dataset in Cloud Storage. While this approach may work in some scenarios, it is generally recommended to write the corrected data to a new dataset to maintain a separation between the original data and the processed data. This separation helps in tracking changes and ensures data integrity and compliance."
+  },
+  {
+   "id": "test_16_q38",
+   "source": "test 16",
+   "question": "Scenario: You are preparing to implement Cloud SQL with MySQL, aiming to guarantee high availability in case of a zone failure. What steps should you take to achieve this goal?",
+   "options": [
+    "Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region.",
+    "Create a Cloud SQL instance in one zone, and create a read replica in another zone within the same region.",
+    "Create a Cloud SQL instance in one zone, and configure an external read replica in a zone in a different region.",
+    "Create a Cloud SQL instance in a region, and configure automatic backup to a Cloud Storage bucket in the same region."
+   ],
+   "answer": [
+    "Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region."
+   ],
+   "explanation": "A. Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region.Creating a Cloud SQL instance in one zone and setting up a failover replica in another zone within the same region is the correct approach to ensure high availability in the event of a zone failure. By having a failover replica in a different zone within the same region, you can ensure that your database remains accessible even if one zone experiences a failure. In case the primary instance becomes unavailable, the failover replica can take over to maintain operations.Now, let‘s explain why the other options are incorrect:B. Create a Cloud SQL instance in one zone, and create a read replica in another zone within the same region.Creating a read replica in another zone within the same region does not provide automatic failover capabilities in the event of a zone failure. Read replicas are used for scaling read operations and cannot automatically take over in case of a failure in the primary instance.C. Create a Cloud SQL instance in one zone, and configure an external read replica in a zone in a different region.Configuring an external read replica in a different region does not ensure high availability in the event of a zone failure within the same region. Read replicas in different regions are typically used for disaster recovery or read scaling purposes and do not provide automatic failover within the same region.D. Create a Cloud SQL instance in a region, and configure automatic backup to a Cloud Storage bucket in the same region.Configuring automatic backups to a Cloud Storage bucket in the same region is a good practice for data protection and recovery but does not directly address high availability in the event of a zone failure. Automatic backups can help in recovering data but do not provide real-time failover capabilities to maintain operations during a zone failure."
+  }
+ ]
+}

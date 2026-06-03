@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f17">
+  <title>Quiz · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=3">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="content" id="root">
+      <p class="eyebrow">Drill</p>
+      <h1>Quiz Mode</h1>
+      <p class="lead">Pick a chapter to drill. Resumable, with stats kept on this device.</p>
+      <div class="spacer"></div>
+      <div class="cards" id="picker"></div>
+    </main>
+  </div>
+  <script type="module">
+    import { boot } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+    import { Quiz } from "./assets/js/quiz.js";
+
+    if (boot()) {
+      const root = document.getElementById("root");
+      const slug = new URLSearchParams(location.search).get("topic") || "";
+      const shuffle = new URLSearchParams(location.search).get("shuffle") === "1";
+
+      if (!slug) {
+        Data.topicsManifest().then((tm) => {
+          const grid = document.getElementById("picker");
+          grid.innerHTML = tm.topics.map((t) => `
+            <a class="card" href="quiz.html?topic=${encodeURIComponent(t.slug)}">
+              <div class="card-top"><span class="badge">${t.question_count} Q</span></div>
+              <p class="card-title">${t.topic}</p>
+              <span class="card-foot">Drill →</span>
+            </a>`).join("");
+        });
+      } else {
+        Data.topic(slug).then((t) => {
+          root.innerHTML = `
+            <p><a class="card-link" href="quiz.html">← All chapters</a></p>
+            <p class="eyebrow">Drill · ${t.questions.length} questions</p>
+            <h1>${t.topic}</h1>
+            <div class="cta-row">
+              <a class="button ${shuffle ? "" : "primary"}" href="quiz.html?topic=${encodeURIComponent(slug)}">In order</a>
+              <a class="button ${shuffle ? "primary" : ""}" href="quiz.html?topic=${encodeURIComponent(slug)}&shuffle=1">Shuffled</a>
+            </div>
+            <div class="spacer"></div>
+            <div id="q"></div>`;
+          const quiz = new Quiz(document.getElementById("q"), t.questions, {
+            shuffle,
+            persistLastSeen: shuffle ? null : "topic:" + slug,
+          });
+          quiz.start();
+        }).catch((e) => {
+          root.innerHTML = `<div class="empty"><div class="big">∅</div>Topic not found: ${e.message}</div>`;
+        });
+      }
+    }
+  </script>
+</body>
+</html>

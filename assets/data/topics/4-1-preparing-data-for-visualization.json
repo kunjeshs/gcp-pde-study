@@ -1,0 +1,22 @@
+{
+ "topic": "4.1 Preparing data for visualization",
+ "slug": "4-1-preparing-data-for-visualization",
+ "question_count": 1,
+ "questions": [
+  {
+   "id": "test_13_q42",
+   "source": "test 13",
+   "question": "Scenario: You are developing a real-time system for a ride-hailing app to detect high-demand areas and efficiently redirect drivers to meet the demand. The system collects data from various sources, processes it, and stores the outcomes for real-time dashboards. What steps should be taken to implement the system effectively?",
+   "options": [
+    "Group the data by using a tumbling window in a Dataflow pipeline, and write the aggregated data to Memorystore.",
+    "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore.",
+    "Group the data by using a session window in a Dataflow pipeline, and write the aggregated data to BigQuery.",
+    "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to BigQuery."
+   ],
+   "answer": [
+    "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore."
+   ],
+   "explanation": "In this scenario, the most suitable option is B: Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore.Explanation for why Option B is correct:1. Hopping window: A hopping window is suitable for aggregating data at regular intervals, such as every 2 seconds as required in this case. It allows you to process data continuously at specified intervals, which is essential for real-time systems like a ride-hailing app.2. Dataflow pipeline: Using Dataflow allows for efficient data processing and allows you to handle the continuous data stream from multiple sources effectively.3. Memorystore: Memorystore is a low-latency, in-memory data store service provided by Google Cloud, which is ideal for storing real-time aggregated data for quick access and visualization.Explanation for why the other options are incorrect:– Option A: Using a tumbling window may not be the best choice as it does not provide the continuous processing required for real-time data aggregation every 2 seconds.– Option C: Session windows are typically used for grouping data based on user-defined sessions, which is not suitable for the time-based aggregation needed in this scenario.– Option D: While using a hopping window is the right choice, writing the aggregated data to BigQuery may not be the most efficient solution for real-time visualization due to potential latency issues compared to using Memorystore."
+  }
+ ]
+}

@@ -1,0 +1,58 @@
+{
+ "topic": "5.3 Organizing workloads based on business requirements",
+ "slug": "5-3-organizing-workloads-based-on-business-requirements",
+ "question_count": 3,
+ "questions": [
+  {
+   "id": "test_3_q11",
+   "source": "test 3",
+   "question": "An online retailer wants to implement a chatbot to improve their customer service. The chatbot needs to be able to handle both text and voice inquiries, and you want to use a low-code or no-code option to easily train it to provide answers based on keywords. Which of the following options should you choose?",
+   "options": [
+    "Build a Python application in App Engine using the Cloud Speech-to-Text API.",
+    "Build a Python application in a Compute Engine instance using the Cloud Speech-to-Text API.",
+    "Use Dialogflow for simple queries and the Cloud Speech-to-Text API for complex queries",
+    "Use Dialogflow to implement the chatbot and define the intents based on the most common queries."
+   ],
+   "answer": [
+    "Use Dialogflow to implement the chatbot and define the intents based on the most common queries."
+   ],
+   "explanation": "Dialogflow is a natural language understanding platform that makes it easy to design and integrate a conversational user interface into your mobile app, web application, device, bot, interactive voice response system, and so on. Using Dialogflow, you can provide new and engaging ways for users to interact with your product. Dialogflow can analyze multiple types of input from your customers, including text or audio inputs (like from a phone or voice recording). It can also respond to your customers in a couple of ways, either through text or with synthetic speech. Ref: https://cloud.google.com/dialogflow/docs",
+   "also_appears_in": [
+    "test_8_q53"
+   ]
+  },
+  {
+   "id": "test_4_q43",
+   "source": "test 4",
+   "question": "How can you address users not getting BigQuery slots when there is a quota of 2K concurrent on-demand slots per project, and you want to avoid adding new projects to the account. Your organization has multiple business units with different budgets and priorities?",
+   "options": [
+    "Transform your batch BigQuery queries to interactive ones.",
+    "Create another project to bypass the 2K on-demand per-project quota.",
+    "Switch to flat-rate pricing and set up a hierarchical priority system for your projects",
+    "Increase the number of concurrent slots per project on the Quotas page in the Cloud Console."
+   ],
+   "answer": [
+    "Switch to flat-rate pricing and set up a hierarchical priority system for your projects"
+   ],
+   "explanation": "The benefits of using BigQuery Reservations include: – Workload management. After you purchase slots, you can allocate them to workloads. That way, a workload has a dedicated pool of BigQuery computational resources available for use. At the same time, if a workload doesn‘t use all of its allocated slots, any unused slots are shared automatically across your other workloads. Centralized purchasing: You can purchase and allocate slots for your entire organization. You don‘t need to purchase slots for each project that uses BigQuery Ref: https://cloud.google.com/bigquery/docs/reservations-intro",
+   "also_appears_in": [
+    "test_10_q32"
+   ]
+  },
+  {
+   "id": "test_14_q16",
+   "source": "test 14",
+   "question": "Scenario: The data analyst team at your company utilizes BigQuery for ad-hoc queries and scheduled SQL pipelines in a Google Cloud project with a slot reservation of 2000 slots. Due to the recent addition of numerous non time-sensitive SQL pipelines, the team is facing frequent quota errors. Upon reviewing the logs, it is evident that around 1500 queries are running concurrently during peak hours. How can you address the concurrency issue to alleviate the quota errors being experienced by the data analyst team while using BigQuery for their SQL pipelines?",
+   "options": [
+    "Increase the slot capacity of the project with baseline as 0 and maximum reservation size as 3000.",
+    "Update SQL pipelines to run as a batch query, and run ad-hoc queries as interactive query jobs.",
+    "Increase the slot capacity of the project with baseline as 2000 and maximum reservation size as 3000.",
+    "Update SQL pipelines and ad-hoc queries to run as interactive query jobs."
+   ],
+   "answer": [
+    "Update SQL pipelines to run as a batch query, and run ad-hoc queries as interactive query jobs."
+   ],
+   "explanation": "The correct answer is B: Update SQL pipelines to run as a batch query, and run ad-hoc queries as interactive query jobs.By updating the SQL pipelines to run as batch queries and running ad-hoc queries as interactive query jobs, you can effectively manage the concurrency issue. Batch queries are typically non time-sensitive and can be scheduled to run during off-peak hours, reducing the number of queries triggered concurrently during peak times. On the other hand, running ad-hoc queries as interactive query jobs allows for better resource allocation and performance optimization for these on-demand queries.Now, let‘s discuss why the other options are incorrect:A. Increasing the slot capacity of the project with a baseline of 0 and a maximum reservation size of 3000 may not effectively address the concurrency issue. Simply increasing the slot capacity without optimizing the query types and scheduling may not efficiently manage the workload.C. Increasing the slot capacity of the project with a baseline of 2000 and a maximum reservation size of 3000 may provide some relief for the concurrency issue, but it may not be the most efficient solution. It is better to optimize the query types and scheduling to manage the workload effectively.D. Updating SQL pipelines and ad-hoc queries to run as interactive query jobs may not be the best approach to resolve the concurrency issue, as interactive queries are typically resource-intensive and may not be suitable for all types of queries. It is important to differentiate between batch and interactive queries to optimize resource allocation and performance."
+  }
+ ]
+}
