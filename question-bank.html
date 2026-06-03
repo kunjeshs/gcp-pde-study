@@ -3,20 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#0e1114">
   <title>Question Bank · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=3">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+  <link rel="stylesheet" href="assets/css/app.css?v=5">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=5">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=5">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=5">
 </head>
 <body>
   <div class="page">
     <header class="topbar" data-appbar></header>
-    <main class="content">
+    <main class="pde-wrap">
       <p class="eyebrow">All questions</p>
       <h1>Question bank</h1>
       <p class="lead">All 592 questions. Filter by chapter, search the text, expand for answer + how-to-think.</p>
 
-      <div class="row field-group" style="margin:18px 0">
+      <div class="row field-group" style="margin:14px 0">
         <input id="search" type="search" placeholder="Search question text…" style="flex:2;min-width:200px">
         <select id="topic-filter" style="flex:1;min-width:160px">
           <option value="">All chapters</option>
@@ -31,7 +33,7 @@
     import { State } from "./assets/js/state.js";
 
     const LETTERS = ["A","B","C","D","E","F"];
-    const esc = (s) => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 
     if (boot()) {
       const list = document.getElementById("list");
@@ -63,10 +65,12 @@
           return `
             <details class="card">
               <summary>
-                <span class="badge">${esc(qq.topic || "")}</span>
-                ${qq.source ? `<span class="badge">${esc(qq.source)}</span>` : ""}
-                ${htt ? `<span class="badge status-live">how-to-think</span>` : ""}
-                ${flagged ? `<span class="badge status-offline">⚑</span>` : ""}
+                <div class="card-top">
+                  <span class="badge">${esc(qq.topic || "")}</span>
+                  ${qq.source ? `<span class="badge">${esc(qq.source)}</span>` : ""}
+                  ${htt ? `<span class="badge status-live">how-to-think</span>` : ""}
+                  ${flagged ? `<span class="badge status-offline">⚑ flagged</span>` : ""}
+                </div>
                 <span class="title">${esc(qq.question || "")}</span>
               </summary>
               <div class="body">
@@ -74,7 +78,7 @@
                   ${(qq.options || []).map((o, oi) => `
                     <div class="opt ${oi === correctIdx ? "correct" : ""}">
                       <span class="letter">${LETTERS[oi]}.</span>
-                      <span class="text">${esc(o)}</span>
+                      <span>${esc(o)}</span>
                     </div>`).join("")}
                 </div>
                 ${qq.explanation ? `<div class="explain"><h3>Explanation</h3><div class="md">${md(qq.explanation)}</div></div>` : ""}

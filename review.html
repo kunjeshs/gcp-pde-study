@@ -3,15 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#0e1114">
   <title>Review · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=3">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+  <link rel="stylesheet" href="assets/css/app.css?v=5">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=5">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=5">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=5">
 </head>
 <body>
   <div class="page">
     <header class="topbar" data-appbar></header>
-    <main class="content">
+    <main class="pde-wrap">
       <p class="eyebrow">Re-drill</p>
       <h1>Review</h1>
       <p class="lead">Flagged + missed questions, in one place.</p>
@@ -23,17 +25,13 @@
       </div>
 
       <div id="root">
-        <section class="section">
-          <div class="section-header">
-            <h2>Flagged <span class="badge" id="flag-count">0</span></h2>
-          </div>
-          <div id="flagged-list" class="cards"></div>
+        <section>
+          <h2>Flagged <span class="badge" id="flag-count">0</span></h2>
+          <div id="flagged-list" class="pde-cards"></div>
         </section>
-        <section class="section">
-          <div class="section-header">
-            <h2>Missed <span class="badge" id="miss-count">0</span></h2>
-          </div>
-          <div id="missed-list" class="cards"></div>
+        <section>
+          <h2>Missed <span class="badge" id="miss-count">0</span></h2>
+          <div id="missed-list" class="pde-cards"></div>
         </section>
       </div>
     </main>
@@ -44,7 +42,7 @@
     import { State } from "./assets/js/state.js";
     import { Quiz } from "./assets/js/quiz.js";
 
-    const esc = (s) => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 
     if (boot()) {
       const all = await Data.allQuestions();
@@ -64,11 +62,11 @@
       const renderList = (slot, qs) => {
         if (!qs.length) { slot.innerHTML = `<p class="muted"><small>Nothing here yet.</small></p>`; return; }
         slot.innerHTML = qs.slice(0, 30).map((q) => `
-          <a class="card" href="quiz.html?topic=${encodeURIComponent(q.topicSlug)}">
-            <div class="card-top"><span class="badge">${esc(q.topic.match(/^\d+\.\d+/)?.[0] || "")}</span></div>
-            <p class="card-title">${esc((q.question || "").slice(0, 110))}…</p>
-            <p class="card-meta">${esc(q.topic)}</p>
-          </a>`).join("") + (qs.length > 30 ? `<p class="muted center" style="grid-column:1/-1;margin-top:6px"><small>+${qs.length - 30} more</small></p>` : "");
+          <div class="pde-card">
+            <h3>${esc((q.question || "").slice(0, 110))}${(q.question || "").length > 110 ? "…" : ""}</h3>
+            <p class="pde-card-meta">${esc(q.topic)}</p>
+            <a href="quiz.html?topic=${encodeURIComponent(q.topicSlug)}">Drill chapter →</a>
+          </div>`).join("") + (qs.length > 30 ? `<p class="muted center" style="grid-column:1/-1;margin-top:6px"><small>+${qs.length - 30} more</small></p>` : "");
       };
       renderList(document.getElementById("flagged-list"), flaggedQs);
       renderList(document.getElementById("missed-list"), missedQs);

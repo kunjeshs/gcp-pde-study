@@ -98,12 +98,18 @@ cheat-sheet.html        # PDF links
 manifest.json           # PWA manifest
 sw.js                   # service worker
 assets/
-  css/app.css           # one stylesheet (mobile-first, theme tokens)
+  css/
+    app.css             # global resets + topbar/nav
+    redesign.css        # .pde-redesign tokens, hero, cards, tabs, TOC, drills
+    theme-toggle.css    # data-theme=light/dark tokens + orbital day/night dial
+    services.css        # .pde-services category-tinted rows
+    overrides.css       # legacy classes (cards, buttons, quiz runner)
   js/
-    app.js              # shared: theme, nav, auth gate, markdown
+    app.js              # shared: theme, nav, auth gate, markdown, boot
     auth.js             # PASS_HASH constant
     data.js             # JSON fetcher + cache
-    state.js            # localStorage wrapper
+    state.js            # localStorage wrapper (pde:* keys)
+    retention.js        # SRS engine: due, mastery, weak-topic buckets
     quiz.js             # quiz runner (used by quiz / review / weak-areas)
   data/
     topics-manifest.json   # 19 topics + counts

@@ -1,7 +1,7 @@
 // sw.js — service worker. Cache-first for shell, stale-while-revalidate for data.
 // Bump VERSION on every deploy that changes shell files.
 
-const VERSION = "pde-v4-2026-06-03";
+const VERSION = "pde-v5-2026-06-03";
 const SHELL_CACHE = "shell-" + VERSION;
 const DATA_CACHE = "data-" + VERSION;
 
@@ -20,12 +20,18 @@ const SHELL = [
   "./cheat-sheet.html",
   "./manifest.json",
   "./assets/css/app.css",
+  "./assets/css/redesign.css",
+  "./assets/css/services.css",
+  "./assets/css/theme-toggle.css",
   "./assets/css/overrides.css",
   "./assets/js/app.js",
   "./assets/js/auth.js",
   "./assets/js/data.js",
   "./assets/js/quiz.js",
+  "./assets/js/retention.js",
+  "./assets/js/services.js",
   "./assets/js/state.js",
+  "./assets/js/theme-toggle.js",
 ];
 
 self.addEventListener("install", (event) => {
