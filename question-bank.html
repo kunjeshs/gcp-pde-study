@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>Question Bank · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=7">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=7">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=7">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=7">
+  <link rel="stylesheet" href="assets/css/app.css?v=8">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=8">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=8">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=8">
 </head>
 <body>
   <div class="page">
@@ -39,6 +39,11 @@
       const list = document.getElementById("list");
       const search = document.getElementById("search");
       const tf = document.getElementById("topic-filter");
+      const footer = document.createElement("div");
+      list.after(footer);
+
+      const PAGE = 25;       // render in chunks so the page stays light on mobile
+      let shown = PAGE;
 
       const [tm, all, explanations] = await Promise.all([
         Data.topicsManifest(),
@@ -52,17 +57,11 @@
         tf.appendChild(o);
       });
 
-      function render() {
-        const q = (search.value || "").toLowerCase().trim();
-        const tslug = tf.value;
-        const filtered = all.filter((x) => (!tslug || x.topicSlug === tslug) && (!q || (x.question || "").toLowerCase().includes(q)));
-        if (!filtered.length) { list.innerHTML = `<div class="empty"><div class="big">∅</div>No matches.</div>`; return; }
-
-        list.innerHTML = filtered.slice(0, 200).map((qq) => {
-          const correctIdx = (qq.options || []).findIndex((o) => (o || "").trim() === (Array.isArray(qq.answer) ? qq.answer[0] : qq.answer || "").trim());
-          const htt = explanations?.[qq.id]?.how_to_think?.markdown;
-          const flagged = State.isFlagged(qq.id);
-          return `
+      function cardHtml(qq) {
+        const correctIdx = (qq.options || []).findIndex((o) => (o || "").trim() === (Array.isArray(qq.answer) ? qq.answer[0] : qq.answer || "").trim());
+        const htt = explanations?.[qq.id]?.how_to_think?.markdown;
+        const flagged = State.isFlagged(qq.id);
+        return `
             <details class="card">
               <summary>
                 <div class="card-top">
@@ -86,7 +85,43 @@
                 <p style="margin-top:14px"><a class="button" href="quiz.html?topic=${encodeURIComponent(qq.topicSlug)}">Drill this chapter →</a></p>
               </div>
             </details>`;
-        }).join("") + (filtered.length > 200 ? `<p class="muted center" style="margin-top:20px"><small>Showing first 200 of ${filtered.length}. Narrow filter for more.</small></p>` : "");
+      }
+
+      function filterAll() {
+        const q = (search.value || "").toLowerCase().trim();
+        const tslug = tf.value;
+        return all.filter((x) => (!tslug || x.topicSlug === tslug) && (!q || (x.question || "").toLowerCase().includes(q)));
+      }
+
+      function renderFooter(filtered) {
+        if (filtered.length > shown) {
+          const next = Math.min(PAGE, filtered.length - shown);
+          footer.innerHTML = `<div class="center" style="margin:18px 0 4px">
+            <button class="button" id="load-more">Load ${next} more</button>
+            <p class="muted" style="margin-top:8px"><small>Showing ${shown} of ${filtered.length}</small></p></div>`;
+          footer.querySelector("#load-more").addEventListener("click", () => {
+            const prev = shown;
+            shown += PAGE;
+            list.insertAdjacentHTML("beforeend", filtered.slice(prev, shown).map(cardHtml).join(""));
+            renderFooter(filtered);
+          });
+        } else {
+          footer.innerHTML = filtered.length > PAGE
+            ? `<p class="muted center" style="margin:18px 0 4px"><small>Showing all ${filtered.length}</small></p>`
+            : "";
+        }
+      }
+
+      function render() {
+        shown = PAGE;
+        const filtered = filterAll();
+        if (!filtered.length) {
+          list.innerHTML = `<div class="empty"><div class="big">∅</div>No matches.</div>`;
+          footer.innerHTML = "";
+          return;
+        }
+        list.innerHTML = filtered.slice(0, shown).map(cardHtml).join("");
+        renderFooter(filtered);
       }
 
       let timer; const debounce = (fn) => { clearTimeout(timer); timer = setTimeout(fn, 150); };

@@ -223,11 +223,17 @@
 .pde-redesign .pde-tabpanel.is-active { display: block; }
 
 /* ── Tables (decision / clue) ─────────────────────────────────────────── */
+/* Wrapper lets a genuinely wide table scroll inside its own box instead of
+ * pushing the page wide. On phones the table restyles into stacked cards. */
+.pde-redesign .pde-tbl-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .pde-redesign table.pde-tbl {
   width: 100%;
   border-collapse: collapse;
   margin: 8px 0 14px;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 .pde-redesign table.pde-tbl th,
 .pde-redesign table.pde-tbl td {
@@ -241,6 +247,46 @@
   font-weight: 600;
 }
 .pde-redesign table.pde-tbl td strong { color: var(--pde-accent); }
+
+/* Phones: a 2-column "if X → answer" grid is cramped, so stack each row into
+ * a labelled card. Roles on the markup preserve table semantics for AT. */
+@media (max-width: 540px) {
+  .pde-redesign table.pde-tbl {
+    border: 0;
+    font-size: 1rem;
+  }
+  .pde-redesign table.pde-tbl thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .pde-redesign table.pde-tbl tr {
+    display: block;
+    border: 1px solid var(--pde-border);
+    border-radius: var(--pde-radius);
+    background: var(--pde-panel);
+    padding: 4px 2px;
+    margin: 0 0 10px;
+  }
+  .pde-redesign table.pde-tbl td {
+    display: block;
+    border: 0;
+    padding: 6px 12px;
+  }
+  .pde-redesign table.pde-tbl td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--pde-fg-muted);
+  }
+}
 
 /* ── Lists ────────────────────────────────────────────────────────────── */
 .pde-redesign ul.pde-list {
