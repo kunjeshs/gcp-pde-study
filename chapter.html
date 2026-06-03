@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>Chapter · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=7">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=7">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=7">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=7">
+  <link rel="stylesheet" href="assets/css/app.css?v=8">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=8">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=8">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=8">
 </head>
 <body>
   <div class="page">
@@ -58,8 +58,14 @@
         const tableHtml = (rows) => {
           if (!Array.isArray(rows) || !rows.length) return "";
           const cols = Object.keys(rows[0]);
-          return `<table class="pde-tbl"><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>
-            <tbody>${rows.map((r) => `<tr>${cols.map((c) => `<td>${esc(r[c] == null ? "" : r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+          // Humanise snake_case keys (e.g. "if_question_says" -> "If question says")
+          // for the visible header/label only; data is still read by raw key.
+          const label = (c) => esc(c.replace(/_/g, " ").replace(/^\w/, (m) => m.toUpperCase()));
+          // ARIA roles are kept so the stacked-card mobile layout (which sets
+          // display:block on the table parts) still exposes table semantics.
+          // data-label drives the per-cell labels in that stacked layout.
+          return `<div class="pde-tbl-wrap"><table class="pde-tbl" role="table"><thead role="rowgroup"><tr role="row">${cols.map((c) => `<th role="columnheader" scope="col">${label(c)}</th>`).join("")}</tr></thead>
+            <tbody role="rowgroup">${rows.map((r) => `<tr role="row">${cols.map((c) => `<td role="cell" data-label="${label(c)}">${esc(r[c] == null ? "" : r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
         };
 
         // ── Read sections for Learn tab ──────────────────────────────
