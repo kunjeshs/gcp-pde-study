@@ -7,7 +7,7 @@ HTML + vanilla JS + JSON. No server, no build step. Mobile-first, dark default, 
 
 - 19 chapter pages (from official exam guide)
 - 592 questions across all 19 topics, with answer + base explanation
-- 56 pre-generated "How to Think" walkthroughs; the rest fall back to a personal-notes textarea (saved to `localStorage`)
+- "How to Think" walkthroughs for all 592 questions (clue → GCP service → trap elimination); a personal-notes textarea remains as a fallback for any future questions without one
 - Quiz mode (per-topic, resumable, shuffleable)
 - Review (flagged + missed) and weak-areas views
 - GCP services reference + scenario drills + cheat-sheet PDF
@@ -65,21 +65,17 @@ To **disable** the gate (fully public site), set `PASS_HASH = ""` in `assets/js/
 
 > Security note: the hash is visible to anyone who views the page source. This is a **friction gate**, not real security. The site content is exam-study material, not secrets, so this is acceptable.
 
-## Pre-generating "How to Think" for remaining questions
+## Re-generating "How to Think" walkthroughs
 
-56 of 592 questions ship with a structured "How to Think" walkthrough. The other 536 fall back to a personal-notes textarea on the quiz page.
+All 592 questions now ship with a structured "How to Think" walkthrough in `assets/data/explanations.json`, keyed by question id. The personal-notes textarea on the quiz page only appears for a question that has no walkthrough — so it stays as a safety net if new questions are added later.
 
-To pre-generate the rest:
+If you add new questions and want walkthroughs for them, generate only the missing ones:
 
-- **Option A — Codex CLI (ChatGPT Plus):** Run `tools/codex-gen/gen_how_to_think.py`. Requires an active ChatGPT subscription so the `codex` CLI can call a supported model. See the script header for args.
-- **Option B — Manual web ChatGPT:** Use the setup prompt below in a fresh chat, then paste batches of ~25 questions. Save replies back to `assets/data/explanations.json` keyed by question id.
-- **Option C — Anthropic API direct:** Adapt the script to call `messages.create` with a Claude model. Costs roughly $2-3 for all 536 on Sonnet.
+- **Option A — Codex CLI (ChatGPT Plus):** Run `tools/codex-gen/gen_how_to_think.py`. It is resume-safe and only fills ids missing from `explanations.json`. Requires an active ChatGPT subscription so the `codex` CLI can call a supported model. See the script header for args.
+- **Option B — Manual web ChatGPT:** Use the `SYS_PROMPT` from the script in a fresh chat, then paste batches of ~25 questions. Save replies back to `assets/data/explanations.json` keyed by question id.
+- **Option C — Anthropic API direct:** Adapt the script to call `messages.create` with a Claude model.
 
-Setup prompt for manual pasting:
-
-> See `tools/codex-gen/gen_how_to_think.py` for the exact `SYS_PROMPT` string.
-
-Merge new entries into `assets/data/explanations.json` and redeploy. No code change needed — the quiz page automatically picks up new ids.
+Each entry follows the exact format in the script's `SYS_PROMPT` (one-line rephrase → Step 1 clue → Step 2 GCP service match → Step 3 trap elimination). Merge new entries into `assets/data/explanations.json` and redeploy. No code change needed — the quiz page automatically picks up new ids.
 
 ## Repo layout
 
@@ -118,7 +114,7 @@ assets/
     services.json
     scenarios.json
     annotations.json
-    explanations.json   # how-to-think (56 baked, room to grow to 592)
+    explanations.json   # how-to-think walkthroughs (all 592 questions)
   pdf/
     cheatsheet.pdf
     exam-guide.pdf

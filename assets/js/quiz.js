@@ -44,9 +44,6 @@ export class Quiz {
     if (!q) return;
     const stats = State.attemptStats(q.id);
     const flagged = State.isFlagged(q.id);
-    const explanations = await this.explanationsP;
-    const hasHtt = !!(explanations && explanations[q.id]?.how_to_think?.markdown);
-    const userNote = State.getNote(q.id);
 
     const optsHtml = (q.options || []).map((text, i) => `
       <label class="opt" data-i="${i}">

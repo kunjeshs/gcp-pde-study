@@ -24,6 +24,10 @@
 
   color: var(--text, #1a1a1a);
   padding-bottom: 4rem;
+  /* Guard against any wide child (long URLs, edge-bleed chip strip) forcing
+   * a horizontal scrollbar on narrow mobile viewports. The mobile category
+   * strip keeps its own internal overflow-x: auto, so it still scrolls. */
+  overflow-x: hidden;
 }
 
 :root[data-theme="dark"] .pde-services {
@@ -245,6 +249,9 @@
   font-size: 0.85rem;
   line-height: 1.5;
   color: var(--text, #1a1a1a);
+  /* Long docs URLs must wrap instead of overflowing the row on mobile. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .svc-detail-row__value a { color: var(--accent, #2f6f4e); }
 
