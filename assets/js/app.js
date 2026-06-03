@@ -1,34 +1,41 @@
 // app.js — shared UI: theme toggle, nav, auth gate, markdown render.
 
 import { State } from "./state.js";
+import { PASS_HASH } from "./auth.js";
 
 // ---- Theme ----------------------------------------------------------------
 function applyTheme(t) {
-  // Original Flask app uses data-theme="light"|"dark" or auto (no attr)
   if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   else document.documentElement.removeAttribute("data-theme");
-  const btn = document.querySelector("[data-theme-toggle]");
-  if (btn) btn.textContent = t === "light" ? "◑" : "◐";
+  const lbl = document.querySelector(".theme-dial__label");
+  if (lbl) lbl.textContent = (t === "light") ? "DAY" : "NIGHT";
 }
 function initTheme() {
   let t = State.getTheme();
-  if (!t) {
-    // No saved choice; default to dark to match original Flask app
-    t = "dark";
-  }
+  if (!t) t = "dark"; // default
   applyTheme(t);
 }
-function toggleTheme() {
+function toggleTheme(ev) {
   const cur = document.documentElement.getAttribute("data-theme") || "dark";
   const next = cur === "dark" ? "light" : "dark";
+  // Play radial sweep from the click location
+  try {
+    const x = (ev && ev.clientX) || window.innerWidth / 2;
+    const y = (ev && ev.clientY) || window.innerHeight / 2;
+    const sweepBg = (next === "dark") ? "#0e1114" : "#fafaf7";
+    const sweep = document.createElement("div");
+    sweep.className = "theme-sweep";
+    sweep.style.setProperty("--sweep-x", x + "px");
+    sweep.style.setProperty("--sweep-y", y + "px");
+    sweep.style.setProperty("--sweep-color", sweepBg);
+    document.body.appendChild(sweep);
+    setTimeout(() => sweep.remove(), 700);
+  } catch (_e) {}
   State.setTheme(next);
   applyTheme(next);
 }
 
 // ---- Auth gate ------------------------------------------------------------
-// Password hash baked at build time. Edit assets/js/auth.js to set hash.
-import { PASS_HASH } from "./auth.js";
-
 export async function sha256Hex(text) {
   const buf = new TextEncoder().encode(text);
   const hash = await crypto.subtle.digest("SHA-256", buf);
@@ -36,7 +43,7 @@ export async function sha256Hex(text) {
 }
 
 export async function verifyPassword(pw) {
-  if (!PASS_HASH) return true; // no gate configured -> open
+  if (!PASS_HASH) return true;
   const h = await sha256Hex(pw);
   return h === PASS_HASH.toLowerCase();
 }
@@ -50,16 +57,17 @@ function requireAuthOrRedirect() {
   return false;
 }
 
-// ---- Nav (sticky bar) -----------------------------------------------------
+// ---- Nav ------------------------------------------------------------------
 const NAV_ITEMS = [
   ["index.html", "Home"],
   ["chapters.html", "Chapters"],
-  ["question-bank.html", "Bank"],
+  ["question-bank.html", "Question Bank"],
   ["quiz.html", "Quiz"],
   ["review.html", "Review"],
-  ["weak-areas.html", "Weak"],
+  ["weak-areas.html", "Weak Areas"],
   ["services.html", "Services"],
-  ["exam-traps.html", "Traps"],
+  ["exam-traps.html", "Exam Traps"],
+  ["cheat-sheet.html", "Cheat Sheet"],
 ];
 
 function renderAppbar() {
@@ -67,13 +75,16 @@ function renderAppbar() {
   if (!slot) return;
   const base = document.querySelector("base")?.getAttribute("href") || "./";
   const curFile = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+  const isChapter = curFile === "chapter.html";
   const navHTML = NAV_ITEMS.map(([href, label]) => {
-    const active = href.toLowerCase() === curFile ? " class=\"nav-active\"" : "";
+    const active = (href.toLowerCase() === curFile || (href === "chapters.html" && isChapter))
+      ? " class=\"nav-active\"" : "";
     return `<a href="${base}${href}"${active}>${label}</a>`;
   }).join("");
+
   slot.innerHTML = `
     <div class="brand">
-      <a class="brand-link" href="${base}index.html" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit">
+      <a class="brand-link" href="${base}index.html">
         <span class="brand-mark">PDE</span>
         <div>
           <div class="brand-title">GCP Professional Data Engineer</div>
@@ -83,10 +94,24 @@ function renderAppbar() {
     </div>
     <nav class="nav" data-nav>
       ${navHTML}
-      <button class="button ghost sm" data-theme-toggle aria-label="toggle theme" title="Toggle theme" style="padding:6px 10px;min-height:0;font-size:.9rem">◐</button>
-      ${PASS_HASH && State.isAuthed() ? `<button class="button ghost sm" data-signout title="Sign out" style="padding:6px 10px;min-height:0;font-size:.85rem">Sign out</button>` : ""}
+      ${PASS_HASH && State.isAuthed() ? `<button class="button ghost sm" data-signout title="Sign out">Sign out</button>` : ""}
     </nav>
-    <button class="button ghost sm menu-btn" aria-label="menu" data-menu-toggle style="display:none;padding:6px 10px;min-height:0">☰</button>`;
+    <div class="theme-dial-wrap">
+      <button class="theme-dial" data-theme-toggle aria-label="Toggle theme" title="Toggle day/night theme">
+        <span class="theme-dial__ring" aria-hidden="true"></span>
+        <span class="theme-dial__core" aria-hidden="true">
+          <span class="theme-dial__star s1"></span>
+          <span class="theme-dial__star s2"></span>
+          <span class="theme-dial__star s3"></span>
+        </span>
+        <span class="theme-dial__orbit" aria-hidden="true">
+          <span class="theme-dial__body"></span>
+        </span>
+      </button>
+      <span class="theme-dial__label">NIGHT</span>
+    </div>
+    <button class="menu-btn" aria-label="menu" data-menu-toggle>☰</button>`;
+
   slot.querySelector("[data-theme-toggle]")?.addEventListener("click", toggleTheme);
   slot.querySelector("[data-menu-toggle]")?.addEventListener("click", () => {
     slot.querySelector("[data-nav]")?.classList.toggle("open");
@@ -95,43 +120,39 @@ function renderAppbar() {
     State.signOut();
     location.replace(base + "login.html");
   });
+
+  // Sync the dial label with current theme
+  const cur = document.documentElement.getAttribute("data-theme") || "dark";
+  const lbl = slot.querySelector(".theme-dial__label");
+  if (lbl) lbl.textContent = (cur === "light") ? "DAY" : "NIGHT";
 }
 
-// ---- Tiny markdown renderer (subset: headings, bold, italic, ul/ol, code, links, br) ----
+// ---- Tiny markdown renderer ----------------------------------------------
 export function md(src) {
   if (!src) return "";
   if (typeof src !== "string") {
     try { src = JSON.stringify(src, null, 2); } catch (_e) { src = String(src); }
   }
-  // Escape HTML
   let s = src.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  // Fenced code
   s = s.replace(/```([\s\S]*?)```/g, (_, code) => `<pre><code>${code.trim()}</code></pre>`);
-  // Inline code
   s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
-  // Headings
   s = s.replace(/^######\s+(.*)$/gm, "<h6>$1</h6>")
        .replace(/^#####\s+(.*)$/gm, "<h5>$1</h5>")
        .replace(/^####\s+(.*)$/gm, "<h4>$1</h4>")
        .replace(/^###\s+(.*)$/gm, "<h3>$1</h3>")
        .replace(/^##\s+(.*)$/gm, "<h2>$1</h2>")
        .replace(/^#\s+(.*)$/gm, "<h1>$1</h1>");
-  // Bold + italic
   s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
        .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
-  // Links [text](url)
   s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-  // Lists: group consecutive "- " or "* " lines
   s = s.replace(/(?:^|\n)((?:[ \t]*[-*]\s+.+\n?)+)/g, (_, block) => {
     const items = block.trim().split(/\n/).map((l) => l.replace(/^[ \t]*[-*]\s+/, "").trim());
     return "\n<ul>" + items.map((i) => `<li>${i}</li>`).join("") + "</ul>\n";
   });
-  // Numbered lists
   s = s.replace(/(?:^|\n)((?:[ \t]*\d+\.\s+.+\n?)+)/g, (_, block) => {
     const items = block.trim().split(/\n/).map((l) => l.replace(/^[ \t]*\d+\.\s+/, "").trim());
     return "\n<ol>" + items.map((i) => `<li>${i}</li>`).join("") + "</ol>\n";
   });
-  // Paragraphs: split by blank line
   s = s.split(/\n{2,}/).map((p) => {
     const t = p.trim();
     if (!t) return "";
@@ -141,7 +162,7 @@ export function md(src) {
   return s;
 }
 
-// ---- DOM helpers ---------------------------------------------------------
+// ---- DOM helpers ----------------------------------------------------------
 export function el(html) {
   const t = document.createElement("template");
   t.innerHTML = html.trim();
@@ -151,9 +172,14 @@ export function qs(sel, root = document) { return root.querySelector(sel); }
 export function qsa(sel, root = document) { return [...root.querySelectorAll(sel)]; }
 
 // ---- Boot ----------------------------------------------------------------
-export function boot({ requireAuth = true } = {}) {
+export function boot({ requireAuth = true, chapter = false } = {}) {
   initTheme();
   if (requireAuth && !requireAuthOrRedirect()) return false;
+  // Apply redesign wrapper class to body so global tokens take effect
+  if (!document.body.classList.contains("pde-redesign")) {
+    document.body.classList.add("pde-redesign");
+  }
+  if (chapter) document.body.classList.add("pde-chapter");
   renderAppbar();
   return true;
 }

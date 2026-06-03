@@ -3,39 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#0e1114">
   <title>Chapters · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=3">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+  <link rel="stylesheet" href="assets/css/app.css?v=5">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=5">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=5">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=5">
 </head>
 <body>
   <div class="page">
     <header class="topbar" data-appbar></header>
-    <main class="content">
+    <main class="pde-wrap">
       <p class="eyebrow">Contents</p>
       <h1>All chapters</h1>
       <p class="lead">19 sections from the official exam guide. Tap to read what the exam tests, must-know services, gotchas, and decision tables.</p>
-      <div class="spacer"></div>
-      <div class="cards" id="list"></div>
+      <div id="list" class="pde-cards" style="margin-top:18px"></div>
     </main>
   </div>
   <script type="module">
     import { boot } from "./assets/js/app.js";
     import { Data } from "./assets/js/data.js";
+    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     if (boot()) {
-      Data.chapters().then((d) => {
+      Promise.all([Data.chapters(), Data.topicsManifest()]).then(([d, tm]) => {
         const list = document.getElementById("list");
-        list.innerHTML = Object.entries(d.chapters).map(([key, ch]) => {
-          const slug = key.replace(/^(\d+)\.(\d+)\s+/, "$1-$2-").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+        const byTitle = d.chapters || {};
+        list.innerHTML = (tm.topics || []).map((t) => {
+          const ch = byTitle[t.topic] || {};
+          const summary = (ch.what_the_exam_tests || "").slice(0, 140);
           return `
-            <a class="card" href="chapter.html?slug=${encodeURIComponent(slug)}">
-              <div class="card-top">
-                <span class="badge">${ch.exam_weight || "—"}</span>
-              </div>
-              <p class="card-title">${key}</p>
-              <p class="card-meta">${(ch.what_the_exam_tests || "").slice(0, 130)}…</p>
-              <span class="card-foot">Open →</span>
-            </a>`;
+            <div class="pde-card">
+              <h3>${esc(t.topic)}</h3>
+              <p class="pde-card-meta">${ch.exam_weight ? esc(ch.exam_weight) + " weight · " : ""}${t.question_count || 0} question${t.question_count === 1 ? "" : "s"}</p>
+              ${summary ? `<p class="pde-card-meta">${esc(summary)}${summary.length === 140 ? "…" : ""}</p>` : ""}
+              <a href="chapter.html?slug=${encodeURIComponent(t.slug)}">Open →</a>
+            </div>`;
         }).join("");
       });
     }

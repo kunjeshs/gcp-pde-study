@@ -3,26 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#0e1114">
   <title>Quiz · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=3">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+  <link rel="stylesheet" href="assets/css/app.css?v=5">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=5">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=5">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=5">
 </head>
 <body>
   <div class="page">
     <header class="topbar" data-appbar></header>
-    <main class="content" id="root">
+    <main class="pde-wrap" id="root">
       <p class="eyebrow">Drill</p>
       <h1>Quiz Mode</h1>
       <p class="lead">Pick a chapter to drill. Resumable, with stats kept on this device.</p>
-      <div class="spacer"></div>
-      <div class="cards" id="picker"></div>
+      <div class="pde-cards" id="picker" style="margin-top:18px"></div>
     </main>
   </div>
   <script type="module">
     import { boot } from "./assets/js/app.js";
     import { Data } from "./assets/js/data.js";
     import { Quiz } from "./assets/js/quiz.js";
+
+    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 
     if (boot()) {
       const root = document.getElementById("root");
@@ -32,32 +35,31 @@
       if (!slug) {
         Data.topicsManifest().then((tm) => {
           const grid = document.getElementById("picker");
-          grid.innerHTML = tm.topics.map((t) => `
-            <a class="card" href="quiz.html?topic=${encodeURIComponent(t.slug)}">
-              <div class="card-top"><span class="badge">${t.question_count} Q</span></div>
-              <p class="card-title">${t.topic}</p>
-              <span class="card-foot">Drill →</span>
-            </a>`).join("");
+          grid.innerHTML = (tm.topics || []).map((t) => `
+            <div class="pde-card">
+              <h3>${esc(t.topic)}</h3>
+              <p class="pde-card-meta">${t.question_count || 0} question${t.question_count === 1 ? "" : "s"}</p>
+              <a href="quiz.html?topic=${encodeURIComponent(t.slug)}">Drill →</a>
+            </div>`).join("");
         });
       } else {
         Data.topic(slug).then((t) => {
           root.innerHTML = `
-            <p><a class="card-link" href="quiz.html">← All chapters</a></p>
-            <p class="eyebrow">Drill · ${t.questions.length} questions</p>
-            <h1>${t.topic}</h1>
+            <p><a href="quiz.html">← All chapters</a></p>
+            <p class="eyebrow">Drill · ${t.questions.length} question${t.questions.length === 1 ? "" : "s"}</p>
+            <h1>${esc(t.topic)}</h1>
             <div class="cta-row">
               <a class="button ${shuffle ? "" : "primary"}" href="quiz.html?topic=${encodeURIComponent(slug)}">In order</a>
               <a class="button ${shuffle ? "primary" : ""}" href="quiz.html?topic=${encodeURIComponent(slug)}&shuffle=1">Shuffled</a>
             </div>
-            <div class="spacer"></div>
-            <div id="q"></div>`;
+            <div id="q" style="margin-top:14px"></div>`;
           const quiz = new Quiz(document.getElementById("q"), t.questions, {
             shuffle,
             persistLastSeen: shuffle ? null : "topic:" + slug,
           });
           quiz.start();
         }).catch((e) => {
-          root.innerHTML = `<div class="empty"><div class="big">∅</div>Topic not found: ${e.message}</div>`;
+          root.innerHTML = `<div class="empty"><div class="big">∅</div>Topic not found: ${esc(e.message)}</div>`;
         });
       }
     }

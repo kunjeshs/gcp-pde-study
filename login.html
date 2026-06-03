@@ -3,26 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#0e1114">
   <title>Sign in · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=3">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=3">
+  <link rel="stylesheet" href="assets/css/app.css?v=5">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=5">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=5">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=5">
 </head>
-<body>
-  <div class="page">
-    <main class="content login-wrap">
-      <form class="login-card" id="login-form">
-        <h1>GCP PDE Study Hub</h1>
-        <p class="lead">Enter the access password.</p>
-        <label for="pw">Password</label>
-        <input id="pw" type="password" autocomplete="current-password" autofocus required>
-        <div class="spacer"></div>
-        <button class="button primary" type="submit" style="width:100%">Enter</button>
-        <p id="err" class="err">Wrong password.</p>
-        <p class="footer-note">Friction gate only — the code is public and the data is not secret.</p>
-      </form>
-    </main>
-  </div>
+<body class="pde-redesign">
+  <main class="pde-wrap">
+    <form class="pde-login" id="login-form">
+      <h1>GCP PDE Study Hub</h1>
+      <p class="pde-login-tag">Enter the access password.</p>
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" autofocus required>
+      <button class="pde-cta" type="submit">Enter</button>
+      <p id="err" class="pde-err">Wrong password.</p>
+      <p class="pde-foot">Friction gate only — the code is public and the data is not secret.</p>
+    </form>
+  </main>
   <script type="module">
     import { State } from "./assets/js/state.js";
     import { verifyPassword } from "./assets/js/app.js";
@@ -41,9 +40,9 @@
     }
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      err.style.display = "none";
+      err.classList.remove("is-on");
       const ok = await verifyPassword(pw.value);
-      if (!ok) { err.style.display = "block"; pw.select(); return; }
+      if (!ok) { err.classList.add("is-on"); pw.select(); return; }
       State.setAuthed(true);
       const next = new URLSearchParams(location.search).get("next") || "index.html";
       location.replace(next);
