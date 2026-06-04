@@ -2,115 +2,241 @@ from lib import append_entries
 
 E = {}
 
-E["test_6_q20"] = '''### Step 4: Choose the answer
+E["test_14_q33"] = '''### Step 4: Choose the answer
 
-- A BigQuery dataset restricted to authorized personnel, paired with Data Access audit logs, records every read in a tamper-proof trail.
-- It satisfies the mandate: native, immutable logging of who accessed the regulated data, no custom plumbing.
-
-### Exam shortcut
-
-If you see:
-- "auditable record of access" to regulated data
-- need to log *who read* the data
-- analytical data
-
-Think: **BigQuery + Data Access audit logs**
-
-**Tiny mental image:** a turnstile that stamps everyone who even glances at the restricted file.
-
-**Final answer:** B. In a BigQuery dataset that is viewable only by authorized personnel, with the Data Access log used to provide the auditability.'''
-
-E["test_6_q50"] = '''### Step 4: Choose the answer
-
-- Giving the consultant an anonymized sample in a separate project lets them build the transformation without ever touching real user PII.
-- It satisfies privacy: the external party works on realistic-but-fake data, isolated from production.
+- A Cloud DLP deep inspection job on each table, using a template with the STREET_ADDRESS infoType, finds every street-address instance reliably.
+- It satisfies the goal: purpose-built detection of a specific sensitive type, not brittle keyword matching.
 
 ### Exam shortcut
 
 If you see:
-- external/untrusted party needs to develop against your data
-- private user data / PII must stay protected
-- they only need representative data, not real records
+- find all instances of a specific sensitive type (addresses, SSNs)
+- need accurate detection across tables
+- infoType-based inspection
 
-Think: **anonymized/sample dataset in an isolated project**
+Think: **Cloud DLP deep inspection job + the matching infoType**
 
-**Tiny mental image:** hand the contractor a crash-test dummy, not a real patient.
+**Tiny mental image:** a trained sniffer dog for "street address," not someone grepping for the word "street."
 
-**Final answer:** D. Create an anonymized sample of the data for the consultant to work with in a different project.'''
+**Final answer:** B. Create a deep inspection job on each table in your dataset with Cloud Data Loss Prevention and create an inspection template that includes the STREET_ADDRESS infoType.'''
 
-E["test_7_q8"] = '''### Step 4: Choose the answer
+E["test_14_q38"] = '''### Step 4: Choose the answer
 
-- A service account granted dataset access lets the application query BigQuery on users' behalf, without users authenticating or getting dataset access.
-- It satisfies all constraints: secure programmatic access, no per-user auth, no direct dataset grants to people.
-
-### Exam shortcut
-
-If you see:
-- an app queries data on behalf of users
-- users must NOT authenticate directly or get dataset access
-- secure service-to-service access
-
-Think: **service account with dataset access (app uses the SA)**
-
-**Tiny mental image:** the app is a licensed broker - customers ask it, it holds the only account at the exchange.
-
-**Final answer:** C. Create a service account and grant dataset access to that account. Use the service account‘s private key to access the dataset'''
-
-E["test_7_q13"] = '''### Step 4: Choose the answer
-
-- Loading each client into its own dataset, restricting that dataset to approved users, and applying the right IAM roles isolates clients from one another.
-- It satisfies the goal: per-client data boundaries with appropriate, auditable access for each client's users.
+- DLP format-preserving encryption (FFX) tokenizes the email consistently in both datasets, so the analysts can still join on it without seeing the real value.
+- It satisfies both: PII is de-identified before BigQuery, yet the email remains a usable join key.
 
 ### Exam shortcut
 
 If you see:
-- multiple tenants/clients must not see each other's data
-- BigQuery with direct query access per client
-- "appropriate access" / least privilege per tenant
+- de-identify a field that is also a join key
+- must keep matching/referential integrity across datasets
+- DLP before loading to BigQuery
 
-Think: **dataset per client + restrict to approved users + IAM roles**
+Think: **DLP format-preserving encryption (FFX) tokenization**
 
-**Tiny mental image:** give each client their own locked room rather than a shared table with name cards.
+**Tiny mental image:** replace every email with the same codename everywhere, so the two lists still line up.
 
-**Final answer:** B. Load data into a different dataset for each client.'''
+**Final answer:** B. 1. Create a pipeline to de-identify the email field by using recordTransformations in Cloud DLP with format-preserving encryption with FFX as the de-identification transformation type. 2. Load the booking and user profile data into a BigQuery table.'''
 
-E["test_7_q29"] = '''### Step 4: Choose the answer
+E["test_14_q46"] = '''### Step 4: Choose the answer
 
-- Recreating the events view over events_partitioned in standard SQL makes it consumable by the ODBC driver (with a service account for auth).
-- It satisfies the connection need: ODBC works against standard-SQL objects, and the partition-pruning cost savings are preserved.
-
-### Exam shortcut
-
-If you see:
-- ODBC/JDBC connecting to BigQuery
-- an existing legacy-SQL view in the way
-- need driver compatibility plus authentication
-
-Think: **standard-SQL view (+ service account for the driver)**
-
-**Tiny mental image:** translate the old document into the language the new reader actually understands.
-
-**Final answer:** C. Create a new view over events_partitioned using standard SQL'''
-
-E["test_7_q42"] = '''### Step 4: Choose the answer
-
-- An authorized view exposes the aggregates while shielding the user-level tables, with no extra stored copy, and each project pays for its own queries.
-- It satisfies every constraint: controlled access, minimal storage, and consumer-borne analysis cost.
+- VPC Network Peering plus a no-external-IP proxy VM in Project B on the peered subnet lets Dataflow reach the private Cloud SQL instance entirely over internal networking.
+- It satisfies the constraint: the connection works and the traffic never touches the public internet.
 
 ### Exam shortcut
 
 If you see:
-- share aggregates while protecting underlying user-level data
-- minimize storage (no copies)
-- consuming projects pay for their own queries
+- Dataflow in one project must reach a private Cloud SQL in another
+- no public IP, no Shared VPC / VPC-SC
+- traffic must stay off the public internet
 
-Think: **BigQuery authorized view**
+Think: **VPC Peering + private proxy VM to Cloud SQL**
 
-**Tiny mental image:** a service window that hands out the summary plate without letting anyone into the kitchen.
+**Tiny mental image:** build a private hallway between the two buildings and post a doorman who relays messages.
 
-**Final answer:** A. Create and share an authorized view that provides the aggregate results.'''
+**Final answer:** D. Set up VPC Network Peering between Project A and Project B. Create a Compute Engine instance without external IP address in Project B on the peered subnet to serve as a proxy server to the Cloud SQL database.'''
 
-E["test_7_q51"] = '''### Step 4: Choose the answer
+E["test_14_q50"] = '''### Step 4: Choose the answer
+
+- A VPC Service Controls perimeter around project A blocks data exfiltration of the Pub/Sub topic to project B and any future project outside the perimeter.
+- It satisfies the goal: a service-level boundary that confines access to resources inside project A.
+
+### Exam shortcut
+
+If you see:
+- confine a managed-API resource (Pub/Sub, BigQuery, GCS) to one project
+- prevent access from other/future projects
+- stop data exfiltration
+
+Think: **VPC Service Controls perimeter around the project**
+
+**Tiny mental image:** draw a fence around the building so only those inside can reach the safe.
+
+**Final answer:** B. Configure VPC Service Controls in the organization with a perimeter around project A.'''
+
+E["test_14_q54"] = '''### Step 4: Choose the answer
+
+- The gcp.resourceLocations org policy set to in:europe-west3-locations restricts resource creation to exactly that region preventively.
+- It satisfies the goal using Google's recommended, declarative control rather than custom scripts or after-the-fact cleanup.
+
+### Exam shortcut
+
+If you see:
+- restrict resources to a specific region/location
+- "Google-recommended" / preventive control
+- data residency / location compliance
+
+Think: **org policy: constraints/gcp.resourceLocations (precise location value)**
+
+**Tiny mental image:** a geofence that simply refuses to create anything outside the chosen city.
+
+**Final answer:** A. Set the constraints/gcp.resourceLocations organization policy constraint to in:europe-west3-locations.'''
+
+E["test_14_q60"] = '''### Step 4: Choose the answer
+
+- BigQuery AEAD functions let you encrypt with per-user keys, so deleting one user's key crypto-shreds just that user's data.
+- It satisfies per-user crypto-deletion natively, which table-level CMEK (one key for the whole table) cannot do.
+
+### Exam shortcut
+
+If you see:
+- per-row / per-user "crypto-deletion" or "crypto-shredding"
+- encrypt within BigQuery with granular keys
+- delete a key to render one subject's data unreadable
+
+Think: **BigQuery AEAD encryption functions**
+
+**Tiny mental image:** each customer's data is in its own tiny lockbox - shred that one key and only their box is gone.
+
+**Final answer:** A. Implement Authenticated Encryption with Associated Data (AEAD) BigQuery functions while storing your data in BigQuery.'''
+
+E["test_15_q24"] = '''### Step 4: Choose the answer
+
+- An aggregated export sink captures Data Access logs from all projects into a Cloud Storage bucket in a new, locked-down audit project, away from the analyst-Owners.
+- It satisfies both: centralized 6-month retention and access limited to audit personnel only.
+
+### Exam shortcut
+
+If you see:
+- collect audit/data-access logs across ALL projects
+- keep them from project Owners/admins
+- central retention for N months
+
+Think: **aggregated log export sink to an isolated audit project**
+
+**Tiny mental image:** funnel every branch's ledgers into one sealed vault that only the auditors can open.
+
+**Final answer:** D. Export the data access logs via an aggregated export sink to a Cloud Storage bucket in a newly created project for audit logs. Restrict access to the project that contains the exported logs.'''
+
+E["test_15_q26"] = '''### Step 4: Choose the answer
+
+- Precomputing predictions in Dataflow and serving them from Bigtable delivers single-user-ID lookups well under 100 ms.
+- It satisfies the latency SLA a live BigQuery query cannot guarantee for point lookups.
+
+### Exam shortcut
+
+If you see:
+- serve BigQuery ML predictions via REST under ~100 ms
+- single-key (user ID) lookups
+- need an online serving store
+
+Think: **precompute in Dataflow, serve from Bigtable**
+
+**Tiny mental image:** bake all the answers ahead of time and file them, so each request is just opening a drawer.
+
+**Final answer:** D. Create a Dataflow pipeline using BigQueryIO to read predictions for all users from the query. Write the results to Bigtable using BigtableIO. Grant the Bigtable Reader role to the application service account so that the application can read predictions for individual users from Bigtable.'''
+
+E["test_15_q35"] = '''### Step 4: Choose the answer
+
+- Since the network team defines firewall rules by network tag, check for a rule allowing TCP 12345-12346 on the Dataflow network tag - the ports workers use to talk to each other.
+- It satisfies the diagnosis: matches the tag-based firewall convention and the exact inter-worker port range.
+
+### Exam shortcut
+
+If you see:
+- Dataflow workers can't communicate with each other
+- firewall rules defined by network tags
+- TCP ports 12345/12346
+
+Think: **firewall rule allowing 12345-12346 on the Dataflow network tag**
+
+**Tiny mental image:** the team can't talk because the intercom ports are firewalled - open them for that crew's badge.
+
+**Final answer:** B. Determine whether there is a firewall rule set to allow traffic on TCP ports 12345 and 12346 for the Dataflow network tag.'''
+
+E["test_15_q40"] = '''### Step 4: Choose the answer
+
+- DLP format-preserving encryption tokenizes the ID reversibly, so reps with the key can recover the original when required.
+- It satisfies both: the value is redacted for everyone, yet authorized staff can de-tokenize on demand.
+
+### Exam shortcut
+
+If you see:
+- redact a sensitive ID but allow authorized re-identification later
+- need reversibility (not a one-way hash)
+- preserve original format
+
+Think: **DLP format-preserving encryption (FPE) token**
+
+**Tiny mental image:** a coat-check tag - hand over the coat, the matching ticket gets it back.
+
+**Final answer:** D. Before loading the data into BigQuery, use Cloud Data Loss Prevention (DLP) to replace input values with a cryptographic format-preserving encryption token.'''
+
+E["test_15_q51"] = '''### Step 4: Choose the answer
+
+- A DLP format-preserving token replaces names and emails consistently, so they stay masked yet remain valid join keys.
+- It satisfies both priorities: PII is protected and referential integrity across records is maintained.
+
+### Exam shortcut
+
+If you see:
+- mask PII but it is also a common join key
+- "maintain referential integrity"
+- streaming de-identification
+
+Think: **DLP format-preserving / deterministic tokenization**
+
+**Tiny mental image:** swap each name for the same codename everywhere, so the records still connect.
+
+**Final answer:** D. Create a pseudonym by replacing PII data with a cryptographic format-preserving token.'''
+
+E["test_15_q59"] = '''### Step 4: Choose the answer
+
+- A VPC Service Controls perimeter with Cloud Storage restricted, granting only the Development Team an access level, lets Dev read GCS while External keeps only BigQuery access.
+- It satisfies both: External is fenced out of Cloud Storage, while both teams retain BigQuery via their viewer role.
+
+### Exam shortcut
+
+If you see:
+- two groups, one allowed an extra service the other isn't
+- both already have broad viewer access
+- restrict a specific API (Cloud Storage) to some users
+
+Think: **VPC Service Controls perimeter restricting the API, access level for the allowed group**
+
+**Tiny mental image:** everyone can enter the library, but only staff badges open the archive room.
+
+**Final answer:** D. Create a VPC Service Controls perimeter containing both projects and Cloud Storage as a restricted API. Add the Development Team users to the perimeter‘s Access Level.'''
+
+E["test_16_q26"] = '''### Step 4: Choose the answer
+
+- Encrypting each file client-side with a key plus unique AAD, and keeping the AAD entirely outside Google Cloud, means provider staff can never decrypt the objects.
+- It satisfies "Trust No One": even with infrastructure access, Google lacks the AAD needed to recover the plaintext.
+
+### Exam shortcut
+
+If you see:
+- "Trust No One" / provider must be unable to decrypt
+- client-side encryption with a secret kept off-platform
+- additional authenticated data (AAD)
+
+Think: **client-side encryption, keep the AAD/secret outside Google Cloud**
+
+**Tiny mental image:** lock the box and keep the second combination dial at home, so the warehouse can never open it.
+
+**Final answer:** A. Use gcloud kms keys create to create a symmetric key. Then use gcloud kms encrypt to encrypt each archival file with the key and unique additional authenticated data (AAD). Use gsutil cp to upload each encrypted file to the Cloud Storage bucket, and keep the AAD outside of Google Cloud.'''
+
+E["test_16_q41"] = '''### Step 4: Choose the answer
 
 - Copying the dependencies to a Cloud Storage bucket inside the VPC perimeter lets the init action fetch them with no internet access.
 - It satisfies both constraints: startup dependency install while the no-internet policy holds.
@@ -128,238 +254,112 @@ Think: **stage dependencies in Cloud Storage within the VPC perimeter**
 
 **Final answer:** C. Copy all dependencies to a Cloud Storage bucket within your VPC security perimeter'''
 
-E["test_8_q21"] = '''### Step 4: Choose the answer
+E["test_1_q11"] = '''### Step 4: Choose the answer
 
-- A view presenting just the needed columns/rows to the visualization tool simplifies what the sales team queries without duplicating storage.
-- It satisfies "most cost-effective": no extra stored table, smaller scans, and a cleaner interface for users.
-
-### Exam shortcut
-
-If you see:
-- users overwhelmed by too many columns / costly broad queries
-- want a simpler, cheaper interface for a BI tool
-- avoid copying data
-
-Think: **a BigQuery view (curated projection)**
-
-**Tiny mental image:** a tidy menu of the dishes people actually order, instead of the whole pantry inventory.
-
-**Final answer:** C. Create a view on the table to present to the virtualization tool.'''
-
-E["test_10_q20"] = '''### Step 4: Choose the answer
-
-- Data Catalog is the managed metadata service for recording and later retrieving information about the PII analysis (tags, classifications, locations).
-- It satisfies the goal: easy discovery and retrieval of metadata describing the analysis, separate from the data itself.
+- HBase, Cassandra, and MongoDB are the three that scale to 100 TB/yr of wide, field-queryable telemetry with high availability and low latency, without needing ACID.
+- It satisfies the profile: distributed NoSQL stores built for massive write volume and per-field reads.
 
 ### Exam shortcut
 
 If you see:
-- store/retrieve *metadata* about data or analysis results
-- tag, classify, or discover sensitive-data findings
-- a managed catalog, not a data store
+- huge-volume IoT/telemetry, no ACID needed
+- high availability + low latency, query individual fields
+- pick the scalable NoSQL stores
 
-Think: **Data Catalog**
+Think: **HBase / Cassandra / MongoDB** (skip Redis, MySQL, HDFS+Hive)
 
-**Tiny mental image:** the library's card catalog - it tells you about the books without being the books.
+**Tiny mental image:** choose the fleet of delivery vans built to scale, not the single armored truck or the warehouse forklift.
 
-**Final answer:** A. Data Catalog'''
+**Final answer:** B. HBase'''
 
-E["test_13_q5"] = '''### Step 4: Choose the answer
+E["test_3_q7"] = '''### Step 4: Choose the answer
 
-- Dataflow calling Cloud DLP to mask sensitive fields, then writing to BigQuery, keeps the data useful for analysis while meeting privacy rules.
-- It satisfies both: masked (not deleted) data preserves analytical value, and DLP enforces the privacy requirement.
-
-### Exam shortcut
-
-If you see:
-- preprocess restricted data for analytics while staying compliant
-- mask/de-identify but keep the data usable
-- pipeline from Cloud Storage to BigQuery
-
-Think: **Dataflow + Cloud DLP masking, land in BigQuery**
-
-**Tiny mental image:** redact the secret names with a marker but leave the rest of the report readable.
-
-**Final answer:** A. Use Dataflow and the Cloud Data Loss Prevention API to mask sensitive data. Write the processed data in BigQuery.'''
-
-E["test_13_q6"] = '''### Step 4: Choose the answer
-
-- Leaving the Authorized Networks list empty and running the Cloud SQL Auth proxy on every app gives secure connections despite changing public IPs.
-- It satisfies the goal: no fragile IP allowlists to maintain, just IAM-authorized, encrypted proxy connections.
+- Cloud SQL for PostgreSQL with high availability gives an ACID-compliant database that automatically fails over with minimal human intervention.
+- It satisfies both: full relational ACID guarantees plus a managed automatic-failover standby.
 
 ### Exam shortcut
 
 If you see:
-- clients with dynamic/changing public IPs connecting to Cloud SQL
-- avoid maintaining Authorized Networks
-- secure, encrypted connection
+- ACID/relational database required
+- automatic recovery, minimal human intervention on failure
+- managed OLTP
 
-Think: **Cloud SQL Auth proxy, empty Authorized Networks**
+Think: **Cloud SQL (PostgreSQL/MySQL) with HA / automatic failover**
 
-**Tiny mental image:** an escort that verifies each guest by ID, so you never have to keep a list of their home addresses.
+**Tiny mental image:** a backup generator that flips on by itself the instant the power cuts.
 
-**Final answer:** C. Leave the Authorized Network empty. Use Cloud SQL Auth proxy on all applications.'''
+**Final answer:** B. Configure a Cloud SQL for PostgreSQL instance with high availability enabled.'''
 
-E["test_13_q20"] = '''### Step 4: Choose the answer
+E["test_5_q18"] = '''### Step 4: Choose the answer
 
-- Granting compute.networkUser to the service account that runs the Dataflow pipeline lets its workers attach to the Shared VPC subnetwork.
-- It satisfies deployment: the executing identity can use the shared network the network team provided.
-
-### Exam shortcut
-
-If you see:
-- run Dataflow (or workers) on a Shared VPC subnet
-- "which identity needs compute.networkUser?"
-- host-project network shared to a service project
-
-Think: **compute.networkUser on the pipeline's worker service account**
-
-**Tiny mental image:** the work crew needs a gate pass to the shared yard, not just the foreman.
-
-**Final answer:** B. Assign the compute.networkUser role to the service account that executes the Dataflow pipeline.'''
-
-E["test_13_q26"] = '''### Step 4: Choose the answer
-
-- A new key, a new bucket with that key as the default CMEK, and copying objects without specifying a key re-encrypts everything and forces future CMEK protection.
-- It satisfies all three: retires the compromised key, re-encrypts data, and prevents any non-CMEK writes going forward.
+- A multi-regional BigQuery dataset gives built-in high availability, and point-in-time recovery (time travel) restores data without paying to maintain extra copies.
+- It satisfies all three: high availability, recoverable backups, and minimized cost (no duplicate backup tables).
 
 ### Exam shortcut
 
 If you see:
-- compromised KMS key, must re-encrypt and retire it
-- guarantee future objects are CMEK-protected
-- Cloud Storage default encryption key
+- BigQuery must be highly available, recoverable, low cost
+- backup/recovery without extra storage spend
+- multi-region vs scheduled copies
 
-Think: **new key + new bucket with default CMEK, copy without specifying a key**
+Think: **multi-region dataset + point-in-time (time-travel) recovery**
 
-**Tiny mental image:** move everything into a new vault whose lock is automatic, then throw away the old compromised key.
+**Tiny mental image:** an "undo" button that's already included, instead of paying to photocopy everything nightly.
 
-**Final answer:** D. Create a new Cloud KMS key. Create a new Cloud Storage bucket configured to use the new key as the default CMEK key. Copy all objects from the old bucket to the new bucket without specifying a key.'''
+**Final answer:** C. Set the BigQuery dataset to be multi-regional. In the event of an emergency, use a point-in-time snapshot to recover the data.'''
 
-E["test_13_q37"] = '''### Step 4: Choose the answer
+E["test_7_q34"] = '''### Step 4: Choose the answer
 
-- A public-visibility tag template lets all employees search by has_sensitive_data, while bigquery.dataViewer for HR on the sensitive tables restricts who sees the rows.
-- It satisfies both with minimal overhead: searchable tags for everyone, data access only for HR, no extra tag-viewer grants.
-
-### Exam shortcut
-
-If you see:
-- everyone can search/discover by a tag, but only some can read the data
-- "minimize configuration overhead"
-- Data Catalog tag template + BigQuery access
-
-Think: **public tag template + dataViewer to the privileged group on sensitive tables**
-
-**Tiny mental image:** the catalog card is on the open shelf for all to find; only HR has the key to that specific drawer.
-
-**Final answer:** C. Create the gdpr tag template with public visibility. Assign the bigquery.dataViewer role to the HR group on the tables that contain sensitive data.'''
-
-E["test_13_q44"] = '''### Step 4: Choose the answer
-
-- Data Viewer on the shared dataset (read-only) plus a per-analyst dataset with Data Editor scoped to that dataset gives shared visibility and private workspaces.
-- It satisfies both goals: nobody edits the shared data, and each analyst has an isolated space others can't see.
+- HBase, Cassandra, and MongoDB scale to 100 TB/yr of wide, field-queryable telemetry with high availability and low latency, and don't need ACID.
+- It satisfies the profile: distributed NoSQL stores built for massive write volume and per-field reads.
 
 ### Exam shortcut
 
 If you see:
-- one shared read-only dataset plus private per-user workspaces
-- scope roles at the *dataset* level, not the project
-- view-but-not-edit shared, edit-own-private
+- huge-volume IoT/telemetry, ACID not required
+- high availability + low latency, query individual fields
+- pick the scalable NoSQL stores
 
-Think: **dataViewer on shared dataset + dataEditor on each analyst's own dataset**
+Think: **HBase / Cassandra / MongoDB** (skip Redis, MySQL, HDFS+Hive)
 
-**Tiny mental image:** a shared reference library (look, don't write) plus a personal locked desk for each person.
+**Tiny mental image:** the fleet of vans built to scale, not the single armored truck or the warehouse forklift.
 
-**Final answer:** C. Give analysts the BigQuery Data Viewer role on the shared dataset. Create a dataset for each analyst, and give each analyst the BigQuery Data Editor role at the dataset level for their assigned dataset.'''
+**Final answer:** B. HBase'''
 
-E["test_13_q56"] = '''### Step 4: Choose the answer
+E["test_8_q10"] = '''### Step 4: Choose the answer
 
-- An Analytics Hub private exchange publishing the sales dataset gives business units self-service, live access with no copies to maintain.
-- It satisfies all three: self-serving subscriptions, low maintenance, and cost-effective in-place sharing.
-
-### Exam shortcut
-
-If you see:
-- share a BigQuery dataset org-wide, self-service
-- low-maintenance, cost-effective, always current
-- no per-consumer copies
-
-Think: **Analytics Hub private exchange**
-
-**Tiny mental image:** publish one live listing everyone can subscribe to, instead of mailing copies to each team.
-
-**Final answer:** A. Create an Analytics Hub private exchange, and publish the sales dataset.'''
-
-E["test_13_q60"] = '''### Step 4: Choose the answer
-
-- A BigLake table over the Cloud Storage data, with Data Catalog policy tags for column security, supports Spark and SQL in place and scales into a data mesh.
-- It satisfies all of it: no costly reload, fine-grained column security, and open processing via the Spark-BigQuery connector.
+- A failover replica in another zone of the same region gives Cloud SQL automatic high availability if the primary zone fails.
+- It satisfies the requirement: zone-failure resilience with automatic failover, not just read scaling or cross-region DR.
 
 ### Exam shortcut
 
 If you see:
-- query Cloud Storage data with Spark AND SQL in place
-- column-level security, cost-effective, data-mesh-ready
-- avoid loading/duplicating into native tables
+- Cloud SQL high availability against a zone failure
+- automatic failover within a region
+- distinguish failover replica vs read replica
 
-Think: **BigLake table + Data Catalog policy tags**
+Think: **Cloud SQL HA = failover replica in another zone, same region**
 
-**Tiny mental image:** put a smart, governed window over the existing warehouse instead of rebuilding the warehouse.
+**Tiny mental image:** a standby twin in the next room that takes over instantly if the first one trips.
 
-**Final answer:** B. 1. Define a BigLake table. 2. Create a taxonomy of policy tags in Data Catalog. 3. Add policy tags to columns. 4. Process with the Spark-BigQuery connector or BigQuery SQL.'''
+**Final answer:** B. Create a Cloud SQL instance in one zone, and create a failover replica in another zone within the same region.'''
 
-E["test_14_q5"] = '''### Step 4: Choose the answer
+E["test_10_q19"] = '''### Step 4: Choose the answer
 
-- Having each team publish to Analytics Hub and subscribe to others lets teams keep full ownership while exchanging data with no copies or pipelines.
-- It satisfies the goal: decentralized control plus low-ops, low-cost in-place data exchange.
-
-### Exam shortcut
-
-If you see:
-- many teams own their data but must share/exchange it
-- minimize operational tasks and cost
-- query within each team's own project
-
-Think: **Analytics Hub publish/subscribe (data mesh)**
-
-**Tiny mental image:** a shared marketplace where each stall owns its goods and others subscribe to the live feed.
-
-**Final answer:** C. Ask each team to publish their data in Analytics Hub. Direct the other teams to subscribe to them.'''
-
-E["test_14_q17"] = '''### Step 4: Choose the answer
-
-- Cloud Storage plus multiple service accounts attached to IAM groups grants each group exactly its PII access, the recommended least-privilege pattern.
-- It satisfies the mandate: access-controlled, auditable, group-scoped handling of regulated PII.
+- A Dataflow job that reads the data, corrects the out-of-range values, and writes to a new Cloud Storage dataset fixes the errors while preserving the originals.
+- It satisfies both: corrected data is produced and the raw data is retained untouched for compliance.
 
 ### Exam shortcut
 
 If you see:
-- control access to PII for many users/teams
-- "Google-recommended" service accounts
-- avoid shared or per-individual identities
+- correct/clean data but keep the original for compliance
+- never overwrite the source
+- batch transform in Cloud Storage
 
-Think: **IAM groups with appropriately-scoped service accounts**
+Think: **Dataflow transform → write to a NEW dataset (preserve source)**
 
-**Tiny mental image:** department badges open only their own doors, not one master key copied for all.
+**Tiny mental image:** edit a photocopy and file it alongside the sealed original, never marking the original.
 
-**Final answer:** D. Use Cloud Storage to comply with major data protection standards. Use multiple service accounts attached to IAM groups to grant the appropriate access to each group.'''
-
-E["test_14_q27"] = '''### Step 4: Choose the answer
-
-- The analytics team still sees sensitive columns because they hold the Fine-Grained Reader role on the policy tags; removing it (and enforcing access control in the taxonomy) closes the gap.
-- It satisfies the fix: policy-tag enforcement only restricts users who lack the Fine-Grained Reader role.
-
-### Exam shortcut
-
-If you see:
-- policy tags set but a group can still read protected columns
-- column-level security via Data Catalog taxonomy
-- "why isn't the restriction taking effect?"
-
-Think: **remove Fine-Grained Reader on the tags + enforce access control in the taxonomy**
-
-**Tiny mental image:** the lock is installed, but they still hold a copy of the key - take the key back.
-
-**Final answer:** B. Ensure that the data analytics team members do not have the Data Catalog Fine-Grained Reader role for the policy tags.'''
+**Final answer:** A. Use a Dataflow workflow to read the data from Cloud Storage, identify and correct values outside the expected range, and write the updated data to a new dataset in Cloud Storage'''
 
 append_entries(E)
