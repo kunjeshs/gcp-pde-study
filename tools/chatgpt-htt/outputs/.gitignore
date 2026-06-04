@@ -1,0 +1,4 @@
+# Intermediate ChatGPT replies live here. Keep the folder, ignore the contents.
+*.json
+*.txt
+!.gitkeep

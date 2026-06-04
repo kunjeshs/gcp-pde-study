@@ -15,6 +15,14 @@ Optional:
     --max       0                  # stop after N batches (0 = all)
     --model     gpt-5-codex        # codex model id (uses codex default profile if omitted)
     --log       gen.log            # progress log path
+    --upgrade                      # also regenerate existing entries that are missing
+                                   # the newer sections (Step 4 / Exam shortcut /
+                                   # Tiny mental image / Final answer)
+
+Every generated entry now includes the full teaching structure: the plain-English
+rephrase, Steps 1-4, an "Exam shortcut" pattern cue, a one-line "Tiny mental image"
+analogy, and a restated "Final answer". Output missing any of these is rejected and
+retried on the next run.
 """
 from __future__ import annotations
 
@@ -28,11 +36,11 @@ import tempfile
 import time
 from pathlib import Path
 
-SYS_PROMPT = """You generate "How to Think" markdown for GCP Professional Data Engineer exam questions.
+SYS_PROMPT = """You are a staff data engineer who coaches candidates through the GCP Professional Data Engineer exam. You write "How to Think" markdown that teaches the reasoning, not just the answer.
 Output ONLY a JSON object mapping each question id to {"how_to_think": {"markdown": "..."}}.
 No prose outside JSON. No code fences. No commentary. No trailing text.
 
-Markdown structure per entry (match exactly):
+Markdown structure per entry (match exactly, include EVERY section below):
 
 ## How to Think
 
@@ -57,12 +65,34 @@ This question is really asking:
 - **Option C** ... - but fails because ...
 - (Skip the correct option.)
 
+### Step 4: Choose the answer
+
+- <one bullet naming the correct option's chosen service/feature and the single decisive reason it wins>.
+- <one bullet tying it back to every requirement in the stem so it clearly satisfies all of them>.
+
+### Exam shortcut
+
+If you see:
+- <distinctive signal 1 from the stem>
+- <distinctive signal 2 from the stem>
+- <distinctive signal 3 from the stem>
+
+Think: **<exact GCP service/feature>**
+
+**Tiny mental image:** <one vivid, concrete real-world analogy in a single sentence that makes the concept stick>.
+
+**Final answer:** <letter>. <correct option text, verbatim from input>
+
 Hard rules:
 - Name real GCP services exact: BigQuery, Dataflow, Pub/Sub, Cloud Storage, Bigtable, Spanner, Composer, Dataproc, Dataplex, Cloud SQL, Memorystore, Vertex AI, Looker, Data Fusion.
-- Every trap reason cites concrete GCP limit, not generic advice.
-- Max 180 words per entry.
-- No restating the answer at the end. No "in conclusion".
-- Use letters and text from input verbatim.
+- Every trap reason cites a concrete GCP limit, not generic advice.
+- ALL of the sections above are mandatory: How to Think, Step 1, Step 2, Step 3, Step 4, Exam shortcut, Tiny mental image, Final answer.
+- The "Exam shortcut" signals must be reusable pattern cues (the kind that recur across questions), not a paraphrase of this one stem.
+- The "Tiny mental image" must be a relatable analogy, max one sentence, not a restatement of the service definition.
+- "Final answer" must use the correct option's letter and text verbatim from the input.
+- Max 280 words per entry.
+- No "in conclusion" filler. No content after the Final answer line.
+- Use option letters and text from input verbatim.
 """
 
 
@@ -110,16 +140,46 @@ def build_question_payload(q: dict) -> dict:
     }
 
 
-def collect_missing(bank: dict, existing: dict) -> list[dict]:
-    have = set(existing.keys())
+# Sections every complete "How to Think" entry must contain. Used both to validate
+# model output and to detect older/partial entries that need regenerating (--upgrade).
+REQUIRED_SECTIONS = (
+    "## How to Think",
+    "### Step 1:",
+    "### Step 2:",
+    "### Step 3:",
+    "### Step 4:",
+    "### Exam shortcut",
+    "**Tiny mental image:**",
+    "**Final answer:**",
+)
+
+
+def is_complete(md: str) -> bool:
+    """True only if the markdown contains every mandatory section."""
+    if not isinstance(md, str):
+        return False
+    return all(section in md for section in REQUIRED_SECTIONS)
+
+
+def collect_missing(bank: dict, existing: dict, upgrade: bool = False) -> list[dict]:
+    """Questions needing generation.
+
+    Default: only questions with no entry yet.
+    upgrade=True: also re-include questions whose existing entry is incomplete
+    (missing Step 4 / Exam shortcut / Tiny mental image / Final answer).
+    """
     missing = []
     for topic in bank.get("topics", []):
         for q in topic.get("questions", []):
             qid = q.get("id")
             if not qid:
                 continue
-            if qid in have:
-                continue
+            if qid in existing:
+                if not upgrade:
+                    continue
+                md = existing[qid].get("how_to_think", {}).get("markdown", "")
+                if is_complete(md):
+                    continue
             missing.append(build_question_payload(q))
     return missing
 
@@ -188,6 +248,12 @@ def main() -> int:
     ap.add_argument("--model", default="gpt-5.5")
     ap.add_argument("--log", default="")
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument(
+        "--upgrade",
+        action="store_true",
+        help="Also regenerate existing entries that are missing newer sections "
+        "(Step 4 / Exam shortcut / Tiny mental image / Final answer).",
+    )
     args = ap.parse_args()
 
     bank_path = Path(args.bank)
@@ -206,7 +272,9 @@ def main() -> int:
     existing = load_json(existing_path) if existing_path.exists() else {}
     log(f"bank: {bank.get('total_questions', '?')} Qs, existing: {len(existing)} entries")
 
-    missing = collect_missing(bank, existing)
+    missing = collect_missing(bank, existing, upgrade=args.upgrade)
+    if args.upgrade:
+        log(f"upgrade mode: regenerating new + incomplete entries -> {len(missing)} Qs")
     log(f"missing: {len(missing)} Qs")
     if not missing:
         log("nothing to do")
@@ -242,7 +310,9 @@ def main() -> int:
             if not entry:
                 continue
             md = entry.get("how_to_think", {}).get("markdown")
-            if not isinstance(md, str) or "## How to Think" not in md:
+            if not is_complete(md):
+                # Reject partial output so we never overwrite a good entry with a
+                # worse one, and so re-runs retry questions that came back short.
                 continue
             existing[qid] = {"how_to_think": {"markdown": md}}
             added += 1
