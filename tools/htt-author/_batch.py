@@ -2,364 +2,364 @@ from lib import append_entries
 
 E = {}
 
-E["test_3_q19"] = '''### Step 4: Choose the answer
+E["test_2_q39"] = '''### Step 4: Choose the answer
 
-- A Cloud Composer DAG models the mix of sequential and concurrent Spark jobs as task dependencies and automates the scheduled run.
-- It satisfies the goal: orchestrate complex inter-job ordering, not just submit jobs.
-
-### Exam shortcut
-
-If you see:
-- jobs with mixed sequential + concurrent dependencies, scheduled
-- automate a multi-job workflow
-- orchestration across steps
-
-Think: **Cloud Composer DAG**
-
-**Tiny mental image:** a dependency graph the conductor follows, cueing some jobs in series and others in parallel.
-
-**Final answer:** C. Create a Directed Acyclic Graph in Cloud Composer'''
-
-E["test_4_q30"] = '''### Step 4: Choose the answer
-
-- The bottleneck for a network transfer is the link itself, so upgrading the datacenter-to-GCP bandwidth is what actually speeds the daily uploads.
-- It satisfies the goal: more throughput on the constrained path, not bigger CPU or disk on the server.
+- Cloud SQL is the managed PostgreSQL service, so the team migrates with minimal application changes.
+- It satisfies the goal: a drop-in managed PostgreSQL for a regional research team.
 
 ### Exam shortcut
 
 If you see:
-- transfers from on-prem to Cloud Storage too slow
-- maximize transfer speed
-- distractors about CPU/disk size
+- migrate PostgreSQL/MySQL with minimal changes
+- regional, moderate scale
+- managed relational
 
-Think: **increase network bandwidth on the transfer link**
+Think: **Cloud SQL**
 
-**Tiny mental image:** the truck isn't slow because of its engine - the road is too narrow; widen the road.
+**Tiny mental image:** the same Postgres, just run and patched by Google.
 
-**Final answer:** C. Upgrade your datacenter‘s network bandwidth to GCP.'''
+**Final answer:** B. Cloud SQL'''
 
-E["test_7_q47"] = '''### Step 4: Choose the answer
+E["test_2_q40"] = '''### Step 4: Choose the answer
 
-- The bottleneck is the datacenter-to-GCP link, so increasing that network bandwidth is what speeds up the daily transfers.
-- It satisfies the goal: more throughput on the constrained path, not server CPU or disk.
-
-### Exam shortcut
-
-If you see:
-- on-prem → Cloud Storage transfers too slow
-- maximize transfer speed
-- distractors about CPU/disk size
-
-Think: **increase network bandwidth from the datacenter to GCP**
-
-**Tiny mental image:** widen the road, don't upgrade the truck's stereo.
-
-**Final answer:** C. Increase your network bandwidth from your datacenter to GCP.'''
-
-E["test_13_q38"] = '''### Step 4: Choose the answer
-
-- Cloud Build copies the DAG to the dev Composer bucket for testing, then on success copies it to the prod Composer bucket - DAGs deploy simply by landing in the bucket.
-- It satisfies the CI/CD goal: tag-triggered, tested, environment-promoted deployment without containers.
+- Cloud Firestore is the managed document database that replaces MongoDB while cutting maintenance cost.
+- It satisfies the goal: a managed NoSQL document store for player game data.
 
 ### Exam shortcut
 
 If you see:
-- CI/CD for Cloud Composer DAGs, dev → prod promotion
-- how DAGs deploy (copy to the Composer GCS bucket)
-- triggered by a Git tag via Cloud Build
-
-Think: **Cloud Build copies DAG to dev bucket, then prod bucket**
-
-**Tiny mental image:** dropping the DAG file into Composer's folder is the deploy - test in the dev folder, then copy to prod.
-
-**Final answer:** A. 1. Use Cloud Build to copy the code of the DAG to the Cloud Storage bucket of the development instance for DAG testing. 2. If the tests pass, use Cloud Build to copy the code to the bucket of the production instance.'''
-
-E["test_14_q12"] = '''### Step 4: Choose the answer
-
-- A Pub/Sub push subscription triggering a Cloud Function that calls the Python API is a serverless, secure queue that scales with trade volume and uses minimal idle resources.
-- It satisfies the goal: event-driven trade processing with no always-on servers.
-
-### Exam shortcut
-
-If you see:
-- secure queue triggering jobs via an API, efficient
-- serverless, event-driven, high volume
-- Pub/Sub + Cloud Function
-
-Think: **Pub/Sub push → Cloud Function → API**
-
-**Tiny mental image:** each trade rings a doorbell that wakes a function only when needed.
-
-**Final answer:** A. Use a Pub/Sub push subscription to trigger a Cloud Function to pass the data to the Python API.'''
-
-E["test_14_q15"] = '''### Step 4: Choose the answer
-
-- Cloud Composer in a Shared VPC, with resources in the service project, is the Google-managed Airflow option that fits the Shared VPC model.
-- It satisfies both: managed open-source orchestration and correct Shared VPC placement.
-
-### Exam shortcut
-
-If you see:
-- managed open-source (Airflow) workflow scheduling
-- Shared VPC networking
-- where do Composer resources live?
-
-Think: **Cloud Composer in Shared VPC, resources in the service project**
-
-**Tiny mental image:** the tenant runs its scheduler while borrowing the landlord's network.
-
-**Final answer:** D. Use Cloud Composer in a Shared VPC configuration. Place the Cloud Composer resources in the service project.'''
-
-E["test_16_q32"] = '''### Step 4: Choose the answer
-
-- Cloud Composer (managed Airflow) orchestrates the interdependent steps in order, mixing shell, Hadoop, and BigQuery tasks with built-in retries.
-- It satisfies the goal: dependency-aware, long-running workflow orchestration with retry on failure.
-
-### Exam shortcut
-
-If you see:
-- multi-step workflow with dependencies/ordering
-- mixed task types (shell, Hadoop, BigQuery), retries
-- orchestrate, not just schedule
-
-Think: **Cloud Composer (Airflow DAG)**
-
-**Tiny mental image:** a conductor cueing each section in order and signaling a retry when one stumbles.
-
-**Final answer:** D. Cloud Composer'''
-
-E["test_11_q23"] = '''### Step 4: Choose the answer
-
-- Cloud Spanner gives horizontally scalable, strongly-consistent transactions at 10 TB, and secondary indexes optimize the range queries on non-key columns.
-- It satisfies both: scale-out relational transactions plus index support for the query patterns.
-
-### Exam shortcut
-
-If you see:
-- relational + horizontally scalable transactions at large scale
-- range/secondary-column query patterns
-- global consistency
-
-Think: **Cloud Spanner + secondary indexes**
-
-**Tiny mental image:** a relational database that grows sideways across machines, with extra indexes for fast range lookups.
-
-**Final answer:** A. Use Cloud Spanner for storage and add secondary indexes to support query patterns'''
-
-E["test_1_q9"] = '''### Step 4: Choose the answer
-
-- gcloud datastore export to the bucket with --async issues the backup and returns immediately while it runs in the background.
-- It satisfies the goal: a non-blocking managed export of Firestore/Datastore to Cloud Storage.
-
-### Exam shortcut
-
-If you see:
-- back up Firestore/Datastore to a Cloud Storage bucket
-- command returns immediately / runs in background
-- gcloud (not gsutil), export, --async
-
-Think: **gcloud datastore export gs://... --async**
-
-**Tiny mental image:** fire off the backup and walk away - the --async flag means you don't wait.
-
-**Final answer:** B. gcloud datastore export gs://game-ds-backup --async'''
-
-E["test_12_q15"] = '''### Step 4: Choose the answer
-
-- Bigtable delivers high-volume, low-latency writes at scale and exposes the HBase API, making it the managed successor to the company's HBase usage.
-- It satisfies both: massive write throughput for drone telemetry and a familiar HBase-compatible interface.
-
-### Exam shortcut
-
-If you see:
-- high-volume, low-latency writes (IoT/time-series)
-- migrating from Hadoop HBase to managed
-- scale to huge data
-
-Think: **Cloud Bigtable**
-
-**Tiny mental image:** a high-speed ledger built for nonstop sensor writes, speaking the HBase dialect.
-
-**Final answer:** D. Bigtable'''
-
-E["test_11_q53"] = '''### Step 4: Choose the answer
-
-- Cloud Firestore is the managed, document-oriented database that maps naturally from MongoDB's document model.
-- It satisfies the goal: a managed NoSQL document store for the migrated application.
-
-### Exam shortcut
-
-If you see:
-- migrate MongoDB (or a document database) to managed GCP
-- flexible document/JSON model
-- not wide-column or relational
+- replace MongoDB / document database, reduce maintenance
+- flexible JSON/document model
+- managed NoSQL
 
 Think: **Cloud Firestore**
 
-**Tiny mental image:** swap one document drawer for a managed one with the same flexible folders.
+**Tiny mental image:** the same flexible document drawers, now maintained for you.
 
-**Final answer:** D. Cloud Firestore'''
+**Final answer:** B. Cloud Firestore'''
 
-E["test_11_q9"] = '''### Step 4: Choose the answer
+E["test_2_q42"] = '''### Step 4: Choose the answer
 
-- In the Firestore data model, an entity (document) is analogous to a row in a relational table.
-- It satisfies the question: entity ≈ row, kind ≈ table, property ≈ column.
-
-### Exam shortcut
-
-If you see:
-- map Firestore/Datastore concepts to relational ones
-- "what is like a row?"
-- entity vs kind vs property
-
-Think: **entity = row** (kind = table)
-
-**Tiny mental image:** each entity is one record card; the kind is the whole filing drawer.
-
-**Final answer:** B. Entity'''
-
-E["test_11_q55"] = '''### Step 4: Choose the answer
-
-- Hot-spotting on one node means the row key groups time-adjacent writes together, sending them to a single node instead of spreading them.
-- It satisfies the diagnosis: sequential/time-based keys concentrate load; a better-distributed key fixes it.
+- Cloud Bigtable is the managed database built on the sparse multidimensional sorted-map model the company already uses.
+- It satisfies the goal: a managed service matching that data structure (with HBase/Cassandra as the open-source equivalents).
 
 ### Exam shortcut
 
 If you see:
-- Bigtable writes hitting one node, uneven distribution
-- time-series / sequential row keys
-- hot-spotting
-
-Think: **row key concentrates time-adjacent writes (bad key design)**
-
-**Tiny mental image:** everyone arriving at once lines up at one register because the tickets are numbered in order.
-
-**Final answer:** B. Using a row key that causes data that arrives close in time to be written to a single node, rather than evenly distributed.'''
-
-E["test_10_q48"] = '''### Step 4: Choose the answer
-
-- A document model stores each possession as a flexible document, absorbing frequent schema changes without costly normalized-schema migrations.
-- It satisfies the goal: schema flexibility for evolving game features and possession types.
-
-### Exam shortcut
-
-If you see:
-- frequent schema changes painful in a normalized relational model
-- flexible/evolving entity attributes
-- semi-structured records
-
-Think: **document data model**
-
-**Tiny mental image:** loose folders you can add fields to anytime, instead of rigid pre-cut table columns.
-
-**Final answer:** A. Document model'''
-
-E["test_11_q32"] = '''### Step 4: Choose the answer
-
-- Cloud Storage is the right home for large FASTQ files; Dataflow reads them from the bucket and writes results to BigQuery.
-- It satisfies the goal: cheap, scalable object storage for big files that the pipeline then processes.
-
-### Exam shortcut
-
-If you see:
-- store large raw files (genomic/FASTQ, media, blobs)
-- processed later by Dataflow/Dataproc
-- object, not table, storage
-
-Think: **Cloud Storage (files) → Dataflow → BigQuery (results)**
-
-**Tiny mental image:** keep the bulky raw reels in the warehouse; the mill turns them into shelved results.
-
-**Final answer:** A. Cloud Storage'''
-
-E["test_11_q57"] = '''### Step 4: Choose the answer
-
-- Interleaving the order-items table within the orders table co-locates the parent and child rows, making the one-to-many join fast in Spanner.
-- It satisfies the goal: physical data locality that speeds parent-child joins, the Spanner-native fix.
-
-### Exam shortcut
-
-If you see:
-- slow parent-child (one-to-many) joins in Cloud Spanner
-- co-locate related rows for performance
-- table interleaving
-
-Think: **interleaved tables (parent-child locality)**
-
-**Tiny mental image:** file each order's line items right behind the order, so the join doesn't hunt across the database.
-
-**Final answer:** A. Use interleaved tables'''
-
-E["test_12_q14"] = '''### Step 4: Choose the answer
-
-- The UUID prefix still hot-spots because the chosen UUID variant produces sequentially ordered strings, so keys remain monotonic.
-- It satisfies the diagnosis: a sequential UUID defeats the purpose; a truly random prefix spreads writes.
-
-### Exam shortcut
-
-If you see:
-- Bigtable still hot-spotting despite a UUID prefix
-- key ordering matters
-- sequential vs random UUID
-
-Think: **the UUID type is sequentially ordered (not random)**
-
-**Tiny mental image:** your "random" tickets are actually numbered in order, so everyone still queues at one window.
-
-**Final answer:** B. You have chosen a type of UUID that has sequentially ordered strings.'''
-
-E["test_2_q13"] = '''### Step 4: Choose the answer
-
-- Adding a second cluster to the Bigtable instance and using two app profiles isolates the heavy write traffic from the analytic batch jobs.
-- It satisfies the goal: workload isolation so batch reads don't degrade write performance.
-
-### Exam shortcut
-
-If you see:
-- Bigtable serving + batch/analytics contending
-- isolate workloads for performance
-- app profiles / multi-cluster routing
-
-Think: **second Bigtable cluster + separate app profiles**
-
-**Tiny mental image:** give the busy cashiers and the stocktaking crew their own copies of the store so they don't collide.
-
-**Final answer:** A. Isolate the write and batch workloads by adding a second cluster to the Bigtable instance and create two app profiles, one for write traffic and one for batch jobs.'''
-
-E["test_2_q19"] = '''### Step 4: Choose the answer
-
-- Cloud Bigtable provides low-latency writes and scales to petabytes for high-volume telemetry, the priority being scalability with willingness to change the app.
-- It satisfies the goal: massive, low-latency write throughput beyond what Cloud SQL/PostgreSQL can sustain.
-
-### Exam shortcut
-
-If you see:
-- ingestion outgrowing a relational DB, need PB scale + low-latency writes
-- scalability is the top priority, app changes acceptable
-- high-volume time-series/telemetry
+- "sparse multidimensional array/map" data structure
+- managed, wide-column at scale
+- (open-source equivalents: HBase, Cassandra)
 
 Think: **Cloud Bigtable**
 
-**Tiny mental image:** swap the single ledger book for a warehouse of ledgers that scales to petabytes.
+**Tiny mental image:** a giant sparse grid where most cells are empty - Bigtable's native shape.
 
-**Final answer:** C. Cloud Bigtable'''
+**Final answer:** B. Cloud Bigtable'''
 
-E["test_2_q25"] = '''### Step 4: Choose the answer
+E["test_2_q48"] = '''### Step 4: Choose the answer
 
-- Performance suffers because 200 column families exceeds Bigtable's recommended limit of ~100 column families.
-- It satisfies the diagnosis: too many column families degrades performance; the schema should consolidate them.
+- Cloud Spanner offers strong consistency, SQL, and horizontal global scale across North America, Asia, and Europe.
+- It satisfies all: a globally distributed, strongly-consistent relational database with SQL.
 
 ### Exam shortcut
 
 If you see:
-- Bigtable underperforming with many column families
-- recall the ~100 column-family guideline
-- schema-design limit
+- strong consistency + SQL + global scale
+- relational across multiple continents
+- transactional at scale
 
-Think: **too many column families (>100 recommended max)**
+Think: **Cloud Spanner**
 
-**Tiny mental image:** the filing cabinet has hundreds of dividers when it's built for about a hundred - it jams.
+**Tiny mental image:** one SQL database that spans the globe yet always agrees with itself.
 
-**Final answer:** B. 200 column families exceeds the recommended 100 column family limit'''
+**Final answer:** A. Cloud Spanner'''
+
+E["test_2_q50"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner provides strong global consistency, normalized relational modeling, and multi-region scale for the expanding financial service.
+- It satisfies all: strongly-consistent transactions, normalized schema, and worldwide growth.
+
+### Exam shortcut
+
+If you see:
+- strong consistency for global transactions
+- normalized relational model
+- multi-continent expansion
+
+Think: **Cloud Spanner**
+
+**Tiny mental image:** a single ledger the whole planet shares with no disagreements.
+
+**Final answer:** A. Cloud Spanner'''
+
+E["test_3_q9"] = '''### Step 4: Choose the answer
+
+- BigQuery is the low-maintenance SQL data warehouse for 10 TB+; setting destination tables lets you persist large query results for further querying.
+- It satisfies the goal: cost-effective SQL retrieval at scale with results written to new tables.
+
+### Exam shortcut
+
+If you see:
+- large result sets from TB-scale data, store results in new tables
+- low-maintenance, SQL-accessible warehouse
+- analytical, not OLTP
+
+Think: **BigQuery with destination/output tables**
+
+**Tiny mental image:** run the big search and save the answers into a fresh shelf for next time.
+
+**Final answer:** B. Use BigQuery as a data warehouse and set output destinations for caching large queries'''
+
+E["test_3_q15"] = '''### Step 4: Choose the answer
+
+- A narrow Bigtable table keyed by computer ID plus per-second timestamp handles millions of high-frequency time-series writes with real-time reads and no per-query charges.
+- It satisfies all: scalable low-latency time-series storage, ad hoc real-time analytics, and flat (not per-query) pricing.
+
+### Exam shortcut
+
+If you see:
+- high-frequency time-series for millions of sources, real-time
+- avoid per-query billing (rules out BigQuery)
+- scalable wide-column
+
+Think: **Bigtable narrow table, row key = entity + timestamp**
+
+**Tiny mental image:** a fast ticker ledger keyed by machine-and-second, not a pay-per-search warehouse.
+
+**Final answer:** C. Create a narrow table in Bigtable with a row key that combines the Computer Engine computer identifier with the sample time at each second.'''
+
+E["test_3_q21"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner is the managed, horizontally scalable relational database suited to a 20 TB operational (transactional) system.
+- It satisfies the goal: SQL OLTP at large scale with strong consistency.
+
+### Exam shortcut
+
+If you see:
+- large operational/transactional (OLTP) system at TB scale
+- relational + scalable + strongly consistent
+- beyond a single Cloud SQL instance
+
+Think: **Cloud Spanner**
+
+**Tiny mental image:** a relational engine that grows sideways to hold the whole transaction system.
+
+**Final answer:** C. Cloud Spanner'''
+
+E["test_3_q26"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner is fully managed, autoscaling, transactionally consistent, scales past 6 TB, and is queried with SQL.
+- It satisfies every listed requirement in one managed relational service.
+
+### Exam shortcut
+
+If you see:
+- managed + autoscale + transactional consistency + SQL + large scale
+- relational beyond a single instance
+- the classic Spanner checklist
+
+Think: **Cloud Spanner**
+
+**Tiny mental image:** the relational database that ticks every box: managed, consistent, SQL, and elastic.
+
+**Final answer:** C. Cloud Spanner'''
+
+E["test_3_q39"] = '''### Step 4: Choose the answer
+
+- A Pub/Sub topic decouples job generators (publishers) from job runners (subscribers), scaling without touching existing applications.
+- It satisfies the goal: asynchronous, scalable job distribution via publish/subscribe.
+
+### Exam shortcut
+
+If you see:
+- decouple producers and consumers of jobs/messages
+- scalable, no impact on existing apps
+- publish/subscribe distribution
+
+Think: **Cloud Pub/Sub topic + subscriptions**
+
+**Tiny mental image:** a bulletin board where generators post jobs and runners pick them up independently.
+
+**Final answer:** B. Utilize a Cloud Pub/Sub topic to publish jobs and execute them through subscriptions'''
+
+E["test_3_q51"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner with locking read-write transactions gives ACID guarantees and SQL access for the bank's transaction data.
+- It satisfies the goal: strongly-consistent, locking transactions over a scalable SQL database.
+
+### Exam shortcut
+
+If you see:
+- ACID-compliant transactions + SQL at scale
+- strong consistency (not stale reads)
+- locking read-write transactions
+
+Think: **Cloud Spanner (locking read-write transactions)**
+
+**Tiny mental image:** a teller who locks the ledger line while updating it, so no two edits collide.
+
+**Final answer:** B. Use Cloud Spanner to store transaction data and utilize locking read-write transactions'''
+
+E["test_4_q10"] = '''### Step 4: Choose the answer
+
+- Cloud SQL is the managed relational service that hosts the 3 TB database with minimal application changes at the lowest operating cost.
+- It satisfies the goal: drop-in managed relational storage where cost, not extreme scale, is the priority.
+
+### Exam shortcut
+
+If you see:
+- migrate a moderate relational DB, minimal app changes
+- cost is the primary concern
+- no need for global/Spanner scale
+
+Think: **Cloud SQL**
+
+**Tiny mental image:** the same database, just managed - the budget-friendly relational choice.
+
+**Final answer:** D. Cloud SQL'''
+
+E["test_4_q26"] = '''### Step 4: Choose the answer
+
+- Adding a second Bigtable cluster with multi-cluster routing, plus separate live-traffic and batch-analytics app profiles, isolates the hourly analytics from the production workload.
+- It satisfies both: production reliability and a place to run the analytical job without contention.
+
+### Exam shortcut
+
+If you see:
+- Bigtable serving + periodic analytics on the same data
+- protect production while running batch
+- app profiles for workload isolation
+
+Think: **second cluster + separate app profiles (live vs batch)**
+
+**Tiny mental image:** give the analysts their own synced copy so they never slow the live cash registers.
+
+**Final answer:** B. Add a second cluster to an existing instance with multi-cluster routing. Configure a live-traffic app profile to handle your regular workload, and a batch-analytics profile to handle the analytical workload'''
+
+E["test_4_q29"] = '''### Step 4: Choose the answer
+
+- Starting on a zonal Cloud SQL for PostgreSQL is cheapest now, and moving to Cloud Spanner later delivers global scale with native JDBC.
+- It satisfies the phased goal: minimal cost initially, then global presence/performance after funding.
+
+### Exam shortcut
+
+If you see:
+- start cheap/regional, later go global + high-performance
+- relational + native JDBC
+- phased: Cloud SQL now → Spanner later
+
+Think: **Cloud SQL (zonal) now → Cloud Spanner later**
+
+**Tiny mental image:** open one small shop first, then scale to a worldwide chain once funded.
+
+**Final answer:** C. Start with a zonal instance of Cloud SQL for PostgreSQL, and then use Cloud Spanner after securing funding.'''
+
+E["test_4_q39"] = '''### Step 4: Choose the answer
+
+- Keeping raw posts in Cloud Storage (cheap archive) and the API-extracted data in BigQuery (for analysis) is the most cost-effective split.
+- It satisfies both: durable low-cost archiving and SQL-queryable analytics, with minimal steps.
+
+### Exam shortcut
+
+If you see:
+- archive raw data cheaply + analyze structured results
+- SQL/dashboards on extracted data
+- cost-effective, minimal steps
+
+Think: **raw → Cloud Storage, analytics → BigQuery**
+
+**Tiny mental image:** keep the original letters in cheap storage; file the summarized notes in the searchable index.
+
+**Final answer:** C. Store the raw social media posts in Cloud Storage, and write the extracted data from the API into BigQuery'''
+
+E["test_4_q46"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner with a North American leader and read-only replicas in Asia and Europe gives a single global endpoint, ANSI SQL, and consistent access to the latest data at 200K writes/sec.
+- It satisfies all three requirements: global endpoint, SQL, and strong consistency under heavy write load.
+
+### Exam shortcut
+
+If you see:
+- single global endpoint + ANSI SQL + always-current (strong consistency)
+- very high write throughput, global readers
+- relational at global scale
+
+Think: **Cloud Spanner (leader + read-only replicas)**
+
+**Tiny mental image:** one worldwide SQL front door that always serves the freshest, agreed-upon data.
+
+**Final answer:** B. Use Cloud Spanner with the master located in North America and read-only replicas located in Asia and Europe'''
+
+E["test_5_q10"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner is fully managed, autoscaling, transactionally consistent, scales past 6 TB, and is queried with SQL.
+- It satisfies every listed requirement in one managed relational service.
+
+### Exam shortcut
+
+If you see:
+- managed + autoscale + transactional consistency + SQL + large scale
+- relational beyond a single instance
+- the classic Spanner checklist
+
+Think: **Cloud Spanner**
+
+**Tiny mental image:** the relational database that ticks every box: managed, consistent, SQL, and elastic.
+
+**Final answer:** C. Cloud Spanner'''
+
+E["test_6_q16"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner with a North American leader and read-only replicas in Asia and Europe gives a single global endpoint, ANSI SQL, and consistent access to the latest data at high write volume.
+- It satisfies all three requirements: global endpoint, SQL, and strong consistency under heavy load.
+
+### Exam shortcut
+
+If you see:
+- single global endpoint + ANSI SQL + always-current (strong consistency)
+- very high write throughput, global readers
+- relational at global scale
+
+Think: **Cloud Spanner (leader + read-only replicas)**
+
+**Tiny mental image:** one worldwide SQL front door always serving the freshest, agreed-upon data.
+
+**Final answer:** B. Implement Cloud Spanner with the leader in North America and read-only replicas in Asia and Europe.'''
+
+E["test_6_q23"] = '''### Step 4: Choose the answer
+
+- Adding a second Bigtable cluster with multi-cluster routing, plus separate live-traffic and batch-analytics app profiles, isolates the hourly analytics from production traffic.
+- It satisfies both: production reliability and a place to run the analytical job without contention.
+
+### Exam shortcut
+
+If you see:
+- Bigtable serving + periodic analytics on the same data
+- protect production while running batch
+- app profiles for workload isolation
+
+Think: **second cluster + separate app profiles (live vs batch)**
+
+**Tiny mental image:** give the analysts their own synced copy so they never slow the live registers.
+
+**Final answer:** B. Add a second cluster to an existing instance with a multi-cluster routing, use live-traffic app profile for your regular workload and batch-analytics profile for the analytics workload.'''
+
+E["test_6_q27"] = '''### Step 4: Choose the answer
+
+- Leading the row key with the datetime concentrates writes/reads on sequential rows; starting the key with the stock symbol spreads load and speeds per-company queries.
+- It satisfies the fix: a key that distributes data and aligns with the access pattern (by company).
+
+### Exam shortcut
+
+If you see:
+- Bigtable performance degrading, time-based row-key prefix
+- queries are per-entity (per stock/company)
+- redesign the key to avoid hot-spotting
+
+Think: **lead the row key with the entity (stock symbol), not the timestamp**
+
+**Tiny mental image:** file by company-then-time so each company's trades sit together and load spreads out.
+
+**Final answer:** A. Change the row key syntax in your Cloud Bigtable table to begin with the stock symbol.'''
 
 append_entries(E)
