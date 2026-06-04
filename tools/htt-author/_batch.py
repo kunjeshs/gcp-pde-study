@@ -2,115 +2,43 @@ from lib import append_entries
 
 E = {}
 
-E["test_2_q16"] = '''### Step 4: Choose the answer
+E["test_5_q35"] = '''### Step 4: Choose the answer
 
-- Predicting a numeric quantity (how many products will sell) is a regression problem.
-- It satisfies the question: continuous numeric output = regression, not classification.
-
-### Exam shortcut
-
-If you see:
-- predict a number/quantity/amount
-- continuous output
-- regression vs classification
-
-Think: **Regression (numeric prediction)**
-
-**Tiny mental image:** forecasting a count on a dial, not sorting into yes/no buckets.
-
-**Final answer:** A. Regression'''
-
-E["test_2_q36"] = '''### Step 4: Choose the answer
-
-- kubectl scale deployment with --replicas 4 sets the deployment to the desired four replicas.
-- It satisfies the goal: declare the target replica count, not the delta.
+- A neural network learns by adjusting its weights and biases during training; features and input values are given, not learned.
+- It satisfies the question: weights and biases are the trainable parameters.
 
 ### Exam shortcut
 
 If you see:
-- scale a Kubernetes deployment to N replicas
-- --replicas sets the desired total
-- kubectl scale
+- "what does a neural network adjust as it learns?"
+- weights + biases are trainable
+- features/inputs are fixed data
 
-Think: **kubectl scale deployment --replicas 4**
+Think: **weights and biases**
 
-**Tiny mental image:** tell Kubernetes "I want four," and it makes it so.
+**Tiny mental image:** training tunes the dials (weights/biases), not the data you feed in.
 
-**Final answer:** A. kubectl scale deployment command with the --replicas 4 parameter.'''
+**Final answer:** A. Weights'''
 
-E["test_2_q44"] = '''### Step 4: Choose the answer
+E["test_5_q41"] = '''### Step 4: Choose the answer
 
-- The F-score (F1) combines precision and recall into a single metric, ideal for ranking the fraud-classification models.
-- It satisfies the goal: one number balancing precision and recall (RMSE/MSE are regression metrics).
-
-### Exam shortcut
-
-If you see:
-- balance precision and recall in one metric
-- classification, imbalanced (fraud)
-- F-score / F1
-
-Think: **F-score (harmonic mean of precision and recall)**
-
-**Tiny mental image:** one dial that blends precision and recall into a single score.
-
-**Final answer:** A. F-score'''
-
-E["test_2_q52"] = '''### Step 4: Choose the answer
-
-- Dialogflow builds the conversational chatbot that understands customer questions and routes them to the right support team.
-- It satisfies the goal: a managed natural-language conversational agent.
+- A deep neural network with multiple hidden layers automatically learns face features from the labeled images, far better than manual feature engineering or clustering.
+- It satisfies the goal: let deep learning discover the hierarchical visual features itself.
 
 ### Exam shortcut
 
 If you see:
-- build a chatbot / conversational agent / intent routing
-- understand and respond to user questions
-- Dialogflow
+- image recognition from labeled images
+- let the model learn features automatically
+- deep learning, multiple hidden layers
 
-Think: **Dialogflow**
+Think: **deep neural network (auto feature learning)**
 
-**Tiny mental image:** a smart virtual receptionist that understands the question and directs the caller.
+**Tiny mental image:** stack enough layers and the network learns "eyes, noses, faces" on its own.
 
-**Final answer:** D. Dialogflow'''
+**Final answer:** C. Use deep learning by creating a neural network with multiple hidden layers to automatically detect features of faces.'''
 
-E["test_2_q53"] = '''### Step 4: Choose the answer
-
-- Feature crosses add representational capacity, helping an underfitting model with few features learn more complex patterns.
-- It satisfies the goal: increase model expressiveness to fix underfitting (more features/interactions).
-
-### Exam shortcut
-
-If you see:
-- model underfitting, too few features
-- need more representational power
-- feature crosses / add features
-
-Think: **feature crosses (add capacity)**
-
-**Tiny mental image:** combine features into new ones so the model has richer signal to learn from.
-
-**Final answer:** B. Use feature crosses'''
-
-E["test_2_q54"] = '''### Step 4: Choose the answer
-
-- Nearline is the low-cost Cloud Storage class for files accessed about once a month, with reliable, highly available storage.
-- It satisfies the goal: minimal cost for monthly-access training data while staying durable and available.
-
-### Exam shortcut
-
-If you see:
-- large dataset accessed ~monthly, minimize cost
-- still reliable/highly available
-- map access frequency to class
-
-Think: **Nearline** (monthly access)
-
-**Tiny mental image:** the shelf you reach for once a month - cheaper than the daily counter.
-
-**Final answer:** B. Cloud Storage Nearline storage'''
-
-E["test_3_q20"] = '''### Step 4: Choose the answer
+E["test_5_q42"] = '''### Step 4: Choose the answer
 
 - Training an AutoML Vision model on labeled package images and wrapping it in an API detects damage and flags items for human review in real time.
 - It satisfies the goal: a custom image classifier (the generic Vision API can't recognize "damaged") served via API.
@@ -124,139 +52,121 @@ If you see:
 
 Think: **AutoML Vision model + API**
 
-**Tiny mental image:** train a custom "is this package damaged?" eye and expose it as a service.
+**Tiny mental image:** train a custom "is this damaged?" eye and expose it as a service.
 
-**Final answer:** B. Train an AutoML model on a corpus of images and build an API around it to integrate with package tracking applications'''
+**Final answer:** B. Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications.'''
 
-E["test_3_q33"] = '''### Step 4: Choose the answer
+E["test_6_q10"] = '''### Step 4: Choose the answer
 
-- Running the existing Spark ML models on Dataproc, reading directly from BigQuery via the connector, migrates the retraining pipelines with minimal change.
-- It satisfies the goal: reuse Spark ML code on managed Dataproc against the BigQuery data.
-
-### Exam shortcut
-
-If you see:
-- migrate existing Spark ML training to GCP, data in BigQuery
-- reuse Spark code (don't rewrite in TensorFlow)
-- Dataproc + BigQuery connector
-
-Think: **Dataproc Spark ML reading from BigQuery**
-
-**Tiny mental image:** run the same Spark models on managed Dataproc, pulling straight from the warehouse.
-
-**Final answer:** C. Use Dataproc for training existing Spark ML models but read data directly from BigQuery'''
-
-E["test_3_q42"] = '''### Step 4: Choose the answer
-
-- A GPU accelerator speeds the TensorFlow training cost-effectively and supports the custom ops that must run partially on CPU, which TPUs don't accommodate.
-- It satisfies both: faster training and compatibility with custom/partial-CPU TensorFlow operations.
+- Subsampling the training dataset reduces the data processed per epoch, speeding up training.
+- It satisfies the goal: faster training (more layers/features would slow it down).
 
 ### Exam shortcut
 
 If you see:
-- speed up TensorFlow training, custom ops (partial CPU)
-- TPU can't run arbitrary custom ops
-- GPU vs TPU choice
+- neural network training too slow, speed it up
+- reduce data processed (subsample training set)
+- not the test set
 
-Think: **GPU accelerator (custom ops → not TPU)**
+Think: **subsample the training dataset**
 
-**Tiny mental image:** a GPU turbo that still runs your hand-written operations; a TPU would choke on them.
+**Tiny mental image:** train on a representative slice to iterate faster.
 
-**Final answer:** C. Use a VM with a GPU hardware accelerator to train the model.'''
+**Final answer:** B. Subsample your training dataset.'''
 
-E["test_3_q52"] = '''### Step 4: Choose the answer
+E["test_6_q12"] = '''### Step 4: Choose the answer
 
-- One-hot encoding the city values into binary columns with SQL prepares the categorical predictor in the column form BigQuery ML needs.
-- It satisfies the goal: efficient, in-warehouse encoding of city names for training and serving.
-
-### Exam shortcut
-
-If you see:
-- categorical string feature (city) for BigQuery ML
-- represent as columns for training/serving
-- one-hot encoding
-
-Think: **one-hot encode the categorical column in SQL**
-
-**Tiny mental image:** turn each city into its own yes/no column the model can read.
-
-**Final answer:** B. Use SQL in BigQuery to apply one-hot encoding to the state column and convert each city to a binary value column'''
-
-E["test_4_q11"] = '''### Step 4: Choose the answer
-
-- Denormalizing the data and appending hourly status updates (instead of in-place UPDATEs) maximizes BigQuery query performance and usability for the data science team.
-- It satisfies both: fewer joins via denormalization and efficient append-only ingestion at PB scale.
+- Hyperparameter tuning on the SVM is the principled way to raise AUC beyond the default-parameter baseline.
+- It satisfies the goal: improve the existing model by optimizing its parameters.
 
 ### Exam shortcut
 
 If you see:
-- huge structured dataset into BigQuery for ML, maximize performance
-- denormalize + append (no UPDATEs)
-- avoid join-heavy normalized schema
+- model trained with default parameters, improve a metric (AUC)
+- tune before switching algorithms
+- hyperparameter tuning
 
-Think: **denormalize + append-only status updates**
+Think: **hyperparameter tuning**
 
-**Tiny mental image:** one wide table you keep adding rows to, not a web of tables you keep editing.
+**Tiny mental image:** dial in the model's settings before throwing it out for a different one.
 
-**Final answer:** A. Denormalize the data as much as possible.'''
+**Final answer:** A. Perform hyperparameter tuning'''
 
-E["test_4_q16"] = '''### Step 4: Choose the answer
+E["test_6_q13"] = '''### Step 4: Choose the answer
 
-- Dialogflow Enterprise Edition interprets the voice commands from in-home assistants and drives the order into the backend systems.
-- It satisfies the goal: a conversational agent that understands intent and integrates with fulfillment.
-
-### Exam shortcut
-
-If you see:
-- interpret voice commands / conversational ordering
-- integrate with assistants (Google Home), call backends
-- intent + fulfillment
-
-Think: **Dialogflow (Enterprise)**
-
-**Tiny mental image:** a voice-order taker that understands the request and rings it up in the backend.
-
-**Final answer:** C. Implement Dialogflow Enterprise Edition'''
-
-E["test_4_q17"] = '''### Step 4: Choose the answer
-
-- Applying regularization techniques like dropout or batch normalization improves generalization and addresses the train/test error gap.
-- It satisfies the goal: reduce overfitting so the model performs consistently.
+- With labeled outcomes you can use supervised learning for fraud and to predict location, and clustering to group transactions by similarity.
+- It satisfies the question: supervised fraud detection, clustering into categories, and supervised location prediction.
 
 ### Exam shortcut
 
 If you see:
-- large train/test error discrepancy
-- improve generalization
-- dropout / batch normalization / regularization
+- "which ML applications fit this data?"
+- supervised = predict labeled outcomes (fraud, location)
+- clustering = group by similarity
 
-Think: **regularization (dropout, batch norm)**
+Think: **supervised (fraud/location) + clustering (group by similarity)**
 
-**Tiny mental image:** add discipline during training so the model generalizes instead of memorizing.
+**Tiny mental image:** label-driven predictions plus unsupervised grouping of similar transactions.
 
-**Final answer:** C. Use regularization techniques like dropout or batch normalization to prevent overfitting'''
+**Final answer:** A. Supervised learning to determine which transactions are most likely to be fraudulent.'''
 
-E["test_4_q48"] = '''### Step 4: Choose the answer
+E["test_6_q31"] = '''### Step 4: Choose the answer
 
-- Cloud GPUs accelerate training while supporting the model once you implement GPU kernel support for the custom C++ ops, which TPUs can't easily run.
-- It satisfies both: faster, lower-cost training and compatibility with custom operations.
+- categorical_column_with_hash_bucket handles a categorical column when you don't know all possible values, hashing them into a fixed number of buckets.
+- It satisfies the goal: encode an open-ended/unknown vocabulary without enumerating it.
 
 ### Exam shortcut
 
 If you see:
-- custom TensorFlow C++ ops, want acceleration
-- TPUs can't run arbitrary custom ops
-- GPU (with custom kernel support)
+- categorical feature with unknown/unbounded vocabulary
+- don't know all possible values
+- hash buckets vs vocabulary list
 
-Think: **Cloud GPUs (after GPU kernel support for custom ops)**
+Think: **categorical_column_with_hash_bucket**
 
-**Tiny mental image:** a GPU you can teach your custom operations to run on; a TPU won't take them.
+**Tiny mental image:** when you can't list every category, hash each into one of N bins.
 
-**Final answer:** C. Use Cloud GPUs after implementing GPU kernel support for your custom ops.'''
+**Final answer:** B. categorical_column_with_hash_bucket'''
 
-E["test_4_q49"] = '''### Step 4: Choose the answer
+E["test_6_q40"] = '''### Step 4: Choose the answer
 
-- Cloud Vision AutoML trained on the existing labeled dataset (≈1000 images per component) produces a custom image classifier for the PoC within days.
+- BigQuery natively supports geospatial (GIS) functions and ML predictions over the 40 TB dataset, and feeds a dashboard of at-risk ships by region.
+- It satisfies all: storage at scale, native prediction (BigQuery ML), geospatial processing (GeoJSON/GIS), and BI dashboards.
+
+### Exam shortcut
+
+If you see:
+- large analytics dataset needing native prediction (ML) + geospatial (GIS)
+- dashboard/reporting on top
+- SQL at TB+ scale
+
+Think: **BigQuery (BigQuery ML + GIS)**
+
+**Tiny mental image:** one warehouse that maps the ships, predicts delays, and feeds the dashboard.
+
+**Final answer:** A. BigQuery'''
+
+E["test_6_q41"] = '''### Step 4: Choose the answer
+
+- You split into train and test so you can verify the model generalizes to unseen data, not just memorizes the training set.
+- It satisfies the question: the test set measures generalization.
+
+### Exam shortcut
+
+If you see:
+- "why split into train/test?"
+- evaluate on unseen data
+- generalization, not memorization
+
+Think: **test set checks generalization to new data**
+
+**Tiny mental image:** hold back an exam the model hasn't studied to see if it really learned.
+
+**Final answer:** B. To make sure your model is generalized for more than just the training data'''
+
+E["test_6_q42"] = '''### Step 4: Choose the answer
+
+- Cloud Vision AutoML trained on the existing labeled dataset (≈1000 images per component) produces a custom classifier for the PoC within days.
 - It satisfies both: custom recognition of 750 components and a fast, low-code build.
 
 ### Exam shortcut
@@ -272,94 +182,184 @@ Think: **Cloud Vision AutoML (existing dataset)**
 
 **Final answer:** A. Use Cloud Vision AutoML with the existing dataset.'''
 
-E["test_5_q9"] = '''### Step 4: Choose the answer
+E["test_7_q4"] = '''### Step 4: Choose the answer
 
-- Overfitting is reduced by getting more training examples, using a smaller feature set, and increasing the regularization parameters.
-- It satisfies the question: all three push the model toward generalization.
-
-### Exam shortcut
-
-If you see:
-- "ways to reduce overfitting"
-- more data, fewer features, stronger regularization
-- (less data or weaker regularization makes it worse)
-
-Think: **more data + fewer features + more regularization**
-
-**Tiny mental image:** more examples, a simpler model, and a firmer hand to stop memorizing noise.
-
-**Final answer:** A. Get more training examples'''
-
-E["test_5_q15"] = '''### Step 4: Choose the answer
-
-- Denormalizing the data and appending hourly status updates (instead of in-place UPDATEs) maximizes BigQuery performance and usability for the data science team.
-- It satisfies both: fewer joins via denormalization and efficient append-only ingestion at PB scale.
+- Cloud GPUs accelerate training while supporting the custom C++ ops once you implement GPU kernel support, which TPUs can't easily run.
+- It satisfies both: faster, lower-cost training and compatibility with custom operations.
 
 ### Exam shortcut
 
 If you see:
-- huge structured dataset into BigQuery for ML, maximize performance
-- denormalize + append (no UPDATEs)
-- avoid join-heavy normalized schema
+- custom TensorFlow C++ ops, want acceleration, low cost
+- TPUs can't run arbitrary custom ops
+- GPU (with custom kernel support)
 
-Think: **denormalize + append-only status updates**
+Think: **Cloud GPUs (after GPU kernel support)**
 
-**Tiny mental image:** one wide table you keep adding rows to, not a web of tables you keep editing.
+**Tiny mental image:** a GPU you can teach your custom operations to run on; a TPU won't take them.
 
-**Final answer:** A. Denormalize the data as must as possible.'''
+**Final answer:** C. Use Cloud GPUs after implementing GPU kernel support for your customs ops.'''
 
-E["test_5_q26"] = '''### Step 4: Choose the answer
+E["test_7_q17"] = '''### Step 4: Choose the answer
 
-- The Cloud Natural Language API's Entity Analysis extracts topics from blog posts as labels with no ML expertise or training, shipping fast.
-- It satisfies the constraints: a prebuilt API delivering topic labels quickly without building a model.
-
-### Exam shortcut
-
-If you see:
-- generate topic/subject labels from text, no ML experience, fast
-- prebuilt API, not a custom model
-- entities = topics/labels
-
-Think: **Cloud Natural Language API (Entity Analysis)**
-
-**Tiny mental image:** call a ready-made text service and use the entities it returns as tags.
-
-**Final answer:** A. Call the Cloud Natural Language API from your application. Process the generated Entity Analysis as labels.'''
-
-E["test_5_q29"] = '''### Step 4: Choose the answer
-
-- In Wide & Deep, the wide (linear) part handles memorization and the deep (neural) part handles generalization, making it a strong fit for recommender systems.
-- It satisfies the question: wide = memorize, deep = generalize, great for recommendations.
+- Feature-crossing latitude and longitude, bucketized at the minute level with L1 regularization, captures the location's nonlinear effect on price while keeping the sparse cross compact.
+- It satisfies the goal: encode the physical location dependency effectively, with L1 pruning unhelpful buckets.
 
 ### Exam shortcut
 
 If you see:
-- Wide & Deep model facts
-- wide = memorization, deep = generalization
-- good for recommender systems
+- location (lat/long) strongly affects the target, nonlinearly
+- bucketize + feature cross lat/long
+- L1 regularization to control the sparse cross
 
-Think: **wide memorizes, deep generalizes (recommenders)**
+Think: **bucketized feature cross of lat × long + L1**
 
-**Tiny mental image:** the wide side remembers specific combos; the deep side spots new patterns.
+**Tiny mental image:** chop the map into a grid and cross the coordinates so each neighborhood gets its own signal.
 
-**Final answer:** A. The wide model is used for memorization, while the deep model is used for generalization.'''
+**Final answer:** C. Create a feature cross of latitude and longitude, bucketize at the minute level and use L1 regularization during optimization.'''
 
-E["test_5_q34"] = '''### Step 4: Choose the answer
+E["test_7_q35"] = '''### Step 4: Choose the answer
 
-- Dialogflow Enterprise Edition interprets the customer voice commands and drives orders into the backend systems.
-- It satisfies the goal: a conversational agent that understands intent and integrates with fulfillment.
+- Combining highly co-dependent features into one representative feature reduces dimensionality and speeds training with minimal accuracy loss.
+- It satisfies the goal: fewer features without discarding the signal they share.
 
 ### Exam shortcut
 
 If you see:
-- interpret voice commands / conversational ordering
-- integrate with assistants, call backends
-- intent + fulfillment
+- too many features, speed up training, keep accuracy
+- merge correlated/co-dependent features
+- dimensionality reduction
 
-Think: **Dialogflow (Enterprise)**
+Think: **combine co-dependent features into one**
 
-**Tiny mental image:** a voice-order taker that understands the request and rings it up.
+**Tiny mental image:** fold redundant columns that say the same thing into a single column.
 
-**Final answer:** C. Dialogflow Enterprise Edition'''
+**Final answer:** B. Combine highly co-dependent features into one representative feature.'''
+
+E["test_7_q38"] = '''### Step 4: Choose the answer
+
+- Linear regression predicts the continuous house price and runs cheaply on a single resource-constrained VM.
+- It satisfies both: a numeric prediction and a lightweight algorithm (neural nets are heavier; logistic is for classification).
+
+### Exam shortcut
+
+If you see:
+- predict a continuous value on limited compute
+- lightweight, low-resource algorithm
+- regression, not deep nets
+
+Think: **linear regression**
+
+**Tiny mental image:** a simple line-fit that runs on a shoestring machine.
+
+**Final answer:** A. Linear regression'''
+
+E["test_8_q14"] = '''### Step 4: Choose the answer
+
+- Training a (linear) regression to output a continuous credit-default risk score fits the labeled default data and the prediction goal.
+- It satisfies the goal: predict a default-risk score from the historical labeled applications.
+
+### Exam shortcut
+
+If you see:
+- predict a default rate / risk score from labeled history
+- continuous score output
+- regression on labeled data
+
+Think: **regression to a risk score**
+
+**Tiny mental image:** fit the past defaults to produce a risk number for new applicants.
+
+**Final answer:** B. Train a linear regression to predict a credit default risk score.'''
+
+E["test_8_q29"] = '''### Step 4: Choose the answer
+
+- To fight overfitting, increase the training dataset and remove some input features, both pushing the model toward generalization.
+- It satisfies the goal: more data plus a simpler feature set reduces overfitting.
+
+### Exam shortcut
+
+If you see:
+- model overfitting, improve with new data
+- more data + fewer features
+- simplify and add examples
+
+Think: **more training data + fewer features**
+
+**Tiny mental image:** show more examples and trim the noisy features so it stops memorizing.
+
+**Final answer:** A. Increase the size of the training dataset and remove some input features'''
+
+E["test_8_q34"] = '''### Step 4: Choose the answer
+
+- Predicting a continuous stock price from history is a regression task, so you use a regressor.
+- It satisfies the question: continuous numeric output = regressor (not classifier/clustering).
+
+### Exam shortcut
+
+If you see:
+- predict a continuous value (price)
+- numeric output
+- regressor vs classifier
+
+Think: **Regressor**
+
+**Tiny mental image:** forecasting a price on a continuous dial, not a category.
+
+**Final answer:** B. Regressor'''
+
+E["test_10_q12"] = '''### Step 4: Choose the answer
+
+- Subsampling the training dataset reduces the data processed per epoch, speeding up the slow neural-network training.
+- It satisfies the goal: faster training (more layers/features would slow it down).
+
+### Exam shortcut
+
+If you see:
+- neural network training too slow, speed it up
+- reduce data processed (subsample training set)
+- not the test set
+
+Think: **subsample the training dataset**
+
+**Tiny mental image:** train on a representative slice to iterate faster.
+
+**Final answer:** D. Should you subsample your training dataset?'''
+
+E["test_13_q28"] = '''### Step 4: Choose the answer
+
+- Partitioning the table by the weather date and setting partition expiration to 30 days automatically drops old data, minimizing cost with no scheduled deletes.
+- It satisfies the goal: keep only the last 30 days by the data's own date, managed automatically.
+
+### Exam shortcut
+
+If you see:
+- retain only the last N days, minimize cost
+- partition by the meaningful date + partition expiration
+- automatic cleanup (not scheduled DELETE)
+
+Think: **partition by the data date + partition expiration**
+
+**Tiny mental image:** dated drawers that auto-empty after 30 days, no janitor needed.
+
+**Final answer:** B. Create a BigQuery table partitioned by datetime value of the weather date. Set up partition expiration to 30 days.'''
+
+E["test_13_q34"] = '''### Step 4: Choose the answer
+
+- Storing header rows with their line items as nested and repeated fields co-locates the tightly-coupled data, so joins are eliminated and analytics queries run efficiently.
+- It satisfies the goal: a single denormalized table reflecting the fixed header-to-lines relationship.
+
+### Exam shortcut
+
+If you see:
+- closely related parent/child tables always joined (header/lines)
+- BigQuery efficiency, avoid joins
+- nested and repeated fields
+
+Think: **nest the line items as repeated fields inside the header**
+
+**Tiny mental image:** tuck each order's line items inside the order row so no join is needed.
+
+**Final answer:** A. Create a sales_transaction table that holds the sales_transaction_header information as rows and the sales_transaction_line rows as nested and repeated fields.'''
 
 append_entries(E)
