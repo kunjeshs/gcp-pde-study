@@ -2,79 +2,133 @@ from lib import append_entries
 
 E = {}
 
-E["test_5_q11"] = '''### Step 4: Choose the answer
+E["test_13_q17"] = '''### Step 4: Choose the answer
 
-- Streaming inventory changes into a daily movement table and computing balances in a view joined to the historical balances (refreshed nightly) keeps the dashboard near-real-time, accurate, and fast.
-- It satisfies both: live accuracy via streamed deltas and high performance by avoiding constant row updates.
-
-### Exam shortcut
-
-If you see:
-- near-real-time BigQuery dashboard, frequent updates, accuracy + performance
-- avoid row-by-row UPDATEs
-- stream deltas, compute current state in a view
-
-Think: **stream changes to a movement table + balance view, reconcile nightly**
-
-**Tiny mental image:** log every transaction live and add it to last night's balance, instead of rewriting the ledger.
-
-**Final answer:** C. Use the BigQuery streaming the stream changes into a daily inventory movement table. Calculate balances in a view that joins it to the historical inventory balance table. Update the inventory balance table nightly.'''
-
-E["test_5_q20"] = '''### Step 4: Choose the answer
-
-- The BigQuery Web UI can load data containing nested and repeated fields; it can't upload SQL files, 20 MB files, or wildcard-match multiple files.
-- It satisfies the question: nested/repeated loading is the supported Web UI operation.
+- Datastream with Cloud Interconnect and private connectivity replicates the no-public-IP MySQL database to BigQuery entirely over private networking.
+- It satisfies both: serverless CDC into BigQuery and ingestion that never traverses the public internet.
 
 ### Exam shortcut
 
 If you see:
-- "what can the BigQuery Web UI do?"
-- nested/repeated field loading supported
-- size/wildcard/SQL-file uploads are not
+- replicate on-prem database (no public IP) to BigQuery
+- must avoid the public internet
+- Datastream + private connectivity over Interconnect
 
-Think: **load nested and repeated fields via the Web UI**
+Think: **Datastream + Interconnect + private connectivity**
 
-**Tiny mental image:** the console handles structured (nested) loads, not bulk wildcard or oversized uploads.
+**Tiny mental image:** a managed sync pipe running through your own private tunnel, never the open web.
 
-**Final answer:** B. Load data with nested and repeated fields.'''
+**Final answer:** B. Use Datastream to replicate data from your on-premises MySQL database to BigQuery. Set up Cloud Interconnect between your on-premises data center and Google Cloud. Use Private connectivity as the connectivity method and allocate an IP address range within your VPC network to the Datastream connectivity configuration. Use Server-only as the encryption type when setting up the connection profile in Datastream.'''
 
-E["test_5_q24"] = '''### Step 4: Choose the answer
+E["test_13_q25"] = '''### Step 4: Choose the answer
 
-- In legacy SQL, TABLE_DATE_RANGE selects across the daily app_events_YYYYMMDD tables for the past 30 days.
-- It satisfies the goal: query a range of date-sharded tables in legacy SQL.
-
-### Exam shortcut
-
-If you see:
-- query daily date-sharded tables (table_YYYYMMDD) over a range
-- legacy SQL
-- date-range wildcard function
-
-Think: **TABLE_DATE_RANGE (legacy SQL)**
-
-**Tiny mental image:** one function that fans out across all the daily tables in the window.
-
-**Final answer:** A. Use the TABLE_DATE_RANGE function'''
-
-E["test_5_q28"] = '''### Step 4: Choose the answer
-
-- ROW_NUMBER partitioned by the unique ID (ordered by timestamp), keeping only row 1, deduplicates the possibly-duplicated streaming inserts at query time.
-- It satisfies the goal: one row per unique ID despite at-least-once streaming duplicates.
+- A separate metrics table partitioned by timestamp, with a sensorId foreign key and append-only INSERTs (joined to the small sensors table when needed), keeps high-frequency writes cheap and weekly queries efficient.
+- It satisfies both: low-cost append ingestion and partition-pruned weekly analytics.
 
 ### Exam shortcut
 
 If you see:
-- de-duplicate streamed rows with a unique ID + timestamp
-- pick the latest/one record per ID at query time
-- window function
+- high-frequency metrics + a small dimension table, weekly analytics, minimize cost
+- append (INSERT), not UPDATE, in BigQuery
+- partition the fact table by time, reference the dimension
 
-Think: **ROW_NUMBER() OVER (PARTITION BY id ...) = 1**
+Think: **separate time-partitioned metrics table, INSERT-append, join to dimension**
 
-**Tiny mental image:** number the copies of each ID and keep only number one.
+**Tiny mental image:** stream readings into a dated log table and join to the sensor list only when reporting.
 
-**Final answer:** D. Use the ROW_NUMBER window function with PARTITION by unique ID along with WHERE row equals 1.'''
+**Final answer:** C. 1. Create a metrics table partitioned by timestamp. 2. Create a sensorId column in the metrics table, that points to the id column in the sensors table. 3. Use an INSERT statement every 30 seconds to append new metrics to the metrics table. 4. Join the two tables, if needed, when running the analytical query.'''
 
-E["test_5_q30"] = '''### Step 4: Choose the answer
+E["test_14_q23"] = '''### Step 4: Choose the answer
+
+- A Dataflow pipeline programmatically identifies longtail and outlier points and cleanses the data in near-real time, writing the result to BigQuery.
+- It satisfies both: near-real-time custom cleansing before the AI models and a BigQuery sink for analytics.
+
+### Exam shortcut
+
+If you see:
+- near-real-time cleansing, detect outliers/longtail programmatically
+- custom logic before ML
+- land in BigQuery
+
+Think: **Dataflow (programmatic cleansing) → BigQuery**
+
+**Tiny mental image:** a live filter that spots the weird data points before they reach the model.
+
+**Final answer:** B. Use Dataflow to identify longtail and outlier data points programmatically, with BigQuery as a sink.'''
+
+E["test_14_q28"] = '''### Step 4: Choose the answer
+
+- BigQuery Data Transfer Service with the JDBC driver and FastExport moves the Teradata history efficiently with minimal coding and without needing local staging storage.
+- It satisfies the constraints: managed transfer, minimal programming, and no reliance on scarce local disk.
+
+### Exam shortcut
+
+If you see:
+- migrate Teradata to BigQuery, minimal programming
+- limited local storage (can't stage exports)
+- managed transfer service
+
+Think: **BigQuery Data Transfer Service (JDBC + FastExport)**
+
+**Tiny mental image:** a managed pipe pulling Teradata straight into BigQuery, no local warehouse needed.
+
+**Final answer:** A. Use BigQuery Data Transfer Service by using the Java Database Connectivity (JDBC) driver with FastExport connection.'''
+
+E["test_14_q47"] = '''### Step 4: Choose the answer
+
+- Dataprep lets non-technical users clean/prepare data visually into BigQuery, and Connected Sheets lets them analyze it directly in a spreadsheet.
+- It satisfies both: graphical data prep and familiar spreadsheet-based analysis over BigQuery.
+
+### Exam shortcut
+
+If you see:
+- non-technical users, graphical data cleaning
+- analyze in a spreadsheet
+- Dataprep + Connected Sheets
+
+Think: **Dataprep (clean) → BigQuery → Connected Sheets (analyze)**
+
+**Tiny mental image:** click-to-clean the data, then explore it in a familiar spreadsheet.
+
+**Final answer:** A. Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.'''
+
+E["test_14_q52"] = '''### Step 4: Choose the answer
+
+- Non-incremental materialized views (allow_non_incremental_definition) support outer joins/analytic functions, and max_staleness=4h with enable_refresh serves fast, low-maintenance results within the 4-hour freshness window.
+- It satisfies both: accelerated visualization queries and reduced pipeline maintenance via managed refresh.
+
+### Exam shortcut
+
+If you see:
+- materialized view with outer joins / analytic functions
+- data can be a few hours stale (max_staleness)
+- speed up viz, cut pipeline maintenance
+
+Think: **non-incremental materialized view + max_staleness + enable_refresh**
+
+**Tiny mental image:** a managed precomputed cache that's allowed to be up to 4 hours old, refreshed for you.
+
+**Final answer:** A. Create materialized views with the allow_non_incremental_definition option set to true for the visualization queries. Specify the max_staleness parameter to 4 hours and the enable_refresh parameter to true. Reference the materialized views in the data visualization tool.'''
+
+E["test_15_q4"] = '''### Step 4: Choose the answer
+
+- Inserting each CDC record (with its operation type) into a staging table in real time, then periodically MERGE-ing into the reporting table, minimizes latency while cutting compute.
+- It satisfies both: near-real-time availability via streamed staging and efficient batched application via MERGE.
+
+### Exam shortcut
+
+If you see:
+- log-based CDC into BigQuery, low latency + low compute
+- stream to staging, then batch-apply
+- DML MERGE instead of per-record DML
+
+Think: **stream CDC to a staging table + periodic MERGE into the reporting table**
+
+**Tiny mental image:** collect the changes in an inbox, then apply them all at once in one efficient sweep.
+
+**Final answer:** B. Insert each new CDC record and corresponding operation type to a staging table in real time.'''
+
+E["test_15_q6"] = '''### Step 4: Choose the answer
 
 - A dataset per department with leads as WRITER (create/update tables) and analysts as READER (query only) maps roles exactly to duties.
 - It satisfies all three rules: per-department isolation, leads who can modify, analysts who can only read.
@@ -92,64 +146,100 @@ Think: **dataset per team; WRITER for editors, READER for query-only**
 
 **Final answer:** B. Create a dataset for each department. Assign the department leads the role of WRITER, and assign the data analysts the role of READER on their dataset.'''
 
-E["test_5_q46"] = '''### Step 4: Choose the answer
+E["test_15_q41"] = '''### Step 4: Choose the answer
 
-- There is no charge for a query that returns results from cache - that's the true statement about BigQuery caching.
-- It satisfies the question: cached results are free (and cached by default, for ~24h, but not when a destination table is set).
-
-### Exam shortcut
-
-If you see:
-- BigQuery caching facts
-- cached results are free
-- cached by default, ~24h, skipped with a destination table
-
-Think: **no charge for cache-hit queries**
-
-**Tiny mental image:** re-asking the same question returns the saved answer for free.
-
-**Final answer:** D. There is no charge for a query that retrieves its results from cache.'''
-
-E["test_6_q17"] = '''### Step 4: Choose the answer
-
-- Recreating the table with a partitioning column (timestamp) and clustering column (ID) lets BigQuery prune so the filtered query no longer full-scans, with no SQL changes.
-- It satisfies the goal: minimize bytes scanned while keeping the same queries.
+- Partitioning by transaction time serves the "last 30 days" filter, and clustering by state, then city, then store ID matches the geographic drill-down.
+- It satisfies both access patterns: date pruning plus coarse-to-fine geographic clustering.
 
 ### Exam shortcut
 
 If you see:
-- filtered BigQuery query still full-scans, reduce bytes
-- filters on a time column + an ID column
-- minimal SQL change
+- date-range filter + drill-down by a geographic hierarchy
+- partition on time, cluster on the filter hierarchy
+- order clustering coarse → fine (state → city → store)
 
-Think: **partition (date/time) + cluster (ID)**
+Think: **partition by date, cluster state → city → store**
 
-**Tiny mental image:** file by date and sort within each day by ID, so the query opens only the right drawers.
+**Tiny mental image:** file by day, then sort within each day by state, then city, then store.
 
-**Final answer:** C. Recreate the table with a partitioning column and clustering column.'''
+**Final answer:** A. Partition by transaction time; cluster by state first, then city, then store ID.'''
 
-E["test_6_q21"] = '''### Step 4: Choose the answer
+E["test_15_q47"] = '''### Step 4: Choose the answer
 
-- The false statement is that you set a query language per dataset (default Standard SQL); the dialect is chosen per query, not per dataset.
-- It satisfies the "not true" framing: there's no per-dataset language setting.
+- Partitioning the table by transaction date lets the last-30-days queries prune to those partitions, speeding them up with no extra storage cost.
+- It satisfies the goal: faster date-filtered queries via partition pruning.
 
 ### Exam shortcut
 
 If you see:
-- "which Legacy vs Standard SQL statement is FALSE"
-- dialect is set per query, not per dataset
-- Standard SQL is preferred
+- BigQuery date-range queries slow, don't want more storage
+- partition pruning on a date column
+- star schema migrated to BigQuery
 
-Think: **no per-dataset language setting (chosen per query)**
+Think: **partition by transaction date**
 
-**Tiny mental image:** you pick the language each time you ask, not once per cabinet.
+**Tiny mental image:** file sales by day so a 30-day query opens only 30 drawers.
 
-**Final answer:** D. You need to set a query language for each dataset and the default is Standard SQL.'''
+**Final answer:** D. Partition the data by transaction date.'''
 
-E["test_6_q25"] = '''### Step 4: Choose the answer
+E["test_15_q52"] = '''### Step 4: Choose the answer
 
-- Creating an authorized view per team in the same dataset, and granting each team data-viewer access to its view, exposes only the rows/tables that team should see.
-- It satisfies the goal: per-team table/column visibility without granting access to the base tables.
+- Nesting the author fields inside an author column (a nested/repeated record) denormalizes the data the BigQuery-recommended way, speeding author-related queries.
+- It satisfies the goal: a single table with nested structures, avoiding costly joins.
+
+### Exam shortcut
+
+If you see:
+- BigQuery schema best practice for related entities
+- avoid joins, denormalize
+- nested/repeated (STRUCT/ARRAY) fields
+
+Think: **nest related fields (nested/repeated records)**
+
+**Tiny mental image:** tuck the author's details inside each book's record instead of a separate table to join.
+
+**Final answer:** C. Create a table that includes information about the books and authors, but nest the author fields inside the author column.'''
+
+E["test_15_q56"] = '''### Step 4: Choose the answer
+
+- Moving staged data into the production table and clearing staging every few hours keeps a single master dataset without impacting ingestion or reporting.
+- It satisfies the goal: one authoritative table, with periodic promotion that avoids contention.
+
+### Exam shortcut
+
+If you see:
+- streaming into staging then promoting to production
+- one master dataset, no ingestion/reporting impact
+- periodic move-and-clear
+
+Think: **promote staging → production and clear staging on an interval**
+
+**Tiny mental image:** empty the inbox into the master file every few hours so neither pile grows messy.
+
+**Final answer:** C. Have a staging table that moves the staged data over to the production table and deletes the contents of the staging table every three hours.'''
+
+E["test_15_q58"] = '''### Step 4: Choose the answer
+
+- Exporting Cloud Logging data daily to BigQuery and building views filtered by project, log type, resource, and user produces the daily consumption-and-user reports efficiently.
+- It satisfies the goal: SQL-queryable, filterable daily reports from the audit/usage logs.
+
+### Exam shortcut
+
+If you see:
+- daily reports on resource consumption + who used them
+- source is Cloud Logging / audit logs
+- export to BigQuery and build views
+
+Think: **Cloud Logging → BigQuery export + filtered views**
+
+**Tiny mental image:** pour the logs into the warehouse each day and slice them with saved views.
+
+**Final answer:** A. Do daily exports of Cloud Logging data to BigQuery. Create views filtering by project, log type, resource, and user.'''
+
+E["test_16_q28"] = '''### Step 4: Choose the answer
+
+- Creating an authorized view per team in the same dataset, and granting each team data-viewer access to its view, exposes only the tables/rows that team should see.
+- It satisfies the goal: per-team visibility without granting access to the base tables.
 
 ### Exam shortcut
 
@@ -160,206 +250,116 @@ If you see:
 
 Think: **authorized views per team**
 
-**Tiny mental image:** a tailored window for each team that shows only their slice, not the whole warehouse.
+**Tiny mental image:** a tailored window for each team showing only their slice of the warehouse.
 
 **Final answer:** C. Create authorized views for each team in the same dataset in which the data resides, and assign the users/groups data viewer access to the authorized views'''
 
-E["test_6_q43"] = '''### Step 4: Choose the answer
+E["test_1_q7"] = '''### Step 4: Choose the answer
 
-- SELECT controls which columns are read, so choosing specific columns (not SELECT *) reduces the columns BigQuery processes.
-- It satisfies the question: SELECT is the column-pruning lever (WHERE/LIMIT affect rows, not columns).
-
-### Exam shortcut
-
-If you see:
-- reduce *columns* processed in BigQuery
-- column pruning, not row filtering
-- SELECT specific columns vs SELECT *
-
-Think: **SELECT (only the needed columns)**
-
-**Tiny mental image:** ask for two columns, not the whole row.
-
-**Final answer:** C. SELECT'''
-
-E["test_7_q11"] = '''### Step 4: Choose the answer
-
-- Converting the date-sharded LOGS_yyyymmdd tables into a single date-partitioned table removes the 1,000-table wildcard limit while keeping date-range queries efficient.
-- It satisfies the goal: long date-range queries succeed and run efficiently via partition pruning.
+- Cloud Storage lifecycle conditions include Age, Is Live, and Matches Storage Class (among others) - not file size or file type.
+- It satisfies the question: those three are valid lifecycle conditions.
 
 ### Exam shortcut
 
 If you see:
-- wildcard queries over daily sharded tables hitting the 1,000-table limit
-- consolidate many date-named tables
-- migrate to partitioning
+- Cloud Storage Object Lifecycle Management conditions
+- Age, Is Live, Matches Storage Class, Number of newer versions, Created before
+- file size/type are NOT conditions
 
-Think: **sharded tables → single date-partitioned table**
+Think: **Age, Is Live, Matches Storage Class**
 
-**Tiny mental image:** merge a thousand daily files into one cabinet with dated drawers.
+**Tiny mental image:** rules trigger on how old, whether current, and which class - not on the file's size or extension.
 
-**Final answer:** B. Convert the sharded tables into a single partitioned table'''
+**Final answer:** B. Age'''
 
-E["test_7_q16"] = '''### Step 4: Choose the answer
+E["test_1_q43"] = '''### Step 4: Choose the answer
 
-- Storing the CSV in Cloud Storage and linking it as permanent BigQuery external tables lets multiple engines query the same files cheaply, with aggregate queries served by BigQuery.
-- It satisfies the goal: low-cost shared storage plus SQL query access over the external data.
-
-### Exam shortcut
-
-If you see:
-- large CSV in Cloud Storage queried by multiple engines
-- minimize cost, query aggregates with SQL
-- external/permanent tables over the bucket
-
-Think: **Cloud Storage + BigQuery permanent external tables**
-
-**Tiny mental image:** keep the files in the shared warehouse and put a permanent SQL window over them.
-
-**Final answer:** C. Use Cloud Storage for storage. Link as permanent tables in BigQuery for query.'''
-
-E["test_7_q33"] = '''### Step 4: Choose the answer
-
-- Normalizing the single patient table into separate patient and visits tables (plus supporting tables) eliminates the expensive self-joins that break at 100x scale.
-- It satisfies the goal: a relational design that scales reporting without the self-join blow-up.
+- An intermittent FetchFailedException on an autoscaling Dataproc cluster typically means the policy scaled down and shuffle data was lost when a node was decommissioned.
+- It satisfies the diagnosis: aggressive scale-down removes nodes still holding shuffle data.
 
 ### Exam shortcut
 
 If you see:
-- a single table with self-joins failing as data grows
-- reports too slow / out of resources
-- relational redesign
+- Dataproc autoscaling + intermittent FetchFailedException
+- shuffle data lost on node removal
+- scale-down too aggressive
 
-Think: **normalize into separate related tables (remove self-joins)**
+Think: **autoscaler decommissioned a node holding shuffle data**
 
-**Tiny mental image:** split the giant all-in-one ledger into patients and visits so the joins stay sane.
+**Tiny mental image:** a worker leaves mid-task carrying the half-done parts the next stage needed.
 
-**Final answer:** C. Normalize the master patient-record table into the patient table and the visits table, and create other necessary tables to avoid self-join.'''
+**Final answer:** A. The autoscaling policy is scaling down and shuffle data is lost when a node is decommissioned.'''
 
-E["test_7_q40"] = '''### Step 4: Choose the answer
+E["test_2_q18"] = '''### Step 4: Choose the answer
 
-- Denormalized structures in BigQuery increase query speed (fewer joins) and make queries simpler to write.
-- It satisfies the question: the benefits are speed and simplicity, not reduced storage.
-
-### Exam shortcut
-
-If you see:
-- benefits of denormalization in BigQuery
-- fewer joins → faster + simpler queries
-- (storage may actually increase)
-
-Think: **faster queries + simpler queries**
-
-**Tiny mental image:** everything in one wide table means no hunting across joins - quicker and easier.
-
-**Final answer:** B. Increases query speed, makes queries simpler'''
-
-E["test_8_q31"] = '''### Step 4: Choose the answer
-
-- You cannot turn a table into a partitioned table by ordering rows and changing its type; that's the unsupported method.
-- It satisfies the "not supported" framing: loading per-partition, querying into a $YYYYMMDD destination, and streaming are valid; ORDER BY + type change is not.
+- gsutil rsync is resumable by design: re-running the same command syncs only the files that didn't upload, skipping the ones already there.
+- It satisfies the goal: resume without re-uploading completed files, no special flag needed.
 
 ### Exam shortcut
 
 If you see:
-- "which is NOT a way to populate a partitioned table"
-- valid: load per partition, query into $YYYYMMDD, stream
-- ORDER BY then "change type" is the impostor
+- resume a failed gsutil rsync, don't re-upload completed files
+- rsync compares source and destination
+- no special resume flag
 
-Think: **can't sort rows and flip the table to "partitioned"**
+Think: **just re-run the same rsync command (it resumes)**
 
-**Tiny mental image:** sorting the pages doesn't magically turn the binder into a dated-tab binder.
+**Tiny mental image:** rsync looks at what's already there and only ships what's missing.
 
-**Final answer:** D. Use ORDER BY to put a table‘s rows into chronological order and then change the table‘s type to “Partitioned“.'''
+**Final answer:** A. The same command that was used initially. Gsutil rsynch will automatically resume.'''
 
-E["test_8_q43"] = '''### Step 4: Choose the answer
+E["test_3_q23"] = '''### Step 4: Choose the answer
 
-- The two BigQuery denormalization methods are joining tables into one wide table and using nested/repeated fields.
-- It satisfies the question: both consolidate related data to avoid query-time joins.
-
-### Exam shortcut
-
-If you see:
-- ways to denormalize in BigQuery
-- join into one table OR use nested/repeated (STRUCT/ARRAY)
-- (partitioning is not denormalization)
-
-Think: **join into one table + nested repeated fields**
-
-**Tiny mental image:** flatten the joins into one wide table, or tuck the children inside each parent row.
-
-**Final answer:** B. 1) Join tables into one table; 2) Use nested repeated fields'''
-
-E["test_9_q16"] = '''### Step 4: Choose the answer
-
-- Partitioning by transaction time serves the "past 30 days" filter, and clustering by state, city, then store ID matches the geographic drill-down for fast trend queries.
-- It satisfies both access patterns: date pruning plus hierarchical geographic clustering.
+- Clustering the ingest-date-partitioned table on the package-tracking ID co-locates each package's records, speeding the geospatial trend queries that follow a package's lifecycle.
+- It satisfies the goal: better performance via clustering on the high-cardinality query key, no re-partitioning.
 
 ### Exam shortcut
 
 If you see:
-- date-range filter + drill-down by a geographic hierarchy
-- partition on time, cluster on the filter hierarchy
-- order clustering columns coarse → fine (state → city → store)
+- partitioned table, queries filter/group by a high-cardinality ID
+- improve performance by clustering
+- cluster on the queried entity, not the partition column
 
-Think: **partition by date, cluster state → city → store**
+Think: **cluster on the package-tracking ID**
 
-**Tiny mental image:** file by day, then sort within each day by state, then city, then store.
+**Tiny mental image:** group each package's events together so its lifecycle query reads one tight block.
 
-**Final answer:** C. Partition the table by transaction time and cluster it by state, city, and then store ID'''
+**Final answer:** B. Use clustering in BigQuery on the package-tracking ID column.'''
 
-E["test_12_q26"] = '''### Step 4: Choose the answer
+E["test_5_q6"] = '''### Step 4: Choose the answer
 
-- BigQuery external tables over Cloud Storage support Avro, ORC, Parquet, CSV, JSON, and Datastore/Firestore exports - but not Excel .xlsx.
-- It satisfies the "not supported" framing: xlsx is the format BigQuery can't read as an external table.
-
-### Exam shortcut
-
-If you see:
-- "which format is NOT supported for BigQuery external tables"
-- supported: Avro, ORC, Parquet, CSV, JSON, Firestore/Datastore export
-- Excel xlsx is the odd one out
-
-Think: **Excel .xlsx is not supported**
-
-**Tiny mental image:** the warehouse reads data formats, not spreadsheet workbooks.
-
-**Final answer:** D. Excel xlsx format'''
-
-E["test_13_q8"] = '''### Step 4: Choose the answer
-
-- A materialized view precomputes the frequent query/aggregation, so repeated daily access is faster and simpler for other users, staying fresh automatically.
-- It satisfies the goal: accelerated, simplified aggregations over the petabyte-scale table.
+- Clustering the ingest-date-partitioned table on the package-tracking ID co-locates each package's records, speeding the geospatial lifecycle queries as data grows.
+- It satisfies the goal: improved performance via clustering on the query key, without re-partitioning.
 
 ### Exam shortcut
 
 If you see:
-- same heavy query/aggregation run repeatedly, speed it up
-- precompute results, auto-refresh
-- simplify for other users
+- partitioned table slowing over time, queries by a high-cardinality ID
+- improve performance with clustering
+- cluster on the queried entity
 
-Think: **materialized view**
+Think: **cluster on the package-tracking ID**
 
-**Tiny mental image:** bake the common report once and keep it warm, instead of re-cooking each time.
+**Tiny mental image:** group each package's events so its lifecycle query reads one tight block.
 
-**Final answer:** D. Create a materialized view based off of the query being run.'''
+**Final answer:** B. Implement clustering in BigQuery on the package-tracking ID column.'''
 
-E["test_13_q12"] = '''### Step 4: Choose the answer
+E["test_7_q12"] = '''### Step 4: Choose the answer
 
-- Clustering the table by country and username co-locates rows for those filters, so the dashboard's country/username lookups scan far less data.
-- It satisfies the goal: fast filtered access without a natural date partition column.
+- Transforming the text files to compressed Avro with Dataflow and storing in BigQuery gives ANSI SQL, compression, and parallel loading per Google's best practices.
+- It satisfies all: SQL queryability, compression, and splittable Avro for parallel loads.
 
 ### Exam shortcut
 
 If you see:
-- dashboard filters on non-date fields (country, username)
-- no good time/date partition key
-- speed up filtered lookups
+- large text files, ANSI SQL + compression + parallel load
+- self-describing, splittable format
+- Avro into BigQuery
 
-Think: **cluster by the filter columns (country, username)**
+Think: **Dataflow → compressed Avro → BigQuery**
 
-**Tiny mental image:** sort the giant table by country then username so each lookup jumps straight to its block.
+**Tiny mental image:** repackage the bulky text into compact, parallel-loadable Avro crates for the SQL warehouse.
 
-**Final answer:** A. Cluster the table by country and username fields.'''
+**Final answer:** A. Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query.'''
 
 append_entries(E)
