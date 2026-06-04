@@ -2,364 +2,364 @@ from lib import append_entries
 
 E = {}
 
-E["test_6_q19"] = '''### Step 4: Choose the answer
+E["test_7_q30"] = '''### Step 4: Choose the answer
 
-- Cloud Dataprep lets you build visual recipes to detect invalid entries and transform the Cloud Storage data with no code or SQL.
-- It satisfies the constraint: interactive, no-programming data cleaning and transformation.
+- Pub/Sub decouples producer from consumer, and a Dataflow pipeline writing Avro to Cloud Storage (cheap, indefinite raw) and to BigQuery (near-real-time SQL over years) meets every requirement.
+- It satisfies all: decoupled ingest, durable cheap archive, and SQL-queryable multi-year history.
 
 ### Exam shortcut
 
 If you see:
-- clean/transform data with no programming or SQL
-- visual recipes, interactive profiling
-- analysts doing the prep
+- decouple producer/consumer + cheap indefinite raw storage + near-real-time SQL + multi-year history
+- one pipeline covering archive and analytics
+- streaming JSON at scale
+
+Think: **Pub/Sub → Dataflow → Cloud Storage (raw) + BigQuery (SQL)**
+
+**Tiny mental image:** one intake that files originals in cheap deep storage and shelves a live searchable copy.
+
+**Final answer:** D. Create an application that publishes events to Cloud Pub/Sub, and create a Cloud Dataflow pipeline that transforms the JSON event payloads to Avro, writing the data to Cloud Storage and BigQuery.'''
+
+E["test_7_q31"] = '''### Step 4: Choose the answer
+
+- BigQuery charges for storage, queries, and streaming inserts; batch loading and exporting data are free.
+- It satisfies the question: those three are the billable operations.
+
+### Exam shortcut
+
+If you see:
+- "what does BigQuery charge for?"
+- storage + queries + streaming inserts billable
+- loading/exporting are free
+
+Think: **storage, queries, streaming inserts**
+
+**Tiny mental image:** you pay rent (storage), per search (queries), and for the express live drop (streaming) - bulk delivery is free.
+
+**Final answer:** A. Storage, queries, and streaming inserts'''
+
+E["test_7_q43"] = '''### Step 4: Choose the answer
+
+- A session window with a 60-minute gap groups each user's activity and fires once they've been inactive for an hour, exactly the abandonment trigger.
+- It satisfies the rule: the window closes after the inactivity gap, letting you check basket value and transaction status.
+
+### Exam shortcut
+
+If you see:
+- act after a period of *user inactivity* / "no interaction for N minutes"
+- per-user activity bursts separated by gaps
+- abandonment / idle-timeout logic
+
+Think: **session window (gap duration)**
+
+**Tiny mental image:** the meter starts when the customer goes quiet and dings after an hour of silence.
+
+**Final answer:** C. Use a session window with a gap time duration of 60 minutes.'''
+
+E["test_7_q48"] = '''### Step 4: Choose the answer
+
+- Rewriting the MapReduce job in Apache Spark uses in-memory processing to run far faster on the same cluster, improving responsiveness without added cost.
+- It satisfies the constraint: more speed from a better engine, not more (costlier) hardware.
+
+### Exam shortcut
+
+If you see:
+- batch MapReduce jobs falling behind, no budget increase
+- speed up processing on existing resources
+- engine choice, not cluster size
+
+Think: **rewrite MapReduce → Spark (in-memory)**
+
+**Tiny mental image:** swap the old steam engine for an electric motor on the same chassis - faster, no bigger fuel bill.
+
+**Final answer:** B. Rewrite the job in Apache Spark.'''
+
+E["test_7_q50"] = '''### Step 4: Choose the answer
+
+- Cloud Composer (managed Airflow) orchestrates the interdependent steps in order, mixing shell, Hadoop, and BigQuery tasks with built-in retries.
+- It satisfies the goal: dependency-aware, long-running, scheduled workflow orchestration with retry on failure.
+
+### Exam shortcut
+
+If you see:
+- scheduled multi-step workflow with dependencies/ordering
+- mixed task types (shell, Hadoop, BigQuery), retries
+- orchestrate, not just schedule
+
+Think: **Cloud Composer (Airflow DAG)**
+
+**Tiny mental image:** a conductor cueing each section in order and signaling a retry when one stumbles.
+
+**Final answer:** D. Cloud Composer'''
+
+E["test_8_q11"] = '''### Step 4: Choose the answer
+
+- Pub/Sub ingests the 10,000-device stream, Dataflow processes it in real time, and BigQuery stores it for analysis - a fully managed real-time stack.
+- It satisfies the goal: scalable real-time process, store, and analyze for very large IoT datasets.
+
+### Exam shortcut
+
+If you see:
+- large fleet of IoT devices, real-time process + store + analyze
+- managed, scalable streaming
+- land in a SQL warehouse
+
+Think: **Pub/Sub → Dataflow → BigQuery**
+
+**Tiny mental image:** a global intake belt feeding a live mill that stocks a searchable warehouse.
+
+**Final answer:** B. Send the data to Google Cloud Pub/Sub, stream Cloud Pub/Sub to Google Cloud Dataflow, and store the data in Google BigQuery.'''
+
+E["test_8_q13"] = '''### Step 4: Choose the answer
+
+- Coalescing the small 200-400 MB parquet files to at least 1 GB reduces task/shuffle overhead and restores throughput cost-effectively on the preemptible cluster.
+- It satisfies the goal: fewer, larger splits cut scheduling and I/O overhead without new hardware spend.
+
+### Exam shortcut
+
+If you see:
+- Spark slow with many small input files
+- shuffle-heavy, cost-sensitive, Dataproc + preemptibles
+- file-size tuning
+
+Think: **increase input file size (≈1 GB+)**
+
+**Tiny mental image:** ship a few full pallets instead of thousands of tiny packages.
+
+**Final answer:** A. Increase the size of your parquet files to ensure them to be 1 GB minimum.'''
+
+E["test_8_q24"] = '''### Step 4: Choose the answer
+
+- Batching the work into ten-second increments groups the high-rate calls to the GUID service, smoothing load and relieving backpressure.
+- It satisfies the goal: fewer, bundled external calls under tens-of-thousands-per-second throughput.
+
+### Exam shortcut
+
+If you see:
+- high-throughput pipeline calling an external service
+- "reduce backpressure" / overwhelmed downstream
+- micro-batching as the lever
+
+Think: **batch into short time increments**
+
+**Tiny mental image:** send one bus every ten seconds instead of a taxi per passenger.
+
+**Final answer:** B. Batch the job into ten-second increments.'''
+
+E["test_8_q30"] = '''### Step 4: Choose the answer
+
+- Calling the Video Intelligence API for labels and storing results in Cloud Bigtable gives the fast, low-latency filtering needed across several TB.
+- It satisfies both: ready-made video labeling plus a high-throughput store for quick preference filtering at scale.
+
+### Exam shortcut
+
+If you see:
+- generate video/image labels without training a model
+- very fast filtering/lookups over TBs
+- recommendation/preference matching
+
+Think: **Video Intelligence API (labels) + Bigtable (fast filtering)**
+
+**Tiny mental image:** an off-the-shelf tagger feeding a lightning-fast lookup table.
+
+**Final answer:** C. Build an application that calls the Cloud Video Intelligence API to generate labels. Store data in Cloud Bigtable, and filter the predicted labels to match the user‘s viewing history to generate preferences.'''
+
+E["test_8_q33"] = '''### Step 4: Choose the answer
+
+- Updating the pipeline with the drain flag finishes in-flight data before the incompatible new version takes over, so nothing is lost.
+- It satisfies the goal: a clean handoff for an incompatible change without dropping buffered data.
+
+### Exam shortcut
+
+If you see:
+- update a streaming Dataflow pipeline, change is incompatible
+- no data loss
+- drain to flush in-flight work
+
+Think: **drain the pipeline on update**
+
+**Tiny mental image:** empty the pipe of water before swapping in the new section.
+
+**Final answer:** A. Update the current pipeline and use the drain flag.'''
+
+E["test_8_q35"] = '''### Step 4: Choose the answer
+
+- gsutil rsync runs outbound from the on-prem servers to Cloud Storage, so no external IP reaches into the data center, and it syncs daily deltas.
+- It satisfies both: secure outbound-only transfer plus ongoing incremental sync after the initial upload.
+
+### Exam shortcut
+
+If you see:
+- no inbound access to on-prem (no external IPs reaching in)
+- initial upload + recurring daily deltas
+- simple secure sync
+
+Think: **gsutil rsync (outbound from on-prem)**
+
+**Tiny mental image:** the building mails out its updates; nobody outside gets a key to come in.
+
+**Final answer:** A. Execute gsutil rsync from the on-premises servers.'''
+
+E["test_8_q37"] = '''### Step 4: Choose the answer
+
+- A healthy pipeline drains the source and fills the sink; alert on an *increase* in undelivered Pub/Sub messages (backlog building) and a *decrease* in the destination's used_bytes growth (output stalling).
+- It satisfies the goal: both signals flag the pipeline no longer processing data.
+
+### Exam shortcut
+
+If you see:
+- monitor a Dataflow streaming pipeline is "still processing"
+- watch source backlog and sink growth
+- which direction signals trouble?
+
+Think: **alert on rising source backlog + falling sink write rate**
+
+**Tiny mental image:** worry when the inbox piles up *and* the outbox stops filling.
+
+**Final answer:** B. An alert based on an increase of subscription/num_undelivered_messages for the source and a rate of change decrease of instance/storage/ used_bytes for the destination'''
+
+E["test_8_q38"] = '''### Step 4: Choose the answer
+
+- The Cloud Dataflow connector for Bigtable is what lets a Dataflow pipeline read from and write to Cloud Bigtable.
+- It satisfies the question: that connector bridges Bigtable into Beam/Dataflow.
+
+### Exam shortcut
+
+If you see:
+- use Bigtable inside a Dataflow pipeline
+- the integration component name
+- read/write Bigtable from Beam
+
+Think: **Cloud Dataflow connector for Bigtable**
+
+**Tiny mental image:** the adapter cable that plugs Bigtable into the Dataflow machine.
+
+**Final answer:** A. Cloud Dataflow connector'''
+
+E["test_8_q40"] = '''### Step 4: Choose the answer
+
+- Partitioning the tables by a DATE/TIMESTAMP column lets date-filtered queries prune to the relevant partitions instead of scanning everything.
+- It satisfies the goal: far less data scanned (lower cost) while keeping full SQL access.
+
+### Exam shortcut
+
+If you see:
+- date-filtered BigQuery queries scanning the whole table
+- rising bytes-scanned cost
+- keep SQL, cut scan volume
+
+Think: **partition by DATE/TIMESTAMP**
+
+**Tiny mental image:** file records by month so you open only the months you asked for.
+
+**Final answer:** A. Re-create the tables using DDL. Partition the tables by a column containing a TIMESTAMP or DATE Type.'''
+
+E["test_9_q47"] = '''### Step 4: Choose the answer
+
+- Dataprep (by Trifacta) lets non-developer analysts build and maintain visual transformation recipes that run on a schedule, adapting as the schema changes.
+- It satisfies all three needs: scheduled execution, analyst-friendly editing, and a graphical design tool.
+
+### Exam shortcut
+
+If you see:
+- scheduled CSV transformations with evolving schema
+- non-developers modify them, graphical tool
+- no-code data prep
+
+Think: **Cloud Dataprep (Trifacta) recipes, scheduled**
+
+**Tiny mental image:** a visual recipe the analysts tweak each month, run automatically on a timer.
+
+**Final answer:** D. Use Dataprep by Trifacta to build and maintain the transformation recipes, and execute them on a scheduled basis'''
+
+E["test_10_q26"] = '''### Step 4: Choose the answer
+
+- A custom Apache Beam connector in a Dataflow pipeline reads the proprietary format and streams it into BigQuery as Avro, efficiently and with minimal resources.
+- It satisfies both: handle the non-standard format and stream it compactly (Avro) into BigQuery.
+
+### Exam shortcut
+
+If you see:
+- ingest a proprietary/unsupported format, stream into BigQuery
+- minimal resource consumption
+- custom parsing needed
+
+Think: **custom Beam connector + Dataflow streaming (Avro into BigQuery)**
+
+**Tiny mental image:** build a custom adapter so the odd-shaped feed plugs straight into the warehouse line.
+
+**Final answer:** D. Use a custom connector with Apache Beam to write a Dataflow pipeline that streams the data into BigQuery in Avro format.'''
+
+E["test_10_q27"] = '''### Step 4: Choose the answer
+
+- Copying the ORC files onto the Dataproc cluster and mounting the Hive tables (or using the master-node→HDFS path) gets Hive running with local data for performance.
+- It satisfies the goal: data replicated to the cluster so Hive reads from fast local storage.
+
+### Exam shortcut
+
+If you see:
+- start Hive on Dataproc with ORC data in Cloud Storage
+- replicate to local HDFS for performance
+- two valid setup paths
+
+Think: **stage files onto the cluster/HDFS (or use the Cloud Storage connector)**
+
+**Tiny mental image:** bring the parts into the workshop so the machine runs at full speed.
+
+**Final answer:** C. Transfer all ORC files from the Cloud Storage bucket to any node of the Dataproc cluster using the gsutil utility, and mount the Hive tables locally.'''
+
+E["test_10_q57"] = '''### Step 4: Choose the answer
+
+- Using Cloud Storage for persistent storage (and keeping preemptible VMs to a sensible fraction of workers) follows Google's Dataproc best practices.
+- It satisfies the goal: durable data decoupled from ephemeral compute, with cost savings that don't jeopardize job completion.
+
+### Exam shortcut
+
+If you see:
+- Dataproc best practices for a busy Spark cluster
+- decouple storage from compute
+- moderate preemptible usage
+
+Think: **Cloud Storage for persistence (+ limited preemptible workers)**
+
+**Tiny mental image:** keep the goods in the permanent warehouse and staff with mostly steady workers plus a few temps.
+
+**Final answer:** A. Use Cloud Storage for persistent storage'''
+
+E["test_11_q7"] = '''### Step 4: Choose the answer
+
+- Cloud Bigtable stores 50 TB of frequently-updated, constantly-streaming financial time-series with low latency and exposes the HBase API for the migrated Hadoop jobs.
+- It satisfies all: massive scale, high-throughput updates/streaming, and Hadoop compatibility.
+
+### Exam shortcut
+
+If you see:
+- large, frequently-updated time-series with constant streaming
+- low-latency writes/reads at TB scale
+- migrate Hadoop/HBase jobs
+
+Think: **Cloud Bigtable**
+
+**Tiny mental image:** a high-speed ticker-tape ledger built for nonstop updates at huge scale.
+
+**Final answer:** A. Cloud Bigtable'''
+
+E["test_11_q10"] = '''### Step 4: Choose the answer
+
+- Cloud Dataprep lets a newcomer visually run data quality checks and exploratory transformations on Cloud Storage data with no coding.
+- It satisfies the goal: interactive profiling and cleansing for someone just learning the platform.
+
+### Exam shortcut
+
+If you see:
+- data quality checks + exploratory analysis, beginner-friendly
+- visual, no-code profiling of files
+- data in Cloud Storage
 
 Think: **Cloud Dataprep**
 
-**Tiny mental image:** a click-driven wizard that fixes the data without writing code.
+**Tiny mental image:** a point-and-click data inspector that needs no programming to explore the files.
 
-**Final answer:** B. Use Cloud Dataprep with recipes to detect errors and perform transformations.'''
-
-E["test_6_q24"] = '''### Step 4: Choose the answer
-
-- Mounting the nightly mysqldump backups into Cloud SQL and processing with Dataproc runs analytics off the backups, not the live cluster.
-- It satisfies the goal: analytics with minimal impact on the production databases.
-
-### Exam shortcut
-
-If you see:
-- analytics must not load the production OLTP database
-- nightly backups/dumps already exist
-- process a copy, not the source
-
-Think: **load the backups elsewhere and analyze the copy**
-
-**Tiny mental image:** study last night's photocopy so you never disturb the busy original ledger.
-
-**Final answer:** D. Mount the backups to Google Cloud SQL, and then process the data using Google Cloud Dataproc.'''
-
-E["test_6_q29"] = '''### Step 4: Choose the answer
-
-- A Dataflow job with KafkaIO and a sliding 1-hour window advancing every 5 minutes computes the moving average and alerts when it drops below 4000/sec.
-- It satisfies the goal: a continuously updated trailing-hour average that a fixed window can't provide.
-
-### Exam shortcut
-
-If you see:
-- alert on a moving/rolling average over a trailing hour
-- frequently re-evaluated
-- stream from Kafka into Dataflow
-
-Think: **sliding window (size 1h, hop 5m)**
-
-**Tiny mental image:** a gliding spotlight on the last hour, re-checked every five minutes.
-
-**Final answer:** A. Consume the stream of data in Cloud Dataflow using Kafka IO. Set a sliding time window of 1 hour every 5 minutes. Compute the average when the window closes, and send an alert if the average is less than 4000 messages.'''
-
-E["test_6_q32"] = '''### Step 4: Choose the answer
-
-- A Transform is the Beam component that performs a data processing operation, and you express conditional/looping/branching logic to build the pipeline graph.
-- It satisfies the question: Transforms are the processing steps (PCollection is data, Pipeline is the container).
-
-### Exam shortcut
-
-If you see:
-- the Beam component that *processes* data
-- build branching logic via code
-- distinguish from PCollection (data) / Pipeline (container)
-
-Think: **Transform**
-
-**Tiny mental image:** the machine that acts on the items, not the belt (PCollection) or the factory (Pipeline).
-
-**Final answer:** B. Transform'''
-
-E["test_6_q33"] = '''### Step 4: Choose the answer
-
-- Putting the disk-I/O-heavy job's intermediate data on native HDFS (persistent disk) avoids round-tripping transient data through the Cloud Storage connector.
-- It satisfies the fix: keep durable input/output in Cloud Storage but local-disk the I/O-intensive intermediates.
-
-### Exam shortcut
-
-If you see:
-- disk-I/O-bound Dataproc job using the Cloud Storage connector
-- intermediate/shuffle data is the bottleneck
-- speed up without re-architecting
-
-Think: **intermediate data on HDFS (persistent disk), not Cloud Storage**
-
-**Tiny mental image:** do the scratch work on the local desk, not by mailing every draft to the warehouse.
-
-**Final answer:** B. Allocate sufficient persistent disk space to the Hadoop cluster, and store the intermediate data of that particular Hadoop job on native HDFS'''
-
-E["test_6_q34"] = '''### Step 4: Choose the answer
-
-- An IoT gateway feeding Cloud Pub/Sub, processed by Cloud Dataflow, absorbs global spikes elastically and replaces the costly single us-east Kafka cluster.
-- It satisfies the goal: managed, globally scalable ingest and processing for bursty batched traffic.
-
-### Exam shortcut
-
-If you see:
-- global IoT ingest, spiky/batched volume, single Kafka too costly
-- need elastic managed ingest + processing
-- "Google-recommended cloud-native"
-
-Think: **IoT gateway → Pub/Sub → Dataflow**
-
-**Tiny mental image:** swap the one overworked depot for a global mail network that scales with surges.
-
-**Final answer:** C. An IoT gateway connected to Cloud Pub/Sub, with Cloud Dataflow to read and process the messages from Cloud Pub/Sub.'''
-
-E["test_6_q36"] = '''### Step 4: Choose the answer
-
-- Scheduling the Dataflow job via App Engine Cron Service runs the batch job once daily after the 2 AM log is ready, with no idle resources.
-- It satisfies "inexpensively": a triggered batch run, not an always-on streaming job or manual start.
-
-### Exam shortcut
-
-If you see:
-- run a batch Dataflow job once per day, cheaply
-- triggered on a schedule, not streaming
-- no manual intervention
-
-Think: **scheduled trigger (App Engine Cron / Cloud Scheduler) → batch Dataflow**
-
-**Tiny mental image:** an alarm clock that starts the machine each morning, then shuts it off.
-
-**Final answer:** C. Create a cron job with Google App Engine Cron Service to run the Cloud Dataflow job.'''
-
-E["test_6_q38"] = '''### Step 4: Choose the answer
-
-- BigQuery can serve as a Dataflow sink in both batch and streaming write modes.
-- It satisfies the question: there's no single-mode restriction - either works.
-
-### Exam shortcut
-
-If you see:
-- "in which mode can BigQuery be a sink?"
-- batch loads vs streaming inserts
-- Dataflow → BigQuery
-
-Think: **both batch and streaming**
-
-**Tiny mental image:** the warehouse accepts both nightly truckloads and the live conveyor.
-
-**Final answer:** A. Both batch and streaming'''
-
-E["test_6_q44"] = '''### Step 4: Choose the answer
-
-- Dataflow (Apache Beam) runs both batch and streaming pipelines under one unified model.
-- It satisfies the question: it is not limited to one mode.
-
-### Exam shortcut
-
-If you see:
-- "does Dataflow do batch or streaming?"
-- unified batch + streaming model
-- Beam's core value proposition
-
-Think: **both batch and streaming**
-
-**Tiny mental image:** one engine that runs whether the data arrives in crates or on a live belt.
-
-**Final answer:** B. Both Batch and Streaming Data Pipelines'''
-
-E["test_6_q45"] = '''### Step 4: Choose the answer
-
-- A Dataproc cluster using the Cloud Storage connector reuses existing Hadoop jobs, minimizes cluster management, and persists data beyond the cluster's life.
-- It satisfies all three: job reuse, managed service, and durable data decoupled from compute.
-
-### Exam shortcut
-
-If you see:
-- reuse existing Hadoop jobs, minimal cluster management
-- data must outlive the cluster
-- managed Hadoop on GCP
-
-Think: **Dataproc + Cloud Storage connector**
-
-**Tiny mental image:** rent a managed workshop but keep your materials in a permanent warehouse next door.
-
-**Final answer:** D. Create a Cloud Dataproc cluster that uses the Google Cloud Storage connector.'''
-
-E["test_6_q47"] = '''### Step 4: Choose the answer
-
-- Pub/Sub delivers the real-time event stream, Cloud Storage holds batch historical exports, and BigQuery serves ANSI SQL over real-time and historical data.
-- It satisfies all three consumer access patterns with one managed stack.
-
-### Exam shortcut
-
-If you see:
-- real-time stream + ANSI SQL (live + historical) + batch exports
-- one platform covering all three
-- market/event data feeds
-
-Think: **Pub/Sub + Cloud Storage + BigQuery**
-
-**Tiny mental image:** a live ticker, an archive room, and a SQL search desk fed from the same feed.
-
-**Final answer:** B. Cloud Pub/Sub, Cloud Storage, BigQuery'''
-
-E["test_6_q48"] = '''### Step 4: Choose the answer
-
-- The Dataflow SDKs became the Apache Beam project, the unified batch/streaming programming model.
-- It satisfies the question: Dataflow's SDK lineage is Apache Beam.
-
-### Exam shortcut
-
-If you see:
-- "Dataflow SDK became which Apache project?"
-- unified batch + streaming model
-- portable pipeline SDK
-
-Think: **Apache Beam**
-
-**Tiny mental image:** the open-sourced blueprint Dataflow now builds from is named Beam.
-
-**Final answer:** D. Apache Beam'''
-
-E["test_7_q5"] = '''### Step 4: Choose the answer
-
-- Keeping the raw posts in Cloud Storage (cheap archive/reprocessing) and writing the API-extracted topics/sentiment into BigQuery (for dashboards) is the lowest-cost split.
-- It satisfies all: durable raw archive, SQL-queryable analytics, and shareable dashboards.
-
-### Exam shortcut
-
-If you see:
-- archive raw data cheaply + analyze structured results
-- dashboards/SQL on the extracted data
-- lowest cost, fewest steps
-
-Think: **raw → Cloud Storage, analytics → BigQuery**
-
-**Tiny mental image:** keep the original letters in cheap storage and file the summarized notes in the searchable index.
-
-**Final answer:** C. Store the raw social media posts in Cloud Storage, and write the data extracted from the API into BigQuery.'''
-
-E["test_7_q7"] = '''### Step 4: Choose the answer
-
-- A byte-mismatch after a successful CSV load usually means the source wasn't in BigQuery's default UTF-8 encoding, so characters were reinterpreted.
-- It satisfies the diagnosis: the data loaded, but an encoding mismatch altered the bytes.
-
-### Exam shortcut
-
-If you see:
-- CSV loads fine but bytes don't match the source
-- character/encoding discrepancies
-- BigQuery default is UTF-8
-
-Think: **source encoding ≠ BigQuery default (UTF-8)**
-
-**Tiny mental image:** the text arrived intact but was read in the wrong alphabet, garbling some letters.
-
-**Final answer:** C. The CSV data loaded in BigQuery is not using BigQuery‘s default encoding.'''
-
-E["test_7_q10"] = '''### Step 4: Choose the answer
-
-- Streaming (unbounded) data requires a non-global windowing function; without one, the Dataflow job fails at pipeline construction for all streaming inserts.
-- It satisfies the diagnosis: unbounded sources can't use the default global window without windowing.
-
-### Exam shortcut
-
-If you see:
-- streaming Dataflow job fails for all inserts at creation
-- unbounded source, no window applied
-- windowing/transformation in play
-
-Think: **unbounded streams need a non-global window**
-
-**Tiny mental image:** you can't tally an endless parade without dividing it into segments first.
-
-**Final answer:** D. They have not applied a non-global windowing function, which causes the job to fail when the pipeline is created'''
-
-E["test_7_q14"] = '''### Step 4: Choose the answer
-
-- Dataflow's three main trigger types are time-based, data-driven (element count), and composite; a trigger based on element size in bytes is not one of them.
-- It satisfies the "NOT one of" framing: byte-size triggering isn't a supported category.
-
-### Exam shortcut
-
-If you see:
-- "which is NOT a Dataflow trigger type"
-- time, data-driven (count), composite are the three
-- byte-size is the impostor
-
-Think: **no "element size in bytes" trigger**
-
-**Tiny mental image:** spot the odd one out: the bell rings on time or count, never on weight.
-
-**Final answer:** A. Trigger based on element size in bytes'''
-
-E["test_7_q22"] = '''### Step 4: Choose the answer
-
-- Using Dataflow to find nulls and a custom script to convert them to 0 keeps the feature real-valued (not removed) for the logistic regression model.
-- It satisfies the constraint: nulls are imputed to a numeric value rather than dropped or set to a non-numeric token.
-
-### Exam shortcut
-
-If you see:
-- impute nulls for an ML model, must stay real-valued
-- cannot remove the rows/feature
-- numeric default (0), not 'none'
-
-Think: **detect nulls and impute to a numeric value (0)**
-
-**Tiny mental image:** fill the blank cells with a real number so the math model still adds up.
-
-**Final answer:** D. Use Cloud Dataflow to find null values in sample source data. Convert all nulls to 0 using a custom script.'''
-
-E["test_7_q24"] = '''### Step 4: Choose the answer
-
-- Each server publishes bid events to Pub/Sub, and a Dataflow pull subscription processes them in real time, awarding the item to the first event processed.
-- It satisfies the goal: globally scalable, real-time collation that resolves near-simultaneous bids.
-
-### Exam shortcut
-
-If you see:
-- collate real-time events from many distributed servers
-- determine first/earliest
-- globally scalable ingest + stream processing
-
-Think: **Pub/Sub ingest + Dataflow streaming**
-
-**Tiny mental image:** every branch drops tickets in one central chute, and a sorter declares whoever's lands first.
-
-**Final answer:** D. Have each application server write the bid events to Google Cloud Pub/Sub as they occur. Use a pull subscription to pull the bid events using Google Cloud Dataflow. Give the bid for each item to the user in the bid event that is processed first.'''
-
-E["test_7_q25"] = '''### Step 4: Choose the answer
-
-- Hashing each table's non-timestamp columns after sorting (via Dataproc and the BigQuery connector) compares outputs deterministically without a join key.
-- It satisfies the goal: a key-free, order-independent equality check between original and migrated results.
-
-### Exam shortcut
-
-If you see:
-- compare two tables with no primary/join key
-- verify migrated output equals original
-- order-independent, exclude timestamp columns
-
-Think: **sort + hash the rows, compare hashes**
-
-**Tiny mental image:** fingerprint each sorted deck - identical prints mean identical decks.
-
-**Final answer:** C. Use a Dataproc cluster and the BigQuery Hadoop connector to read the data from each table and calculate a hash from non-timestamp columns of the table after sorting. Compare the hashes of each table.'''
-
-E["test_7_q27"] = '''### Step 4: Choose the answer
-
-- A multi-regional Cloud Storage bucket maximizes availability and is directly accessible by Dataproc, BigQuery, and Compute Engine for any file format.
-- It satisfies the goal: a single highly-available store for CSV/Avro/PDF that all tools read, with performance not a concern.
-
-### Exam shortcut
-
-If you see:
-- one store shared by Dataproc + BigQuery + Compute Engine
-- mixed formats (CSV/Avro/PDF), maximize availability
-- performance not the priority
-
-Think: **multi-regional Cloud Storage bucket**
-
-**Tiny mental image:** one highly-available warehouse every department can enter, holding boxes of any shape.
-
-**Final answer:** D. Store the data in a multi-regional Cloud Storage bucket. Access the data directly using Cloud Dataproc, BigQuery, and Compute Engine.'''
+**Final answer:** C. Cloud Dataprep'''
 
 append_entries(E)
