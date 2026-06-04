@@ -2,364 +2,364 @@ from lib import append_entries
 
 E = {}
 
-E["test_7_q30"] = '''### Step 4: Choose the answer
+E["test_11_q24"] = '''### Step 4: Choose the answer
 
-- Pub/Sub decouples producer from consumer, and a Dataflow pipeline writing Avro to Cloud Storage (cheap, indefinite raw) and to BigQuery (near-real-time SQL over years) meets every requirement.
-- It satisfies all: decoupled ingest, durable cheap archive, and SQL-queryable multi-year history.
-
-### Exam shortcut
-
-If you see:
-- decouple producer/consumer + cheap indefinite raw storage + near-real-time SQL + multi-year history
-- one pipeline covering archive and analytics
-- streaming JSON at scale
-
-Think: **Pub/Sub → Dataflow → Cloud Storage (raw) + BigQuery (SQL)**
-
-**Tiny mental image:** one intake that files originals in cheap deep storage and shelves a live searchable copy.
-
-**Final answer:** D. Create an application that publishes events to Cloud Pub/Sub, and create a Cloud Dataflow pipeline that transforms the JSON event payloads to Avro, writing the data to Cloud Storage and BigQuery.'''
-
-E["test_7_q31"] = '''### Step 4: Choose the answer
-
-- BigQuery charges for storage, queries, and streaming inserts; batch loading and exporting data are free.
-- It satisfies the question: those three are the billable operations.
+- gcloud dataflow sql query runs a SQL statement as a Dataflow job and writes the results to a BigQuery table.
+- It satisfies the goal: SQL on Dataflow with a BigQuery sink, via the correct gcloud group/verb.
 
 ### Exam shortcut
 
 If you see:
-- "what does BigQuery charge for?"
-- storage + queries + streaming inserts billable
-- loading/exporting are free
+- run a SQL query *as a Dataflow job*, output to BigQuery
+- gcloud command structure
+- Dataflow SQL
 
-Think: **storage, queries, streaming inserts**
+Think: **gcloud dataflow sql query**
 
-**Tiny mental image:** you pay rent (storage), per search (queries), and for the express live drop (streaming) - bulk delivery is free.
+**Tiny mental image:** the right tool is "dataflow sql," not the bq or bigquery groups.
 
-**Final answer:** A. Storage, queries, and streaming inserts'''
+**Final answer:** C. gcloud dataflow sql query'''
 
-E["test_7_q43"] = '''### Step 4: Choose the answer
+E["test_11_q47"] = '''### Step 4: Choose the answer
 
-- A session window with a 60-minute gap groups each user's activity and fires once they've been inactive for an hour, exactly the abandonment trigger.
-- It satisfies the rule: the window closes after the inactivity gap, letting you check basket value and transaction status.
-
-### Exam shortcut
-
-If you see:
-- act after a period of *user inactivity* / "no interaction for N minutes"
-- per-user activity bursts separated by gaps
-- abandonment / idle-timeout logic
-
-Think: **session window (gap duration)**
-
-**Tiny mental image:** the meter starts when the customer goes quiet and dings after an hour of silence.
-
-**Final answer:** C. Use a session window with a gap time duration of 60 minutes.'''
-
-E["test_7_q48"] = '''### Step 4: Choose the answer
-
-- Rewriting the MapReduce job in Apache Spark uses in-memory processing to run far faster on the same cluster, improving responsiveness without added cost.
-- It satisfies the constraint: more speed from a better engine, not more (costlier) hardware.
+- --maxNumWorkers caps how many workers the Dataflow job can scale to, limiting resource use while testing.
+- It satisfies the goal: bound the autoscaler so a test run can't consume large resources.
 
 ### Exam shortcut
 
 If you see:
-- batch MapReduce jobs falling behind, no budget increase
-- speed up processing on existing resources
-- engine choice, not cluster size
+- limit/cap Dataflow processing resources
+- restrict autoscaling during testing
+- worker-count parameter
 
-Think: **rewrite MapReduce → Spark (in-memory)**
+Think: **--maxNumWorkers**
 
-**Tiny mental image:** swap the old steam engine for an electric motor on the same chassis - faster, no bigger fuel bill.
+**Tiny mental image:** set a hiring ceiling so the test crew stays small.
 
-**Final answer:** B. Rewrite the job in Apache Spark.'''
+**Final answer:** D. --maxNumWorkers'''
 
-E["test_7_q50"] = '''### Step 4: Choose the answer
+E["test_12_q13"] = '''### Step 4: Choose the answer
 
-- Cloud Composer (managed Airflow) orchestrates the interdependent steps in order, mixing shell, Hadoop, and BigQuery tasks with built-in retries.
-- It satisfies the goal: dependency-aware, long-running, scheduled workflow orchestration with retry on failure.
-
-### Exam shortcut
-
-If you see:
-- scheduled multi-step workflow with dependencies/ordering
-- mixed task types (shell, Hadoop, BigQuery), retries
-- orchestrate, not just schedule
-
-Think: **Cloud Composer (Airflow DAG)**
-
-**Tiny mental image:** a conductor cueing each section in order and signaling a retry when one stumbles.
-
-**Final answer:** D. Cloud Composer'''
-
-E["test_8_q11"] = '''### Step 4: Choose the answer
-
-- Pub/Sub ingests the 10,000-device stream, Dataflow processes it in real time, and BigQuery stores it for analysis - a fully managed real-time stack.
-- It satisfies the goal: scalable real-time process, store, and analyze for very large IoT datasets.
+- gcloud dataproc clusters update with --num-secondary-workers adds preemptible (secondary) workers to the running cluster.
+- It satisfies the goal: scale out with preemptibles, which are the "secondary" worker type.
 
 ### Exam shortcut
 
 If you see:
-- large fleet of IoT devices, real-time process + store + analyze
-- managed, scalable streaming
-- land in a SQL warehouse
+- add preemptible VMs to a running Dataproc cluster
+- preemptibles = secondary workers
+- update an existing cluster
 
-Think: **Pub/Sub → Dataflow → BigQuery**
+Think: **gcloud dataproc clusters update --num-secondary-workers**
 
-**Tiny mental image:** a global intake belt feeding a live mill that stocks a searchable warehouse.
+**Tiny mental image:** dial up the count of temp ("secondary") workers on the live cluster.
 
-**Final answer:** B. Send the data to Google Cloud Pub/Sub, stream Cloud Pub/Sub to Google Cloud Dataflow, and store the data in Google BigQuery.'''
+**Final answer:** C. gcloud dataproc clusters update with the --num-secondary-workers parameter'''
 
-E["test_8_q13"] = '''### Step 4: Choose the answer
+E["test_13_q2"] = '''### Step 4: Choose the answer
 
-- Coalescing the small 200-400 MB parquet files to at least 1 GB reduces task/shuffle overhead and restores throughput cost-effectively on the preemptible cluster.
-- It satisfies the goal: fewer, larger splits cut scheduling and I/O overhead without new hardware spend.
-
-### Exam shortcut
-
-If you see:
-- Spark slow with many small input files
-- shuffle-heavy, cost-sensitive, Dataproc + preemptibles
-- file-size tuning
-
-Think: **increase input file size (≈1 GB+)**
-
-**Tiny mental image:** ship a few full pallets instead of thousands of tiny packages.
-
-**Final answer:** A. Increase the size of your parquet files to ensure them to be 1 GB minimum.'''
-
-E["test_8_q24"] = '''### Step 4: Choose the answer
-
-- Batching the work into ten-second increments groups the high-rate calls to the GUID service, smoothing load and relieving backpressure.
-- It satisfies the goal: fewer, bundled external calls under tens-of-thousands-per-second throughput.
+- Dataform gives developers an intuitive environment to build, manage, version, and schedule SQL-as-code ELT pipelines in BigQuery.
+- It satisfies the goal: an ELT-native, SQL-first development workflow for BigQuery.
 
 ### Exam shortcut
 
 If you see:
-- high-throughput pipeline calling an external service
-- "reduce backpressure" / overwhelmed downstream
-- micro-batching as the lever
+- ELT with "SQL as code," version-controlled, scheduled
+- developer-friendly SQL pipeline authoring in BigQuery
+- transformations live in the warehouse
 
-Think: **batch into short time increments**
+Think: **Dataform**
 
-**Tiny mental image:** send one bus every ten seconds instead of a taxi per passenger.
+**Tiny mental image:** a Git-style IDE where your transformations are just managed SQL files.
 
-**Final answer:** B. Batch the job into ten-second increments.'''
+**Final answer:** A. Use Dataform to build, manage, and schedule SQL pipelines.'''
 
-E["test_8_q30"] = '''### Step 4: Choose the answer
+E["test_13_q9"] = '''### Step 4: Choose the answer
 
-- Calling the Video Intelligence API for labels and storing results in Cloud Bigtable gives the fast, low-latency filtering needed across several TB.
-- It satisfies both: ready-made video labeling plus a high-throughput store for quick preference filtering at scale.
-
-### Exam shortcut
-
-If you see:
-- generate video/image labels without training a model
-- very fast filtering/lookups over TBs
-- recommendation/preference matching
-
-Think: **Video Intelligence API (labels) + Bigtable (fast filtering)**
-
-**Tiny mental image:** an off-the-shelf tagger feeding a lightning-fast lookup table.
-
-**Final answer:** C. Build an application that calls the Cloud Video Intelligence API to generate labels. Store data in Cloud Bigtable, and filter the predicted labels to match the user‘s viewing history to generate preferences.'''
-
-E["test_8_q33"] = '''### Step 4: Choose the answer
-
-- Updating the pipeline with the drain flag finishes in-flight data before the incompatible new version takes over, so nothing is lost.
-- It satisfies the goal: a clean handoff for an incompatible change without dropping buffered data.
+- Enabling Pub/Sub exactly-once delivery on the pull subscription prevents two agents from receiving the same order, with no extra components.
+- It satisfies both: no duplicate processing and no added workflow complexity.
 
 ### Exam shortcut
 
 If you see:
-- update a streaming Dataflow pipeline, change is incompatible
-- no data loss
-- drain to flush in-flight work
+- prevent duplicate processing of Pub/Sub messages
+- avoid adding components/complexity
+- pull subscription
 
-Think: **drain the pipeline on update**
+Think: **Pub/Sub exactly-once delivery**
 
-**Tiny mental image:** empty the pipe of water before swapping in the new section.
+**Tiny mental image:** a ticket system that hands each order to exactly one clerk, never two.
 
-**Final answer:** A. Update the current pipeline and use the drain flag.'''
+**Final answer:** C. Use Pub/Sub exactly-once delivery in your pull subscription.'''
 
-E["test_8_q35"] = '''### Step 4: Choose the answer
+E["test_13_q13"] = '''### Step 4: Choose the answer
 
-- gsutil rsync runs outbound from the on-prem servers to Cloud Storage, so no external IP reaches into the data center, and it syncs daily deltas.
-- It satisfies both: secure outbound-only transfer plus ongoing incremental sync after the initial upload.
-
-### Exam shortcut
-
-If you see:
-- no inbound access to on-prem (no external IPs reaching in)
-- initial upload + recurring daily deltas
-- simple secure sync
-
-Think: **gsutil rsync (outbound from on-prem)**
-
-**Tiny mental image:** the building mails out its updates; nobody outside gets a key to come in.
-
-**Final answer:** A. Execute gsutil rsync from the on-premises servers.'''
-
-E["test_8_q37"] = '''### Step 4: Choose the answer
-
-- A healthy pipeline drains the source and fills the sink; alert on an *increase* in undelivered Pub/Sub messages (backlog building) and a *decrease* in the destination's used_bytes growth (output stalling).
-- It satisfies the goal: both signals flag the pipeline no longer processing data.
+- Data freshness of 40 seconds with only 5 seconds of system lag means each message is processed quickly, but the job can't drain the Pub/Sub backlog - add workers/optimize.
+- It satisfies the diagnosis: the bottleneck is throughput against a growing subscription backlog, not per-message processing time.
 
 ### Exam shortcut
 
 If you see:
-- monitor a Dataflow streaming pipeline is "still processing"
-- watch source backlog and sink growth
-- which direction signals trouble?
+- data freshness much larger than system lag
+- messages process fast but backlog grows
+- Dataflow falling behind the subscription
 
-Think: **alert on rising source backlog + falling sink write rate**
+Think: **scale up workers to clear the backlog (throughput, not per-message latency)**
 
-**Tiny mental image:** worry when the inbox piles up *and* the outbox stops filling.
+**Tiny mental image:** each customer is served quickly, but the line keeps growing - open more registers.
 
-**Final answer:** B. An alert based on an increase of subscription/num_undelivered_messages for the source and a rate of change decrease of instance/storage/ used_bytes for the destination'''
+**Final answer:** C. Messages in your Dataflow job are processed in less than 30 seconds, but your job cannot keep up with the backlog in the Pub/Sub subscription. Optimize your job or increase the number of workers to fix this.'''
 
-E["test_8_q38"] = '''### Step 4: Choose the answer
+E["test_13_q14"] = '''### Step 4: Choose the answer
 
-- The Cloud Dataflow connector for Bigtable is what lets a Dataflow pipeline read from and write to Cloud Bigtable.
-- It satisfies the question: that connector bridges Bigtable into Beam/Dataflow.
-
-### Exam shortcut
-
-If you see:
-- use Bigtable inside a Dataflow pipeline
-- the integration component name
-- read/write Bigtable from Beam
-
-Think: **Cloud Dataflow connector for Bigtable**
-
-**Tiny mental image:** the adapter cable that plugs Bigtable into the Dataflow machine.
-
-**Final answer:** A. Cloud Dataflow connector'''
-
-E["test_8_q40"] = '''### Step 4: Choose the answer
-
-- Partitioning the tables by a DATE/TIMESTAMP column lets date-filtered queries prune to the relevant partitions instead of scanning everything.
-- It satisfies the goal: far less data scanned (lower cost) while keeping full SQL access.
+- Dataform assertions express uniqueness and null-value checks declaratively in the pipeline code, failing the run if the data violates them.
+- It satisfies the goal: data-quality tests integrated directly into the Dataform ELT workflow.
 
 ### Exam shortcut
 
 If you see:
-- date-filtered BigQuery queries scanning the whole table
-- rising bytes-scanned cost
-- keep SQL, cut scan volume
+- data-quality checks (uniqueness, non-null) inside a Dataform/ELT pipeline
+- declarative tests on final tables
+- fail the pipeline on bad data
 
-Think: **partition by DATE/TIMESTAMP**
+Think: **Dataform assertions**
 
-**Tiny mental image:** file records by month so you open only the months you asked for.
+**Tiny mental image:** built-in unit tests for your tables that block the build when they fail.
 
-**Final answer:** A. Re-create the tables using DDL. Partition the tables by a column containing a TIMESTAMP or DATE Type.'''
+**Final answer:** C. Build Dataform assertions into your code.'''
 
-E["test_9_q47"] = '''### Step 4: Choose the answer
+E["test_13_q15"] = '''### Step 4: Choose the answer
 
-- Dataprep (by Trifacta) lets non-developer analysts build and maintain visual transformation recipes that run on a schedule, adapting as the schema changes.
-- It satisfies all three needs: scheduled execution, analyst-friendly editing, and a graphical design tool.
-
-### Exam shortcut
-
-If you see:
-- scheduled CSV transformations with evolving schema
-- non-developers modify them, graphical tool
-- no-code data prep
-
-Think: **Cloud Dataprep (Trifacta) recipes, scheduled**
-
-**Tiny mental image:** a visual recipe the analysts tweak each month, run automatically on a timer.
-
-**Final answer:** D. Use Dataprep by Trifacta to build and maintain the transformation recipes, and execute them on a scheduled basis'''
-
-E["test_10_q26"] = '''### Step 4: Choose the answer
-
-- A custom Apache Beam connector in a Dataflow pipeline reads the proprietary format and streams it into BigQuery as Avro, efficiently and with minimal resources.
-- It satisfies both: handle the non-standard format and stream it compactly (Avro) into BigQuery.
+- Dataprep gives the data science team a low-code way to explore, cleanse, and validate the files directly in Cloud Storage.
+- It satisfies the goal: interactive, no-code data preparation on the raw Cloud Storage data.
 
 ### Exam shortcut
 
 If you see:
-- ingest a proprietary/unsupported format, stream into BigQuery
-- minimal resource consumption
-- custom parsing needed
-
-Think: **custom Beam connector + Dataflow streaming (Avro into BigQuery)**
-
-**Tiny mental image:** build a custom adapter so the odd-shaped feed plugs straight into the warehouse line.
-
-**Final answer:** D. Use a custom connector with Apache Beam to write a Dataflow pipeline that streams the data into BigQuery in Avro format.'''
-
-E["test_10_q27"] = '''### Step 4: Choose the answer
-
-- Copying the ORC files onto the Dataproc cluster and mounting the Hive tables (or using the master-node→HDFS path) gets Hive running with local data for performance.
-- It satisfies the goal: data replicated to the cluster so Hive reads from fast local storage.
-
-### Exam shortcut
-
-If you see:
-- start Hive on Dataproc with ORC data in Cloud Storage
-- replicate to local HDFS for performance
-- two valid setup paths
-
-Think: **stage files onto the cluster/HDFS (or use the Cloud Storage connector)**
-
-**Tiny mental image:** bring the parts into the workshop so the machine runs at full speed.
-
-**Final answer:** C. Transfer all ORC files from the Cloud Storage bucket to any node of the Dataproc cluster using the gsutil utility, and mount the Hive tables locally.'''
-
-E["test_10_q57"] = '''### Step 4: Choose the answer
-
-- Using Cloud Storage for persistent storage (and keeping preemptible VMs to a sensible fraction of workers) follows Google's Dataproc best practices.
-- It satisfies the goal: durable data decoupled from ephemeral compute, with cost savings that don't jeopardize job completion.
-
-### Exam shortcut
-
-If you see:
-- Dataproc best practices for a busy Spark cluster
-- decouple storage from compute
-- moderate preemptible usage
-
-Think: **Cloud Storage for persistence (+ limited preemptible workers)**
-
-**Tiny mental image:** keep the goods in the permanent warehouse and staff with mostly steady workers plus a few temps.
-
-**Final answer:** A. Use Cloud Storage for persistent storage'''
-
-E["test_11_q7"] = '''### Step 4: Choose the answer
-
-- Cloud Bigtable stores 50 TB of frequently-updated, constantly-streaming financial time-series with low latency and exposes the HBase API for the migrated Hadoop jobs.
-- It satisfies all: massive scale, high-throughput updates/streaming, and Hadoop compatibility.
-
-### Exam shortcut
-
-If you see:
-- large, frequently-updated time-series with constant streaming
-- low-latency writes/reads at TB scale
-- migrate Hadoop/HBase jobs
-
-Think: **Cloud Bigtable**
-
-**Tiny mental image:** a high-speed ticker-tape ledger built for nonstop updates at huge scale.
-
-**Final answer:** A. Cloud Bigtable'''
-
-E["test_11_q10"] = '''### Step 4: Choose the answer
-
-- Cloud Dataprep lets a newcomer visually run data quality checks and exploratory transformations on Cloud Storage data with no coding.
-- It satisfies the goal: interactive profiling and cleansing for someone just learning the platform.
-
-### Exam shortcut
-
-If you see:
-- data quality checks + exploratory analysis, beginner-friendly
-- visual, no-code profiling of files
-- data in Cloud Storage
+- explore/clean/validate Cloud Storage data, low-code
+- non-engineers preparing data
+- visual profiling and cleansing
 
 Think: **Cloud Dataprep**
 
-**Tiny mental image:** a point-and-click data inspector that needs no programming to explore the files.
+**Tiny mental image:** a click-driven workbench that lets the team tidy the raw files without code.
 
-**Final answer:** C. Cloud Dataprep'''
+**Final answer:** D. Provide the data science team access to Dataprep to prepare, validate, and explore the data within Cloud Storage.'''
+
+E["test_13_q22"] = '''### Step 4: Choose the answer
+
+- A BigQuery scheduled query runs the every-two-hours transformation, and routing run notifications to Pub/Sub with a Cloud Function emails after three consecutive failures.
+- It satisfies all: scheduled SQL with retry plus a custom failure-count alert the scheduled query alone can't express.
+
+### Exam shortcut
+
+If you see:
+- periodic BigQuery SQL transform with retry
+- email only after N consecutive failures
+- custom alerting logic on top of scheduling
+
+Think: **scheduled query → Pub/Sub notification → Cloud Function (count failures, email)**
+
+**Tiny mental image:** a timer runs the job; a small watcher counts strikes and rings the alarm on the third.
+
+**Final answer:** D. Create a BigQuery scheduled query to run the SQL transformation with schedule options that repeats every two hours, and enable notification to Pub/Sub topic. Use Pub/Sub and Cloud Functions to send an email after three failed executions.'''
+
+E["test_13_q27"] = '''### Step 4: Choose the answer
+
+- Migrating the Parquet data into BigQuery and refactoring the Spark jobs to read/write BigQuery on Dataproc Serverless gives managed services with the data already in BigQuery.
+- It satisfies the goal: data lands in BigQuery for future pipelines, serverless Spark, and minimal ETL/overhead changes.
+
+### Exam shortcut
+
+If you see:
+- migrate Spark + Parquet, want data *in BigQuery* for future use
+- managed/serverless, minimal code and overhead
+- BigQuery-centric target
+
+Think: **data → BigQuery, Spark on Dataproc Serverless reading/writing BigQuery**
+
+**Tiny mental image:** move the goods straight into the warehouse and let the serverless crew work them in place.
+
+**Final answer:** C. Migrate your data to BigQuery. Refactor Spark pipelines to write and read data on BigQuery, and run them on Dataproc Serverless.'''
+
+E["test_13_q33"] = '''### Step 4: Choose the answer
+
+- A session window with a 15-minute gap keeps aggregating a sensor's readings until 15 minutes of silence, then closes - matching the "close after 15 min of no data" rule.
+- It satisfies the goal: activity-bounded windows that span however long data keeps arriving.
+
+### Exam shortcut
+
+If you see:
+- window should close after N minutes of *no data*
+- per-sensor activity bursts of variable length
+- gap-based closing
+
+Think: **session window (gap = inactivity timeout)**
+
+**Tiny mental image:** keep recording while the sensor chatters; stop once it's quiet for 15 minutes.
+
+**Final answer:** A. Use session windows with a 15-minute gap duration.'''
+
+E["test_13_q35"] = '''### Step 4: Choose the answer
+
+- Draining the old pipeline finishes in-flight windows before the new version starts, avoiding data loss and keeping latency within bounds.
+- It satisfies the goal: a clean handoff with no dropped data and no large processing gap.
+
+### Exam shortcut
+
+If you see:
+- deploy a new streaming pipeline version, no data loss
+- bounded latency increase
+- graceful cutover
+
+Think: **Drain old, then start new**
+
+**Tiny mental image:** let the current batch finish flowing out before switching to the new line.
+
+**Final answer:** C. Drain the old pipeline, then start the new pipeline.'''
+
+E["test_13_q40"] = '''### Step 4: Choose the answer
+
+- Copying the ORC files to Cloud Storage and exposing them as external BigQuery tables lets the team run SQL on the Hive-partitioned data cheaply, with no cluster to keep running.
+- It satisfies the goal: familiar SQL exploration of the existing ORC data at minimal storage/compute cost.
+
+### Exam shortcut
+
+If you see:
+- query existing ORC/Hive data with SQL, cost-effective
+- no persistent cluster, no data reload into native tables
+- explore in place
+
+Think: **ORC in Cloud Storage + BigQuery external tables**
+
+**Tiny mental image:** put a SQL window over the existing files instead of rebuilding a warehouse or running a cluster all day.
+
+**Final answer:** D. Copy the ORC files on Cloud Storage, then create external BigQuery tables for the data scientist team.'''
+
+E["test_13_q41"] = '''### Step 4: Choose the answer
+
+- Specifying a worker region with --region lets Dataflow place workers across zones in that region, surviving individual zonal failures at submission.
+- It satisfies the goal: regional resilience instead of pinning the job to one zone.
+
+### Exam shortcut
+
+If you see:
+- protect a Dataflow job from zonal failure
+- regional vs single-zone placement
+- --region vs --zone
+
+Think: **--region (regional worker placement)**
+
+**Tiny mental image:** let the crew set up anywhere in the region, not in one building that might go dark.
+
+**Final answer:** C. Specify a worker region by using the --region flag.'''
+
+E["test_13_q43"] = '''### Step 4: Choose the answer
+
+- Wrapping the DoFn logic in exception handling and routing failed records through a side output to a new Pub/Sub topic captures business-logic failures for alerting.
+- It satisfies the goal: custom-logic failures (not delivery failures) are redirected and monitorable on the alert topic.
+
+### Exam shortcut
+
+If you see:
+- route messages that fail *custom business logic* in a DoFn
+- send them to an alert/Pub/Sub topic
+- distinguish from Pub/Sub dead-lettering (delivery failures)
+
+Think: **DoFn try/catch → side output → new Pub/Sub topic**
+
+**Tiny mental image:** the inspector sets aside parts that fail the custom test onto a separate alert chute.
+
+**Final answer:** B. Use an exception handling block in your Dataflows DoFn code to push the messages that failed to be transformed through a side output and to a new Pub/Sub topic. Use Cloud Monitoring to monitor the topic/num_unacked_messages_by_region metric on this new topic.'''
+
+E["test_13_q45"] = '''### Step 4: Choose the answer
+
+- Defining watermarks to model expected arrival time, and allowing late data, lets the pipeline assign stragglers to their correct hopping windows.
+- It satisfies the goal: late records are recognized as late and folded into the right window's aggregation.
+
+### Exam shortcut
+
+If you see:
+- late data not recognized, wrong aggregations
+- hopping/sliding windows
+- need correct handling of stragglers
+
+Think: **watermarks + allowed lateness**
+
+**Tiny mental image:** a "most mail is in" marker that still accepts and correctly files late letters.
+
+**Final answer:** A. Use watermarks to define the expected data arrival window. Allow late data as it arrives.'''
+
+E["test_13_q47"] = '''### Step 4: Choose the answer
+
+- The BigQuery Storage Write API provides exactly-once streaming semantics at high throughput, and a regional target table keeps the high-rate writes consistent.
+- It satisfies both: exactly-once delivery and ~1.5 GB/s ingestion that the older streaming API can't match.
+
+### Exam shortcut
+
+If you see:
+- exactly-once streaming into BigQuery at high throughput
+- source lacks exactly-once
+- modern write path
+
+Think: **BigQuery Storage Write API (regional table)**
+
+**Tiny mental image:** the new high-speed loading dock that guarantees each crate is logged exactly once.
+
+**Final answer:** A. Use the BigQuery Storage Write API and ensure that your target BigQuery table is regional.'''
+
+E["test_13_q51"] = '''### Step 4: Choose the answer
+
+- Moving the data to Cloud Storage and running the existing Spark jobs on Dataproc is a managed lift-and-shift with minimal code changes on a tight timeline.
+- It satisfies the goal: managed execution, no persistent cluster to own, and the Spark code largely unchanged.
+
+### Exam shortcut
+
+If you see:
+- migrate Spark jobs fast, minimal code changes
+- managed service, no long-lived Hadoop cluster
+- lift-and-shift
+
+Think: **data → Cloud Storage, run on Dataproc**
+
+**Tiny mental image:** move into the managed workshop and run the same machines you already know.
+
+**Final answer:** D. Move your data to Cloud Storage. Run your jobs on Dataproc.'''
+
+E["test_13_q54"] = '''### Step 4: Choose the answer
+
+- Cloud Data Fusion with the Wrangler tool normalizes the inconsistent fields visually and runs as a recurring job, with no coding.
+- It satisfies the goal: a quick, no-code, scheduled data-normalization pipeline.
+
+### Exam shortcut
+
+If you see:
+- normalize/standardize messy fields, no coding, recurring
+- visual data wrangling
+- quick scheduled cleanup
+
+Think: **Cloud Data Fusion + Wrangler (scheduled)**
+
+**Tiny mental image:** a point-and-click cleanup wizard that reruns itself each week.
+
+**Final answer:** A. Use Cloud Data Fusion and Wrangler to normalize the data, and set up a recurring job.'''
+
+E["test_13_q55"] = '''### Step 4: Choose the answer
+
+- Exponential backoff as the retry policy spaces out retries during consumer downtime, and dead-lettering to a different topic after 10 attempts stores the unprocessed messages.
+- It satisfies all: reliability during outages, gradual retries, and capture of poison messages after the retry limit.
+
+### Exam shortcut
+
+If you see:
+- retry failed Pub/Sub messages gradually
+- store undeliverable messages after N attempts
+- dead-letter to a separate topic
+
+Think: **exponential backoff + dead-letter topic (max delivery attempts)**
+
+**Tiny mental image:** retry with longer pauses each time, then drop the stubborn parcel into the separate "undeliverable" bin.
+
+**Final answer:** D. Use exponential backoff as the subscription retry policy, and configure dead lettering to a different topic with maximum delivery attempts set to 10.'''
 
 append_entries(E)
