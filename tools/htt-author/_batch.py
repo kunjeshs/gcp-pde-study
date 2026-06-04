@@ -2,207 +2,315 @@ from lib import append_entries
 
 E = {}
 
-E["test_13_q4"] = '''### Step 4: Choose the answer
+E["test_2_q16"] = '''### Step 4: Choose the answer
 
-- BigQuery Omni connects to the S3 data, and BigLake tables over both Cloud Storage and S3 let users query through BigQuery without any direct bucket access.
-- It satisfies both: cross-cloud querying and fine-grained access control that hides the underlying storage.
-
-### Exam shortcut
-
-If you see:
-- query data across clouds (GCS + S3) via BigQuery
-- users must NOT get direct bucket access
-- BigQuery Omni + BigLake (governed access)
-
-Think: **BigQuery Omni + BigLake tables**
-
-**Tiny mental image:** a governed SQL window over both clouds' buckets - no one reaches the files directly.
-
-**Final answer:** A. Setup a BigQuery Omni connection to the AWS S3 bucket data. Create BigLake tables over the Cloud Storage and S3 data and query the data using BigQuery directly.'''
-
-E["test_13_q30"] = '''### Step 4: Choose the answer
-
-- Per-department projects with Dataplex mapping each department to a data lake (Cloud Storage buckets) and zones (BigQuery datasets), each department owning and sharing its data, implements a true data mesh.
-- It satisfies the goal: decentralized, domain-owned data with unified governance and sharing.
+- Predicting a numeric quantity (how many products will sell) is a regression problem.
+- It satisfies the question: continuous numeric output = regression, not classification.
 
 ### Exam shortcut
 
 If you see:
-- data mesh across departments/domains, structure GCS + BigQuery
-- decentralized ownership with central governance
-- map lakes/zones to data
+- predict a number/quantity/amount
+- continuous output
+- regression vs classification
 
-Think: **Dataplex data mesh (lakes + zones, domain-owned)**
+Think: **Regression (numeric prediction)**
 
-**Tiny mental image:** each department owns its own lake, all governed through one Dataplex map.
+**Tiny mental image:** forecasting a count on a dial, not sorting into yes/no buckets.
 
-**Final answer:** D. 1. Create multiple projects for storage of the data for each of your departments applications. 2. Enable each department to create Cloud Storage buckets and BigQuery datasets. 3. In Dataplex, map each department to a data lake and the Cloud Storage buckets, and map the BigQuery datasets to zones. 4. Enable each department to own and share the data of their data lakes.'''
+**Final answer:** A. Regression'''
 
-E["test_13_q48"] = '''### Step 4: Choose the answer
+E["test_2_q36"] = '''### Step 4: Choose the answer
 
-- Upgrading the Hive external table to a BigLake table and enabling metadata caching speeds queries over the many partitioned Cloud Storage files.
-- It satisfies the goal: faster queries via cached metadata and BigLake's optimized access, no data movement.
-
-### Exam shortcut
-
-If you see:
-- slow queries over many partitioned files in Cloud Storage / external Hive table
-- speed up without migrating the data
-- BigLake + metadata caching
-
-Think: **BigLake table + metadata caching**
-
-**Tiny mental image:** cache the file index so the query stops re-listing thousands of files each time.
-
-**Final answer:** C. Upgrade the external table to a BigLake table. Enable metadata caching for the table.'''
-
-E["test_13_q50"] = '''### Step 4: Choose the answer
-
-- Exporting to a Cloud Storage Archive-class bucket with a locked retention policy stores the backup cheaply and immutably for 3 years, with an external table for occasional SQL access.
-- It satisfies all: lowest-cost cold storage, immutable/locked retention, and infrequent SQL querying.
+- kubectl scale deployment with --replicas 4 sets the deployment to the desired four replicas.
+- It satisfies the goal: declare the target replica count, not the delta.
 
 ### Exam shortcut
 
 If you see:
-- cheap, immutable backup for N years, infrequent SQL access
-- Archive storage class + locked retention policy
-- external table for occasional queries
+- scale a Kubernetes deployment to N replicas
+- --replicas sets the desired total
+- kubectl scale
 
-Think: **export to Archive bucket + locked retention + external table**
+Think: **kubectl scale deployment --replicas 4**
 
-**Tiny mental image:** seal the old data in a cheap time-locked vault, with a SQL window for the rare peek.
+**Tiny mental image:** tell Kubernetes "I want four," and it makes it so.
 
-**Final answer:** D. 1. Perform a BigQuery export to a Cloud Storage bucket with archive storage class. 2. Set a locked retention policy on the bucket. 3. Create a BigQuery external table on the exported files.'''
+**Final answer:** A. kubectl scale deployment command with the --replicas 4 parameter.'''
 
-E["test_13_q53"] = '''### Step 4: Choose the answer
+E["test_2_q44"] = '''### Step 4: Choose the answer
 
-- Dataplex provides managed data management, discovery, lineage tracking, and quality validation across the scattered storage services, quickly and cost-effectively.
-- It satisfies all four needs in one managed governance product, no custom build.
-
-### Exam shortcut
-
-If you see:
-- data discovery + management + lineage + quality across many sources
-- cost-optimized, quick to implement
-- unified governance
-
-Think: **Dataplex**
-
-**Tiny mental image:** one governance fabric draped over all the scattered data, tracking and validating it.
-
-**Final answer:** D. Use Dataplex to manage data, track data lineage, and perform data quality validation.'''
-
-E["test_14_q2"] = '''### Step 4: Choose the answer
-
-- Granting dataplex.dataOwner to engineers on the whole lake and dataplex.dataReader to analysts on the curated zone uses Dataplex's own roles to scope access correctly.
-- It satisfies both: engineers get full lake access, analysts read only the curated zone.
+- The F-score (F1) combines precision and recall into a single metric, ideal for ranking the fraud-classification models.
+- It satisfies the goal: one number balancing precision and recall (RMSE/MSE are regression metrics).
 
 ### Exam shortcut
 
 If you see:
-- Dataplex data-mesh permissions, full vs curated access
-- use dataplex.dataOwner / dataReader (not raw BigQuery/GCS roles)
-- scope to lake vs zone
+- balance precision and recall in one metric
+- classification, imbalanced (fraud)
+- F-score / F1
 
-Think: **dataplex.dataOwner (lake) for engineers, dataplex.dataReader (curated zone) for analysts**
+Think: **F-score (harmonic mean of precision and recall)**
 
-**Tiny mental image:** owners hold the whole lake; readers get a window into just the polished zone.
+**Tiny mental image:** one dial that blends precision and recall into a single score.
 
-**Final answer:** A. 1. Grant the dataplex.dataOwner role to the data engineer group on the customer data lake. 2. Grant the dataplex.dataReader role to the analytic user group on the customer curated zone.'''
+**Final answer:** A. F-score'''
 
-E["test_14_q37"] = '''### Step 4: Choose the answer
+E["test_2_q52"] = '''### Step 4: Choose the answer
 
-- Autoclass automatically moves objects between storage classes based on access, with no retrieval charges and instant availability, matching the unpredictable access and cost goals.
-- It satisfies all: automatic cost optimization, no retrieval fees, instant access, and freedom to delete anytime.
-
-### Exam shortcut
-
-If you see:
-- unknown/random access pattern, no retrieval charges, instant availability
-- automatic, transparent storage-class optimization
-- avoid manual lifecycle tuning
-
-Think: **Cloud Storage Autoclass**
-
-**Tiny mental image:** a self-tiering bucket that moves data to the cheapest class automatically, with no surprise retrieval bills.
-
-**Final answer:** A. Create the bucket with the Autoclass storage class feature.'''
-
-E["test_14_q45"] = '''### Step 4: Choose the answer
-
-- Autoclass transparently tiers each object based on its actual access, minimizing cost for random, write-once access without any user-visible retrieval penalty.
-- It satisfies the goal: automatic, invisible cost optimization for unpredictable access patterns.
+- Dialogflow builds the conversational chatbot that understands customer questions and routes them to the right support team.
+- It satisfies the goal: a managed natural-language conversational agent.
 
 ### Exam shortcut
 
 If you see:
-- write-once objects, random/unknown access
-- minimize cost transparently, no retrieval surprises
-- automatic tiering
+- build a chatbot / conversational agent / intent routing
+- understand and respond to user questions
+- Dialogflow
 
-Think: **Cloud Storage Autoclass**
+Think: **Dialogflow**
 
-**Tiny mental image:** the bucket quietly shelves each object at the right cost tier based on how it's actually used.
+**Tiny mental image:** a smart virtual receptionist that understands the question and directs the caller.
 
-**Final answer:** A. Create a Cloud Storage bucket with Autoclass enabled.'''
+**Final answer:** D. Dialogflow'''
 
-E["test_15_q27"] = '''### Step 4: Choose the answer
+E["test_2_q53"] = '''### Step 4: Choose the answer
 
-- Clustering the ingest-date-partitioned table on the package-tracking ID co-locates each package's records, speeding the geospatial lifecycle queries.
-- It satisfies the goal: better performance via clustering on the queried entity, no re-partitioning.
-
-### Exam shortcut
-
-If you see:
-- partitioned table slowing over time, queries by a high-cardinality ID
-- improve performance with clustering
-- cluster on the queried entity
-
-Think: **cluster on the package-tracking ID**
-
-**Tiny mental image:** group each package's events so its lifecycle query reads one tight block.
-
-**Final answer:** B. Implement clustering in BigQuery on the package-tracking ID column.'''
-
-E["test_14_q35"] = '''### Step 4: Choose the answer
-
-- Creating one Dataplex lake per domain, a zone per team, and letting each domain manage its own lake decentralizes ownership and removes the central-team bottleneck.
-- It satisfies the data-mesh goal: domain-owned data with federated governance, no central choke point.
+- Feature crosses add representational capacity, helping an underfitting model with few features learn more complex patterns.
+- It satisfies the goal: increase model expressiveness to fix underfitting (more features/interactions).
 
 ### Exam shortcut
 
 If you see:
-- data mesh, central platform team is the bottleneck
-- domains should own their data
-- Dataplex lake-per-domain, zone-per-team, domain-managed
+- model underfitting, too few features
+- need more representational power
+- feature crosses / add features
 
-Think: **lake per domain, zone per team, domains self-manage**
+Think: **feature crosses (add capacity)**
 
-**Tiny mental image:** give each business domain the keys to its own lake instead of routing everything through HQ.
+**Tiny mental image:** combine features into new ones so the model has richer signal to learn from.
 
-**Final answer:** C. 1. Create one lake for each domain. Inside each lake, create one zone for each team. 2. Attach each of the BigQuery datasets created by the individual teams as assets to the respective zone. 3. Direct each domain to manage their own lakes data assets.'''
+**Final answer:** B. Use feature crosses'''
 
-E["test_13_q42"] = '''### Step 4: Choose the answer
+E["test_2_q54"] = '''### Step 4: Choose the answer
 
-- A hopping (sliding) window in Dataflow continuously recomputes demand over a moving interval, and writing aggregates to Memorystore gives the real-time dashboard low-latency reads.
-- It satisfies both: up-to-date rolling demand and fast serving for live driver redirection.
+- Nearline is the low-cost Cloud Storage class for files accessed about once a month, with reliable, highly available storage.
+- It satisfies the goal: minimal cost for monthly-access training data while staying durable and available.
 
 ### Exam shortcut
 
 If you see:
-- real-time rolling/moving aggregation (demand, hotspots)
-- low-latency serving for a live dashboard
-- hopping/sliding window + Memorystore
+- large dataset accessed ~monthly, minimize cost
+- still reliable/highly available
+- map access frequency to class
 
-Think: **Dataflow hopping window → Memorystore (real-time serving)**
+Think: **Nearline** (monthly access)
 
-**Tiny mental image:** a sliding view of recent demand pushed to a lightning-fast cache the dashboard reads.
+**Tiny mental image:** the shelf you reach for once a month - cheaper than the daily counter.
 
-**Final answer:** B. Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore.'''
+**Final answer:** B. Cloud Storage Nearline storage'''
 
-E["test_1_q3"] = '''### Step 4: Choose the answer
+E["test_3_q20"] = '''### Step 4: Choose the answer
 
-- The Cloud Natural Language API's Entity Analysis extracts subjects/topics from blog posts as labels, with no ML expertise or training needed, shipping fast.
+- Training an AutoML Vision model on labeled package images and wrapping it in an API detects damage and flags items for human review in real time.
+- It satisfies the goal: a custom image classifier (the generic Vision API can't recognize "damaged") served via API.
+
+### Exam shortcut
+
+If you see:
+- custom image recognition (damage/defects) the prebuilt API can't do
+- real-time flagging, integrate via API
+- AutoML Vision on your labeled images
+
+Think: **AutoML Vision model + API**
+
+**Tiny mental image:** train a custom "is this package damaged?" eye and expose it as a service.
+
+**Final answer:** B. Train an AutoML model on a corpus of images and build an API around it to integrate with package tracking applications'''
+
+E["test_3_q33"] = '''### Step 4: Choose the answer
+
+- Running the existing Spark ML models on Dataproc, reading directly from BigQuery via the connector, migrates the retraining pipelines with minimal change.
+- It satisfies the goal: reuse Spark ML code on managed Dataproc against the BigQuery data.
+
+### Exam shortcut
+
+If you see:
+- migrate existing Spark ML training to GCP, data in BigQuery
+- reuse Spark code (don't rewrite in TensorFlow)
+- Dataproc + BigQuery connector
+
+Think: **Dataproc Spark ML reading from BigQuery**
+
+**Tiny mental image:** run the same Spark models on managed Dataproc, pulling straight from the warehouse.
+
+**Final answer:** C. Use Dataproc for training existing Spark ML models but read data directly from BigQuery'''
+
+E["test_3_q42"] = '''### Step 4: Choose the answer
+
+- A GPU accelerator speeds the TensorFlow training cost-effectively and supports the custom ops that must run partially on CPU, which TPUs don't accommodate.
+- It satisfies both: faster training and compatibility with custom/partial-CPU TensorFlow operations.
+
+### Exam shortcut
+
+If you see:
+- speed up TensorFlow training, custom ops (partial CPU)
+- TPU can't run arbitrary custom ops
+- GPU vs TPU choice
+
+Think: **GPU accelerator (custom ops → not TPU)**
+
+**Tiny mental image:** a GPU turbo that still runs your hand-written operations; a TPU would choke on them.
+
+**Final answer:** C. Use a VM with a GPU hardware accelerator to train the model.'''
+
+E["test_3_q52"] = '''### Step 4: Choose the answer
+
+- One-hot encoding the city values into binary columns with SQL prepares the categorical predictor in the column form BigQuery ML needs.
+- It satisfies the goal: efficient, in-warehouse encoding of city names for training and serving.
+
+### Exam shortcut
+
+If you see:
+- categorical string feature (city) for BigQuery ML
+- represent as columns for training/serving
+- one-hot encoding
+
+Think: **one-hot encode the categorical column in SQL**
+
+**Tiny mental image:** turn each city into its own yes/no column the model can read.
+
+**Final answer:** B. Use SQL in BigQuery to apply one-hot encoding to the state column and convert each city to a binary value column'''
+
+E["test_4_q11"] = '''### Step 4: Choose the answer
+
+- Denormalizing the data and appending hourly status updates (instead of in-place UPDATEs) maximizes BigQuery query performance and usability for the data science team.
+- It satisfies both: fewer joins via denormalization and efficient append-only ingestion at PB scale.
+
+### Exam shortcut
+
+If you see:
+- huge structured dataset into BigQuery for ML, maximize performance
+- denormalize + append (no UPDATEs)
+- avoid join-heavy normalized schema
+
+Think: **denormalize + append-only status updates**
+
+**Tiny mental image:** one wide table you keep adding rows to, not a web of tables you keep editing.
+
+**Final answer:** A. Denormalize the data as much as possible.'''
+
+E["test_4_q16"] = '''### Step 4: Choose the answer
+
+- Dialogflow Enterprise Edition interprets the voice commands from in-home assistants and drives the order into the backend systems.
+- It satisfies the goal: a conversational agent that understands intent and integrates with fulfillment.
+
+### Exam shortcut
+
+If you see:
+- interpret voice commands / conversational ordering
+- integrate with assistants (Google Home), call backends
+- intent + fulfillment
+
+Think: **Dialogflow (Enterprise)**
+
+**Tiny mental image:** a voice-order taker that understands the request and rings it up in the backend.
+
+**Final answer:** C. Implement Dialogflow Enterprise Edition'''
+
+E["test_4_q17"] = '''### Step 4: Choose the answer
+
+- Applying regularization techniques like dropout or batch normalization improves generalization and addresses the train/test error gap.
+- It satisfies the goal: reduce overfitting so the model performs consistently.
+
+### Exam shortcut
+
+If you see:
+- large train/test error discrepancy
+- improve generalization
+- dropout / batch normalization / regularization
+
+Think: **regularization (dropout, batch norm)**
+
+**Tiny mental image:** add discipline during training so the model generalizes instead of memorizing.
+
+**Final answer:** C. Use regularization techniques like dropout or batch normalization to prevent overfitting'''
+
+E["test_4_q48"] = '''### Step 4: Choose the answer
+
+- Cloud GPUs accelerate training while supporting the model once you implement GPU kernel support for the custom C++ ops, which TPUs can't easily run.
+- It satisfies both: faster, lower-cost training and compatibility with custom operations.
+
+### Exam shortcut
+
+If you see:
+- custom TensorFlow C++ ops, want acceleration
+- TPUs can't run arbitrary custom ops
+- GPU (with custom kernel support)
+
+Think: **Cloud GPUs (after GPU kernel support for custom ops)**
+
+**Tiny mental image:** a GPU you can teach your custom operations to run on; a TPU won't take them.
+
+**Final answer:** C. Use Cloud GPUs after implementing GPU kernel support for your custom ops.'''
+
+E["test_4_q49"] = '''### Step 4: Choose the answer
+
+- Cloud Vision AutoML trained on the existing labeled dataset (≈1000 images per component) produces a custom image classifier for the PoC within days.
+- It satisfies both: custom recognition of 750 components and a fast, low-code build.
+
+### Exam shortcut
+
+If you see:
+- custom image classification with a labeled dataset, fast PoC
+- prebuilt Vision API can't recognize your specific items
+- AutoML Vision on the existing data
+
+Think: **Cloud Vision AutoML (existing dataset)**
+
+**Tiny mental image:** feed your labeled component photos into AutoML and get a custom recognizer in days.
+
+**Final answer:** A. Use Cloud Vision AutoML with the existing dataset.'''
+
+E["test_5_q9"] = '''### Step 4: Choose the answer
+
+- Overfitting is reduced by getting more training examples, using a smaller feature set, and increasing the regularization parameters.
+- It satisfies the question: all three push the model toward generalization.
+
+### Exam shortcut
+
+If you see:
+- "ways to reduce overfitting"
+- more data, fewer features, stronger regularization
+- (less data or weaker regularization makes it worse)
+
+Think: **more data + fewer features + more regularization**
+
+**Tiny mental image:** more examples, a simpler model, and a firmer hand to stop memorizing noise.
+
+**Final answer:** A. Get more training examples'''
+
+E["test_5_q15"] = '''### Step 4: Choose the answer
+
+- Denormalizing the data and appending hourly status updates (instead of in-place UPDATEs) maximizes BigQuery performance and usability for the data science team.
+- It satisfies both: fewer joins via denormalization and efficient append-only ingestion at PB scale.
+
+### Exam shortcut
+
+If you see:
+- huge structured dataset into BigQuery for ML, maximize performance
+- denormalize + append (no UPDATEs)
+- avoid join-heavy normalized schema
+
+Think: **denormalize + append-only status updates**
+
+**Tiny mental image:** one wide table you keep adding rows to, not a web of tables you keep editing.
+
+**Final answer:** A. Denormalize the data as must as possible.'''
+
+E["test_5_q26"] = '''### Step 4: Choose the answer
+
+- The Cloud Natural Language API's Entity Analysis extracts topics from blog posts as labels with no ML expertise or training, shipping fast.
 - It satisfies the constraints: a prebuilt API delivering topic labels quickly without building a model.
 
 ### Exam shortcut
@@ -214,152 +322,44 @@ If you see:
 
 Think: **Cloud Natural Language API (Entity Analysis)**
 
-**Tiny mental image:** call a ready-made text-understanding service and use the entities it returns as tags.
+**Tiny mental image:** call a ready-made text service and use the entities it returns as tags.
 
-**Final answer:** A. Utilize the Cloud Natural Language API in the application and process the generated Entity Analysis as labels'''
+**Final answer:** A. Call the Cloud Natural Language API from your application. Process the generated Entity Analysis as labels.'''
 
-E["test_1_q6"] = '''### Step 4: Choose the answer
+E["test_5_q29"] = '''### Step 4: Choose the answer
 
-- Overfitting is reduced by adding more training examples, using fewer features, and increasing regularization strength.
-- It satisfies the question: these three all push the model toward generalization.
-
-### Exam shortcut
-
-If you see:
-- "ways to reduce overfitting"
-- more data, fewer features, stronger regularization
-- (decreasing data or regularization makes it worse)
-
-Think: **more training data + fewer features + more regularization**
-
-**Tiny mental image:** more examples, a simpler model, and a firmer hand to stop memorizing noise.
-
-**Final answer:** A. Increase the number of training examples'''
-
-E["test_1_q32"] = '''### Step 4: Choose the answer
-
-- A quarantine bucket whose upload event triggers a Cloud Function calling the DLP API detects PII immediately and moves flagged files to the Classified Data bucket.
-- It satisfies the goal: event-driven, immediate PII detection using a managed service (no custom model).
+- In Wide & Deep, the wide (linear) part handles memorization and the deep (neural) part handles generalization, making it a strong fit for recommender systems.
+- It satisfies the question: wide = memorize, deep = generalize, great for recommendations.
 
 ### Exam shortcut
 
 If you see:
-- detect PII on upload and act immediately
-- event-driven (Cloud Function on object create), not hourly batch
-- use DLP infotypes, not a custom ML model
+- Wide & Deep model facts
+- wide = memorization, deep = generalization
+- good for recommender systems
 
-Think: **quarantine bucket → Cloud Function → DLP API → move on detection**
+Think: **wide memorizes, deep generalizes (recommenders)**
 
-**Tiny mental image:** every new file trips a scanner that checks for PII the instant it lands.
+**Tiny mental image:** the wide side remembers specific combos; the deep side spots new patterns.
 
-**Final answer:** C. Create a quarantine bucket for uploading, once a file is uploaded trigger a Cloud Function to call the Data Loss Prevention API to apply infotypes to detect PII. If PII is detected, move file to the Classified Data bucket.'''
+**Final answer:** A. The wide model is used for memorization, while the deep model is used for generalization.'''
 
-E["test_1_q36"] = '''### Step 4: Choose the answer
+E["test_5_q34"] = '''### Step 4: Choose the answer
 
-- L1 (Lasso) regularization drives the weights of the least important features toward zero, effectively performing feature selection.
-- It satisfies the goal: zero out unimportant features, which L2 (Ridge) only shrinks, not zeroes.
-
-### Exam shortcut
-
-If you see:
-- push least-important feature weights to exactly zero
-- automatic feature selection / sparsity
-- L1/Lasso vs L2/Ridge
-
-Think: **L1 (Lasso) regularization**
-
-**Tiny mental image:** L1 prunes useless features down to zero; L2 just trims them a bit.
-
-**Final answer:** A. L1 or Lasso Regression'''
-
-E["test_10_q52"] = '''### Step 4: Choose the answer
-
-- Adding more training instances gives the model more signal to learn from, raising both precision and recall.
-- It satisfies the goal: improve generalization and predictive quality with more data (regularization/dropout fight overfitting, not low scores from too little data).
+- Dialogflow Enterprise Edition interprets the customer voice commands and drives orders into the backend systems.
+- It satisfies the goal: a conversational agent that understands intent and integrates with fulfillment.
 
 ### Exam shortcut
 
 If you see:
-- low precision AND recall (underperforming model)
-- more data improves learning
-- regularization/dropout address overfitting, not underfitting
+- interpret voice commands / conversational ordering
+- integrate with assistants, call backends
+- intent + fulfillment
 
-Think: **use more training instances**
+Think: **Dialogflow (Enterprise)**
 
-**Tiny mental image:** show the model more examples so it actually learns the pattern.
+**Tiny mental image:** a voice-order taker that understands the request and rings it up.
 
-**Final answer:** C. Use more training instances'''
-
-E["test_1_q45"] = '''### Step 4: Choose the answer
-
-- Vertex AI custom training is the managed service that lets the team bring and tune their own models, including manual hyperparameter tuning.
-- It satisfies both: managed infrastructure plus full control to customize and tune.
-
-### Exam shortcut
-
-If you see:
-- managed ML but full model customization + manual hyperparameter tuning
-- bring your own training code
-- not AutoML (hands-off) / BigQuery ML (SQL only)
-
-Think: **Vertex AI custom training**
-
-**Tiny mental image:** Google runs the gym, but you write the workout and tune every dial.
-
-**Final answer:** A. Vertex AI custom training'''
-
-E["test_2_q2"] = '''### Step 4: Choose the answer
-
-- L2 regularization penalizes large weights during training, reducing overfitting so the model generalizes better in production.
-- It satisfies the goal: a training-time technique that curbs overfitting (gradient descent/backprop are just training mechanics).
-
-### Exam shortcut
-
-If you see:
-- model overfits (great in validation, poor in production)
-- training-time technique to reduce overfitting
-- regularization
-
-Think: **L2 regularization**
-
-**Tiny mental image:** a penalty that discourages the model from over-trusting any single weight.
-
-**Final answer:** A. L2 Regularization'''
-
-E["test_2_q9"] = '''### Step 4: Choose the answer
-
-- Kubeflow runs ML workflows natively on Kubernetes, letting the team reuse their existing Kubernetes expertise.
-- It satisfies the goal: ML pipelines on Kubernetes, leveraging their container skills.
-
-### Exam shortcut
-
-If you see:
-- ML pipelines/workflows on Kubernetes
-- reuse existing Kubernetes/GKE expertise
-- portable ML orchestration
-
-Think: **Kubeflow**
-
-**Tiny mental image:** ML pipelines that live right inside the Kubernetes the team already runs.
-
-**Final answer:** C. Kubeflow'''
-
-E["test_2_q14"] = '''### Step 4: Choose the answer
-
-- BigQuery ML lets SQL-proficient analysts build and train models directly on the relational data using SQL, with no Python/Java needed.
-- It satisfies both: ML on ~1 TB of relational data and an SQL-only workflow.
-
-### Exam shortcut
-
-If you see:
-- analysts know SQL but not Python/Java
-- build ML models on relational/warehouse data
-- ML inside the database
-
-Think: **BigQuery ML**
-
-**Tiny mental image:** train models with the SQL the analysts already speak, right where the data lives.
-
-**Final answer:** C. BigQuery ML'''
+**Final answer:** C. Dialogflow Enterprise Edition'''
 
 append_entries(E)
