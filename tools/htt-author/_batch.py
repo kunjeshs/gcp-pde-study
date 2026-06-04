@@ -2,207 +2,27 @@ from lib import append_entries
 
 E = {}
 
-E["test_2_q55"] = '''### Step 4: Choose the answer
+E["test_14_q19"] = '''### Step 4: Choose the answer
 
-- Nearline is the lowest-cost Cloud Storage class for data accessed roughly once a month, matching the ~30-day access pattern.
-- It satisfies the goal: minimal storage cost for monthly-access archival data, without Coldline/Archive retrieval penalties.
-
-### Exam shortcut
-
-If you see:
-- accessed about once a month (~30 days)
-- minimize storage cost
-- map access frequency to a storage class
-
-Think: **Nearline** (monthly), vs Coldline (quarterly), Archive (yearly)
-
-**Tiny mental image:** the shelf you reach for once a month - not the daily counter, not the deep-freeze.
-
-**Final answer:** A. Nearline Storage'''
-
-E["test_3_q4"] = '''### Step 4: Choose the answer
-
-- Transfer Service for on-premises data uses local agents that work without public-internet inbound access, landing daily files in Cloud Storage for BigQuery.
-- It satisfies both: recurring large transfers from a network-isolated source, then query via BigQuery.
+- Transfer Service for on-premises data uses local agents that move the daily JSON files into Cloud Storage without public-internet access, then BigQuery queries them.
+- It satisfies both: recurring transfer from a network-isolated source plus exploration in BigQuery.
 
 ### Exam shortcut
 
 If you see:
-- recurring on-prem transfer, source not reachable from public internet
+- recurring on-prem transfer, source not on public internet
 - agent-based, scheduled, into Cloud Storage
-- then load to BigQuery
+- then explore in BigQuery
 
 Think: **Storage Transfer Service for on-premises data (agents)**
 
-**Tiny mental image:** station your own couriers inside the locked building to ship the mail out on schedule.
+**Tiny mental image:** station your own couriers inside the locked building to ship mail out on schedule.
 
-**Final answer:** C. Use Transfer Service for on-premises data to transfer the data to Cloud Storage, then import the data into BigQuery using the BigQuery Data Transfer Service.'''
+**Final answer:** C. Use Transfer Service for on-premises data to copy data from your on-premises environment to Cloud Storage. Use the BigQuery Data Transfer Service to import data into BigQuery.'''
 
-E["test_3_q5"] = '''### Step 4: Choose the answer
+E["test_16_q43"] = '''### Step 4: Choose the answer
 
-- An RDB backup copied to Cloud Storage with gsutil and imported into Memorystore is the simplest, lowest-cost, Google-recommended Redis migration.
-- It satisfies minimal cost/time/effort: a native snapshot-and-import flow with no extra infrastructure.
-
-### Exam shortcut
-
-If you see:
-- migrate Redis to Memorystore, minimal cost/time/effort
-- "Google-recommended" Redis migration
-- snapshot/backup based
-
-Think: **RDB backup → Cloud Storage → import to Memorystore**
-
-**Tiny mental image:** save the game, copy the save file over, and load it on the new console.
-
-**Final answer:** A. Backup the Redis database as an RDB file, copy the file to a Cloud Storage bucket using the gsutil utility, and import the file into the Memorystore for Redis instance'''
-
-E["test_3_q8"] = '''### Step 4: Choose the answer
-
-- Storage Transfer Service agents installed on-premises run a reliable, scheduled weekly job from the POSIX source over the available bandwidth.
-- It satisfies the goal: managed, repeatable, resumable weekly transfers - far more reliable than scripted gsutil.
-
-### Exam shortcut
-
-If you see:
-- recurring/weekly on-prem transfer over the network
-- POSIX source, moderate bandwidth
-- "reliable" / Google-recommended
-
-Think: **Storage Transfer Service for on-premises data (agents), scheduled**
-
-**Tiny mental image:** a managed delivery service with tracking and retries, not you driving the boxes each week.
-
-**Final answer:** C. Install Storage Transfer Service agents on-premises in your data center and configure a weekly transfer job.'''
-
-E["test_3_q16"] = '''### Step 4: Choose the answer
-
-- Lifting the Spark/Hive/HDFS workloads to Dataproc with Cloud Storage (modernize later) hits the tight two-month deadline while already capturing storage-decoupling savings.
-- It satisfies both constraints: fast migration on schedule plus immediate cost benefit from Cloud Storage over HDFS.
-
-### Exam shortcut
-
-If you see:
-- hard migration deadline, maximize cost savings
-- existing Hadoop/Spark/Hive
-- lift-and-shift now, modernize later
-
-Think: **Dataproc + Cloud Storage, modernize later**
-
-**Tiny mental image:** move into the new building first and remodel the rooms after you've met the deadline.
-
-**Final answer:** B. Migrate the workloads to Dataproc plus Cloud Storage; modernize later: This option suggests moving the workloads to Dataproc plus Cloud Storage without modernizing and doing so at a later time'''
-
-E["test_3_q24"] = '''### Step 4: Choose the answer
-
-- At 20 Mb/sec, 2 PB cannot move online in six months, so Transfer Appliance ships the data physically within the window.
-- It satisfies the constraint: offline bulk transfer when bandwidth, not time alone, is the bottleneck.
-
-### Exam shortcut
-
-If you see:
-- petabytes with low bandwidth / "would take too long online"
-- a hard deadline the network can't meet
-- one-time bulk migration
-
-Think: **Transfer Appliance** (offline shipping)
-
-**Tiny mental image:** when the data won't fit through the straw, FedEx the whole tank instead.
-
-**Final answer:** A. Use Transfer Appliance to copy the data to Cloud Storage'''
-
-E["test_4_q21"] = '''### Step 4: Choose the answer
-
-- Exporting to Avro and shipping it on a Transfer Appliance moves 10 TB of sensitive records securely and quickly, then loads cleanly into BigQuery.
-- It satisfies both: encrypted physical transfer (no public URLs) and a time-efficient bulk path.
-
-### Exam shortcut
-
-If you see:
-- large, sensitive bulk load into BigQuery
-- secure (reject public-URL options)
-- time-efficient at multi-TB scale
-
-Think: **Avro export + Transfer Appliance → BigQuery**
-
-**Tiny mental image:** ship the patient files in a sealed armored case, not posted on an open web link.
-
-**Final answer:** B. Export the records from the database as an Avro file, copy the file onto a Transfer Appliance, send it to Google, and then load the Avro file into BigQuery using the BigQuery web UI in the GCP Console.'''
-
-E["test_4_q34"] = '''### Step 4: Choose the answer
-
-- gsutil handles the one-off migration of the few large 90 GB files, while Pub/Sub plus Dataflow streams real-time updates from the transactional systems.
-- It satisfies both halves: simple bulk move now, plus a managed streaming pipeline for continuous updates.
-
-### Exam shortcut
-
-If you see:
-- bulk migrate a handful of very large files + ongoing real-time updates
-- streaming ingestion/transformation
-- Pub/Sub feeding the warehouse
-
-Think: **gsutil (migration) + Pub/Sub → Dataflow (real-time)**
-
-**Tiny mental image:** truck over the big crates once, then run a live conveyor belt for the daily flow.
-
-**Final answer:** C. Use gsutil for the migration; Pub/Sub and Dataflow for real-time updates'''
-
-E["test_4_q44"] = '''### Step 4: Choose the answer
-
-- Establishing Cloud Interconnect and then using Storage Transfer Service gives a fast, secure, high-bandwidth path to move 1 PB.
-- It satisfies the goal: minimized transfer time over a private, dedicated connection following best practice.
-
-### Exam shortcut
-
-If you see:
-- petabyte online transfer, minimize time, secure connection
-- dedicated/private high bandwidth needed
-- "Google-recommended secure connection"
-
-Think: **Cloud Interconnect + Storage Transfer Service**
-
-**Tiny mental image:** lay a private high-speed pipeline instead of trickling it through the public garden hose.
-
-**Final answer:** A. Use the Storage Transfer Service after establishing a Cloud Interconnect connection between the on-premises data center and Google Cloud'''
-
-E["test_5_q22"] = '''### Step 4: Choose the answer
-
-- Exporting to Avro and shipping it on a Transfer Appliance moves the 10 TB of sensitive records securely and efficiently, then loads into BigQuery.
-- It satisfies both: encrypted physical transfer (no public URLs) and a time-efficient bulk path.
-
-### Exam shortcut
-
-If you see:
-- large, sensitive bulk load into BigQuery
-- secure (reject public-URL options)
-- time-efficient at multi-TB scale
-
-Think: **Avro export + Transfer Appliance → BigQuery**
-
-**Tiny mental image:** ship the patient files in a sealed armored case, not on an open web link.
-
-**Final answer:** B. Export the records from the database as an Avro file. Copy the file onto a Transfer Appliance and send it to Google, and then load the Avro file into BigQuery using the BigQuery web UI in the GCP Console.'''
-
-E["test_6_q30"] = '''### Step 4: Choose the answer
-
-- Copying the ORC files to the master node and using the Hadoop utility to put them into HDFS (or using the Cloud Storage connector for external tables) gets Hive running on Dataproc.
-- It satisfies the goal: data replicated to local HDFS for performance, with Hive tables mounted from HDFS.
-
-### Exam shortcut
-
-If you see:
-- start Hive on Dataproc with data already in Cloud Storage
-- replicate to local HDFS for performance
-- ORC files staged in a bucket
-
-Think: **stage to master node → hadoop fs into HDFS (or use the Cloud Storage connector)**
-
-**Tiny mental image:** bring the parts into the workshop's own bench so the machine runs at full speed.
-
-**Final answer:** C. Run the gsutil utility to transfer all ORC files from the Cloud Storage bucket to the master node of the Dataproc cluster. Then run the Hadoop utility to copy them do HDFS. Mount the Hive tables from HDFS.'''
-
-E["test_7_q46"] = '''### Step 4: Choose the answer
-
-- At 20 Mb/sec, 2 PB can't move online within six months, so Transfer Appliance ships the data physically in time.
+- At 20 Mb/sec, 2 PB can't move online in six months, so Transfer Appliance ships the data physically within the window.
 - It satisfies the constraint: offline bulk transfer when bandwidth, not the deadline alone, is the bottleneck.
 
 ### Exam shortcut
@@ -218,148 +38,328 @@ Think: **Transfer Appliance** (offline shipping)
 
 **Final answer:** A. Use Transfer Appliance to copy the data to Cloud Storage'''
 
-E["test_11_q17"] = '''### Step 4: Choose the answer
+E["test_1_q48"] = '''### Step 4: Choose the answer
 
-- Dataflow's prebuilt Cloud Storage Avro to Bigtable template gives a reliable, monitorable, managed copy job with no custom code.
-- It satisfies the goal: a supported, observable pipeline for loading Avro into Bigtable.
-
-### Exam shortcut
-
-If you see:
-- load files from Cloud Storage into Bigtable
-- want reliable, monitored, no custom code
-- a Google-provided template exists
-
-Think: **Dataflow GCS-Avro-to-Bigtable template**
-
-**Tiny mental image:** use the labeled, off-the-shelf conveyor instead of hand-building one in Python.
-
-**Final answer:** C. Cloud Dataflow, starting with a Cloud Storage Avro to Bigtable template.'''
-
-E["test_11_q29"] = '''### Step 4: Choose the answer
-
-- Storage Transfer Service moving the log files into a Multi-Regional bucket gives globally distributed teams low-latency access for ANSI SQL analysis.
-- It satisfies the goal: managed transfer plus a multi-region landing zone for global analytics.
+- Running a data quality assessment on the extracted source data - value ranges, distributions, invalid/missing counts - reveals the scope of the problem before any ETL is written.
+- It satisfies the goal: understand the data's actual condition first, rather than trusting source owners or polluting the warehouse.
 
 ### Exam shortcut
 
 If you see:
-- bring backup/log files into Cloud Storage
-- globally distributed teams analyzing the data
-- managed/online transfer
+- gauge data quality "before writing ETL"
+- profile ranges, distributions, null/invalid counts
+- understand scope of bad data first
 
-Think: **Storage Transfer Service → Multi-Regional bucket**
+Think: **data quality assessment / profiling of the source**
 
-**Tiny mental image:** stock a warehouse with depots on every continent so each team is nearby.
+**Tiny mental image:** inspect and measure the lumber before you start building, not after the house leans.
 
-**Final answer:** B. Use Storage Transfer Service to transfer the offsite backup files to a Cloud Storage Multi-Regional storage bucket as a final destination'''
+**Final answer:** C. Perform a data quality assessment on the source data after it is extracted from the source system. These should include checks for ranges of values in each attribute, distribution of values in each attribute, counts of the number of invalid and missing values, and other checks on source data.'''
 
-E["test_13_q7"] = '''### Step 4: Choose the answer
+E["test_5_q39"] = '''### Step 4: Choose the answer
 
-- The 403s mean the signed URLs expired mid-run; regenerating them with a longer validity and splitting into parallel jobs lets the remaining files finish.
-- It satisfies the fix: fresh, longer-lived credentials plus parallelism to complete before they lapse again.
-
-### Exam shortcut
-
-If you see:
-- Storage Transfer Service failing partway with HTTP 403
-- source unchanged, signed URLs involved
-- long-running job that started fine
-
-Think: **signed URLs expired - regenerate with longer validity (and parallelize)**
-
-**Tiny mental image:** the gate passes timed out halfway through - reissue longer-dated passes and send several crews at once.
-
-**Final answer:** C. Create a new TSV file for the remaining files by generating signed URLs with a longer validity period. Split the TSV file into multiple smaller files and submit them as separate Storage Transfer Service jobs in parallel.'''
-
-E["test_13_q16"] = '''### Step 4: Choose the answer
-
-- A dual-region bucket with turbo replication gives RPO=15 minutes, and reading from the in-region copy keeps latency minimal; on failure, redeploy Dataproc and read the same bucket.
-- It satisfies both targets: tight RPO via turbo replication and low read latency by staying same-region.
+- Keeping the frequently-updated prices in a Cloud Storage bucket and querying them as a BigQuery external (federated) source means the latest file is read on demand with no reload cost.
+- It satisfies the goal: always-current data combined in BigQuery as cheaply as possible.
 
 ### Exam shortcut
 
 If you see:
-- survive a single-region failure with small RPO (~15 min)
-- minimal read latency for the compute
-- Cloud Storage + Dataproc
+- small, frequently-updated reference data to join in BigQuery
+- avoid repeated load jobs / minimize cost
+- keep it always current
 
-Think: **dual-region bucket + turbo replication, read in-region**
+Think: **BigQuery external (federated) table over Cloud Storage**
 
-**Tiny mental image:** keep a synced twin warehouse next door, but always shop from the one closest to the kitchen.
+**Tiny mental image:** read the live price sheet pinned to the wall instead of reprinting the whole catalog every half hour.
 
-**Final answer:** D. 1. Create a dual-region Cloud Storage bucket in the us-central1 and us-south1 regions. 2. Enable turbo replication. 3. Run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in the same region. 4. In case of a regional failure, redeploy the Dataproc clusters to the us-south1 region and read from the same bucket.'''
+**Final answer:** B. Store and update the data in a regional Google Cloud Storage bucket and create a federated data source in BigQuery'''
 
-E["test_13_q32"] = '''### Step 4: Choose the answer
+E["test_7_q45"] = '''### Step 4: Choose the answer
 
-- BigQuery time travel recovers table data from any point in the last seven days as a built-in managed feature, with the lowest RPO and no extra cost.
-- It satisfies the goal: instant point-in-time recovery from corruption without snapshots or exports to maintain.
-
-### Exam shortcut
-
-If you see:
-- recover BigQuery data from corruption within the last 7 days
-- lowest RPO, cost-effective, managed
-- no extra copies to maintain
-
-Think: **BigQuery time travel**
-
-**Tiny mental image:** a built-in rewind button that jumps the table back to before the spill.
-
-**Final answer:** A. Access historical data by using time travel in BigQuery.'''
-
-E["test_14_q6"] = '''### Step 4: Choose the answer
-
-- An RDB backup copied to Cloud Storage with gsutil and imported into Memorystore is the simplest, lowest-cost, Google-recommended Redis migration.
-- It satisfies minimal cost/time/effort: a native snapshot-and-import flow with no extra infrastructure.
+- ParDo applies a per-element transform that extracts the customer name from each record and emits it to the output PCollection.
+- It satisfies the requirement: element-wise processing/extraction, the core Beam transform for this.
 
 ### Exam shortcut
 
 If you see:
-- migrate Redis to Memorystore, minimal cost/time/effort
-- "Google-recommended" Redis migration
-- snapshot/backup based
+- per-element transform/extraction in Dataflow/Beam
+- map/filter each record to an output PCollection
+- custom processing logic
 
-Think: **RDB backup → Cloud Storage → import to Memorystore**
+Think: **ParDo (with a DoFn)**
 
-**Tiny mental image:** save the game, copy the save file, load it on the new console.
+**Tiny mental image:** a worker on the line who picks one field off each passing item.
 
-**Final answer:** A. Make an RDB backup of the Redis database, use the gsutil utility to copy the RDB file into a Cloud Storage bucket, and then import the RDB file into the Memorystore for Redis instance.'''
+**Final answer:** A. ParDo'''
 
-E["test_14_q7"] = '''### Step 4: Choose the answer
+E["test_8_q36"] = '''### Step 4: Choose the answer
 
-- Moving 1 PB within hours rules out shipping an appliance; Cloud Interconnect plus Storage Transfer Service provides the high-bandwidth, secure online path.
-- It satisfies both: extreme volume in a tight time window over a private, dedicated connection.
-
-### Exam shortcut
-
-If you see:
-- petabyte transfer in *hours* (not weeks)
-- secure, high-bandwidth, online
-- appliance shipping is too slow for the deadline
-
-Think: **Cloud Interconnect + Storage Transfer Service**
-
-**Tiny mental image:** open a dedicated firehose pipeline; there's no time to mail a truck.
-
-**Final answer:** A. Establish a Cloud Interconnect connection between the on-premises data center and Google Cloud, and then use the Storage Transfer Service.'''
-
-E["test_14_q13"] = '''### Step 4: Choose the answer
-
-- Storage Transfer Service for on-premises data, installed in the data center, runs a reliable scheduled weekly job from the POSIX source.
-- It satisfies the goal: managed, resumable, repeatable weekly transfers rather than fragile scripted gsutil.
+- Permission-denied errors running a BigQuery-source pipeline locally mean your gcloud credentials lack access to the BigQuery resources.
+- It satisfies the diagnosis: pipelines run fine locally, but the local identity must be authorized for BigQuery.
 
 ### Exam shortcut
 
 If you see:
-- recurring/weekly on-prem transfer over the network
-- POSIX source, moderate bandwidth
-- "reliable" / Google-recommended
+- "permission denied" running a pipeline locally against BigQuery
+- it's an auth/credentials issue, not a capability limit
+- local execution is allowed
 
-Think: **Storage Transfer Service for on-premises data (agents), scheduled**
+Think: **local gcloud identity lacks BigQuery access**
 
-**Tiny mental image:** a managed courier with tracking and retries, not you driving the boxes weekly.
+**Tiny mental image:** you're at the right door, but your badge isn't on the access list.
 
-**Final answer:** C. Install Storage Transfer Service for on-premises data in your data center, and then configure a weekly transfer job.'''
+**Final answer:** A. Your gcloud does not have access to the BigQuery resources'''
+
+E["test_15_q53"] = '''### Step 4: Choose the answer
+
+- Batching the work into ten-second increments groups the high-rate HTTP calls, smoothing load and relieving backpressure on the GUID service.
+- It satisfies the goal: fewer, bundled external calls under tens-of-thousands-per-second throughput.
+
+### Exam shortcut
+
+If you see:
+- high-throughput pipeline making external HTTP calls
+- "reduce backpressure" / overwhelmed downstream service
+- micro-batching as a lever
+
+Think: **batch into short time increments to throttle external calls**
+
+**Tiny mental image:** send one bus every ten seconds instead of flagging a taxi for each passenger.
+
+**Final answer:** D. Batch the job into ten-second increments.'''
+
+E["test_16_q51"] = '''### Step 4: Choose the answer
+
+- An extracted data source caches a static snapshot, so charts and tables refresh far faster than querying a live source each time.
+- It satisfies the goal: improved interactive performance by reading from the in-memory extract.
+
+### Exam shortcut
+
+If you see:
+- slow chart/table refresh in Looker Studio (Data Studio)
+- improve dashboard performance
+- live vs extracted source
+
+Think: **extracted (cached) data source**
+
+**Tiny mental image:** work from a printed snapshot on your desk instead of phoning the warehouse for every number.
+
+**Final answer:** C. Use an extracted data source'''
+
+E["test_11_q51"] = '''### Step 4: Choose the answer
+
+- A service account scoped to exactly read the batch files and write to BigQuery runs the automated job securely without over-granting.
+- It satisfies "most secure": least-privilege automation, not a human account or an Owner-level role.
+
+### Exam shortcut
+
+If you see:
+- automate an unattended pipeline securely
+- read from Cloud Storage, write to BigQuery
+- avoid Owner role / human accounts
+
+Think: **least-privilege service account scoped to the job's reads and writes**
+
+**Tiny mental image:** give the night robot a keycard for just its two doors, not the master key.
+
+**Final answer:** B. Use a service account that has permission to read the batch files and write to BigQuery.'''
+
+E["test_10_q17"] = '''### Step 4: Choose the answer
+
+- Each server publishes bid events to Pub/Sub, and a Dataflow pull subscription processes them in real time, awarding the bid to the first event processed.
+- It satisfies the goal: globally scalable, ordered real-time collation across many servers.
+
+### Exam shortcut
+
+If you see:
+- collate real-time events from many distributed producers
+- globally scalable ingest + stream processing
+- determine first/earliest
+
+Think: **Pub/Sub ingest + Dataflow streaming**
+
+**Tiny mental image:** every branch drops tickets in one central chute, and a sorter declares whoever's slip lands first.
+
+**Final answer:** A. Have each application server write the bid events to Google Cloud Pub/Sub, and use a pull subscription with Google Cloud Dataflow to pull and process the events, giving the bid to the first user processed'''
+
+E["test_1_q10"] = '''### Step 4: Choose the answer
+
+- A sliding (hopping) window continuously re-evaluates the trailing hour as it advances, which is exactly what a rolling mean/standard-deviation alert needs.
+- It satisfies the goal: overlapping windows that always reflect "the last hour" for anomaly detection.
+
+### Exam shortcut
+
+If you see:
+- a rolling/continuous "last N minutes" computation
+- overlapping windows, frequent re-evaluation
+- moving average / trailing statistics
+
+Think: **sliding (hopping) windows**
+
+**Tiny mental image:** a moving spotlight that always lights the most recent hour as it glides forward.
+
+**Final answer:** D. sliding window (also called hopping windows)'''
+
+E["test_10_q44"] = '''### Step 4: Choose the answer
+
+- gcloud functions deploy (with a Pub/Sub trigger) is the command that deploys the function to run on messages to the topic.
+- It satisfies the task: deploying the Cloud Function, not publishing or pulling messages.
+
+### Exam shortcut
+
+If you see:
+- deploy a Cloud Function triggered by Pub/Sub
+- distinguish deploy vs publish/pull
+- gcloud command choice
+
+Think: **gcloud functions deploy (--trigger-topic)**
+
+**Tiny mental image:** "deploy" installs the machine; "publish/pull" just move the parcels.
+
+**Final answer:** D. gcloud functions deploy'''
+
+E["test_12_q7"] = '''### Step 4: Choose the answer
+
+- Streaming (unbounded) data requires a non-global windowing function; without one, the Dataflow job fails at pipeline construction for all streaming inserts.
+- It satisfies the diagnosis: unbounded sources can't use the default global window without windowing/triggers.
+
+### Exam shortcut
+
+If you see:
+- streaming Dataflow job fails for all inserts at creation
+- unbounded source with no window applied
+- windowing/transformation in play
+
+Think: **unbounded streams need a non-global window**
+
+**Tiny mental image:** you can't tally an endless parade without dividing it into segments first.
+
+**Final answer:** C. The job fails because a non-global windowing function has not been applied, causing the job to fail during pipeline creation.'''
+
+E["test_10_q23"] = '''### Step 4: Choose the answer
+
+- Pig (PigLatin) expresses ETL data flows with native support for checkpointing and splitting pipelines on Hadoop.
+- It satisfies the requirement: a dataflow-oriented language built for multi-stage, splittable ETL.
+
+### Exam shortcut
+
+If you see:
+- Hadoop ETL needing checkpointing and pipeline splits
+- dataflow scripting over raw MapReduce
+- declarative transformation chains
+
+Think: **Pig / PigLatin**
+
+**Tiny mental image:** a pipeline language with built-in valves and save-points, not hand-wired MapReduce plumbing.
+
+**Final answer:** B. PigLatin using Pig'''
+
+E["test_10_q14"] = '''### Step 4: Choose the answer
+
+- A side input supplies the extra data to a DoFn each time it processes a PCollection element, exactly the construct needed here.
+- It satisfies the goal: additional read-only input available alongside the main element stream.
+
+### Exam shortcut
+
+If you see:
+- a DoFn needs extra/reference data per element
+- enrich or look up against a second dataset
+- Apache Beam construct
+
+Think: **side input**
+
+**Tiny mental image:** the worker keeps a reference sheet beside the conveyor to consult on each item.
+
+**Final answer:** B. Side input'''
+
+E["test_11_q30"] = '''### Step 4: Choose the answer
+
+- Bigtable exposes the HBase API, so the team migrates off on-prem Hadoop/HBase to a managed service with minimal program changes.
+- It satisfies both: a fully managed wide-column store and HBase-API compatibility for existing code.
+
+### Exam shortcut
+
+If you see:
+- migrate Hadoop/HBase to managed GCP
+- keep using the HBase API with minimal changes
+- large-scale NoSQL wide-column
+
+Think: **Cloud Bigtable (HBase-compatible API)**
+
+**Tiny mental image:** swap the engine but keep the same dashboard and controls the drivers already know.
+
+**Final answer:** B. Bigtable'''
+
+E["test_1_q46"] = '''### Step 4: Choose the answer
+
+- Creating a Pub/Sub schema and assigning it to the topic at creation enforces a standard message structure on everything published.
+- It satisfies the goal: validation at publish time on the topic, the producer-facing boundary.
+
+### Exam shortcut
+
+If you see:
+- enforce a standard message structure in Pub/Sub
+- validate at publish, on the topic (not subscription)
+- schema enforcement
+
+Think: **Pub/Sub schema assigned to the topic at creation**
+
+**Tiny mental image:** the post office rejects any letter that doesn't fit the approved envelope template at the counter.
+
+**Final answer:** B. Create a schema and assign it to a topic during topic creation.'''
+
+E["test_2_q5"] = '''### Step 4: Choose the answer
+
+- PCollections are the core Beam data abstraction that carries the (key, value) elements through the Dataflow workflow.
+- It satisfies the question: the construct representing the distributed dataset being processed.
+
+### Exam shortcut
+
+If you see:
+- the core dataset abstraction in Beam/Dataflow
+- holds the elements flowing through transforms
+- key-value or any record stream
+
+Think: **PCollection**
+
+**Tiny mental image:** the conveyor belt itself, carrying every item between machines.
+
+**Final answer:** B. PCollections'''
+
+E["test_2_q8"] = '''### Step 4: Choose the answer
+
+- Cloud Dataflow is the managed service for streaming sensor data with windowed, stateful analysis like rolling mean/standard-deviation alerts.
+- It satisfies the goal: serverless stream processing with native windowing for the anomaly logic.
+
+### Exam shortcut
+
+If you see:
+- streaming sensor/IoT analytics, managed service
+- windowed/stateful real-time computation
+- anomaly detection on a moving window
+
+Think: **Cloud Dataflow (Apache Beam streaming)**
+
+**Tiny mental image:** a self-managing stream mill that watches the sensor flow and rings the bell on outliers.
+
+**Final answer:** A. Cloud Dataflow'''
+
+E["test_2_q33"] = '''### Step 4: Choose the answer
+
+- Dataflow FlexRS lowers batch cost by scheduling jobs flexibly on preemptible resources, ideal when completion time can slip.
+- It satisfies the goal: meaningful savings on non-urgent batch jobs with no pipeline rewrite.
+
+### Exam shortcut
+
+If you see:
+- cut Dataflow *batch* cost, timing is flexible
+- willing to wait longer for cheaper runs
+- minimal changes to the pipeline
+
+Think: **Dataflow FlexRS (Flexible Resource Scheduling)**
+
+**Tiny mental image:** book the off-peak, standby fare because you don't care exactly when you land.
+
+**Final answer:** C. Use Dataflow FlexRS'''
 
 append_entries(E)
