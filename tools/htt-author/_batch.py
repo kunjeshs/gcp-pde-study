@@ -2,364 +2,364 @@ from lib import append_entries
 
 E = {}
 
-E["test_15_q20"] = '''### Step 4: Choose the answer
+E["test_3_q19"] = '''### Step 4: Choose the answer
 
-- Raising maxNumWorkers speeds the Dataflow writes, and adding Bigtable nodes lets the cluster serve more concurrent dashboard users.
-- It satisfies both pressures: faster ingestion and higher read concurrency by scaling each tier.
-
-### Exam shortcut
-
-If you see:
-- Dataflow → Bigtable writes too slow + many concurrent readers
-- scale the writer and the store together
-- two scaling actions
-
-Think: **increase Dataflow maxNumWorkers + add Bigtable nodes**
-
-**Tiny mental image:** hire more loaders at the dock and open more checkout lanes at the store.
-
-**Final answer:** B. Increase the maximum number of Dataflow workers by setting maxNumWorkers in PipelineOptions'''
-
-E["test_15_q39"] = '''### Step 4: Choose the answer
-
-- Lifting the Spark/Hive/HDFS workloads to Dataproc with Cloud Storage (modernize later) meets the two-month deadline while capturing storage-decoupling savings.
-- It satisfies both: fast migration on schedule plus immediate cost benefit from Cloud Storage over HDFS.
+- A Cloud Composer DAG models the mix of sequential and concurrent Spark jobs as task dependencies and automates the scheduled run.
+- It satisfies the goal: orchestrate complex inter-job ordering, not just submit jobs.
 
 ### Exam shortcut
 
 If you see:
-- hard migration deadline, maximize cost savings
-- existing Hadoop/Spark/Hive
-- lift-and-shift now, modernize later
+- jobs with mixed sequential + concurrent dependencies, scheduled
+- automate a multi-job workflow
+- orchestration across steps
 
-Think: **Dataproc + Cloud Storage, modernize later**
+Think: **Cloud Composer DAG**
 
-**Tiny mental image:** move into the new building first and remodel after you've met the deadline.
+**Tiny mental image:** a dependency graph the conductor follows, cueing some jobs in series and others in parallel.
 
-**Final answer:** B. Migrate the workloads to Dataproc plus Cloud Storage; modernize later.'''
+**Final answer:** C. Create a Directed Acyclic Graph in Cloud Composer'''
 
-E["test_15_q42"] = '''### Step 4: Choose the answer
+E["test_4_q30"] = '''### Step 4: Choose the answer
 
-- Taking a Pub/Sub snapshot before deploying lets you Seek back and re-deliver messages if the new subscriber wrongly acknowledges and loses them.
-- It satisfies the goal: a recovery point to replay from, guarding against ack bugs in the new code.
-
-### Exam shortcut
-
-If you see:
-- protect against message loss from bad acks after a deploy
-- need to replay/redeliver messages
-- snapshot + Seek
-
-Think: **Pub/Sub snapshot before deploy, Seek to replay on error**
-
-**Tiny mental image:** save a checkpoint before the risky update so you can reload if it corrupts progress.
-
-**Final answer:** B. Create a Pub/Sub snapshot before deploying new subscriber code. Use a Seek operation to re-deliver messages that became available after the snapshot was created.'''
-
-E["test_15_q44"] = '''### Step 4: Choose the answer
-
-- A sliding window of 30 seconds with a 5-second period, emitting on AfterWatermark, computes the trailing-30s average refreshed every 5 seconds.
-- It satisfies the spec exactly: window size = data range (30s), period = update cadence (5s).
+- The bottleneck for a network transfer is the link itself, so upgrading the datacenter-to-GCP bandwidth is what actually speeds the daily uploads.
+- It satisfies the goal: more throughput on the constrained path, not bigger CPU or disk on the server.
 
 ### Exam shortcut
 
 If you see:
-- moving average over the last N seconds, updated every M seconds
-- map "size = N, period = M" to a sliding window
-- emit on watermark
+- transfers from on-prem to Cloud Storage too slow
+- maximize transfer speed
+- distractors about CPU/disk size
 
-Think: **sliding window (duration = data span, period = refresh interval)**
+Think: **increase network bandwidth on the transfer link**
 
-**Tiny mental image:** a 30-second magnifier sliding forward 5 seconds at a time.
+**Tiny mental image:** the truck isn't slow because of its engine - the road is too narrow; widen the road.
 
-**Final answer:** D. Use a sliding window with a duration of 30 seconds and a period of 5 seconds. Emit results by setting the following trigger: AfterWatermark.pastEndOfWindow ()'''
+**Final answer:** C. Upgrade your datacenter‘s network bandwidth to GCP.'''
 
-E["test_15_q45"] = '''### Step 4: Choose the answer
+E["test_7_q47"] = '''### Step 4: Choose the answer
 
-- A streaming Dataflow job reading continuously from Pub/Sub with tumbling (fixed hourly) windows scales to high volume and produces the hourly aggregates.
-- It satisfies both: elastic streaming ingestion and clean, non-overlapping hourly rollups.
-
-### Exam shortcut
-
-If you see:
-- continuously load Pub/Sub events into BigQuery at scale
-- aggregate over fixed, non-overlapping hourly buckets
-- streaming, not batch polling
-
-Think: **streaming Dataflow + tumbling (fixed) hourly windows**
-
-**Tiny mental image:** an hourglass that empties and resets each hour, tallying that hour's grains.
-
-**Final answer:** D. Create a streaming Dataflow job that reads continually from the Pub/Sub topic and performs the necessary aggregations using tumbling windows.'''
-
-E["test_15_q48"] = '''### Step 4: Choose the answer
-
-- Exporting pipeline metrics/logs to Cloud Monitoring and configuring an Alerting policy gives managed, cross-project health checks and failure notifications.
-- It satisfies the goal: native monitoring and alerting across BigQuery, Dataflow, and Dataproc without custom apps.
+- The bottleneck is the datacenter-to-GCP link, so increasing that network bandwidth is what speeds up the daily transfers.
+- It satisfies the goal: more throughput on the constrained path, not server CPU or disk.
 
 ### Exam shortcut
 
 If you see:
-- monitor pipelines across multiple projects, get failure alerts
-- prefer managed/platform features
-- health checks + notifications
+- on-prem → Cloud Storage transfers too slow
+- maximize transfer speed
+- distractors about CPU/disk size
 
-Think: **Cloud Monitoring + Alerting policy**
+Think: **increase network bandwidth from the datacenter to GCP**
 
-**Tiny mental image:** one dashboard with built-in alarms watching all the projects, no custom watcher app.
+**Tiny mental image:** widen the road, don't upgrade the truck's stereo.
 
-**Final answer:** A. Export the information to Cloud Monitoring, and set up an Alerting policy'''
+**Final answer:** C. Increase your network bandwidth from your datacenter to GCP.'''
 
-E["test_15_q49"] = '''### Step 4: Choose the answer
+E["test_13_q38"] = '''### Step 4: Choose the answer
 
-- Ingesting the Cloud Storage data into BigQuery and rewriting the PySpark logic as BigQuery SQL gives a serverless, SQL-native pipeline that runs far faster than the 12-hour job.
-- It satisfies all: serverless, SQL syntax, and dramatically reduced run time.
-
-### Exam shortcut
-
-If you see:
-- slow Spark/PySpark batch on structured data
-- want serverless + SQL to speed development and runtime
-- data already in Cloud Storage
-
-Think: **load into BigQuery and transform with BigQuery SQL**
-
-**Tiny mental image:** retire the hand-cranked mill and let the warehouse's SQL engine do the milling.
-
-**Final answer:** C. Ingest your data into BigQuery from Cloud Storage, convert your PySpark commands into BigQuery SQL queries to transform the data, and then write the transformations to a new table.'''
-
-E["test_15_q50"] = '''### Step 4: Choose the answer
-
-- Replacing the SideInput join with CoGroupByKey performs the join as a scalable shuffle, removing the SideInput bottleneck and speeding the job.
-- It satisfies the goal: a more efficient join pattern for large datasets than broadcasting a side input.
+- Cloud Build copies the DAG to the dev Composer bucket for testing, then on success copies it to the prod Composer bucket - DAGs deploy simply by landing in the bucket.
+- It satisfies the CI/CD goal: tag-triggered, tested, environment-promoted deployment without containers.
 
 ### Exam shortcut
 
 If you see:
-- Dataflow join via SideInput is slow / large side data
-- need a scalable join
-- CoGroupByKey vs SideInput
+- CI/CD for Cloud Composer DAGs, dev → prod promotion
+- how DAGs deploy (copy to the Composer GCS bucket)
+- triggered by a Git tag via Cloud Build
 
-Think: **use CoGroupByKey instead of a large SideInput**
+Think: **Cloud Build copies DAG to dev bucket, then prod bucket**
 
-**Tiny mental image:** sort both decks and merge them, instead of handing every worker a full copy of one.
+**Tiny mental image:** dropping the DAG file into Composer's folder is the deploy - test in the dev folder, then copy to prod.
 
-**Final answer:** D. Use CoGroupByKey instead of the SideInput.'''
+**Final answer:** A. 1. Use Cloud Build to copy the code of the DAG to the Cloud Storage bucket of the development instance for DAG testing. 2. If the tests pass, use Cloud Build to copy the code to the bucket of the production instance.'''
 
-E["test_15_q54"] = '''### Step 4: Choose the answer
-
-- gsutil handles the one-off migration of the few large 90 GB files, while Pub/Sub plus Dataflow streams real-time updates from the transactional systems.
-- It satisfies both halves: simple bulk move now, plus a managed streaming pipeline for continuous updates.
-
-### Exam shortcut
-
-If you see:
-- bulk migrate a handful of very large files + ongoing real-time updates
-- streaming ingestion/transformation
-- Pub/Sub feeding the warehouse
-
-Think: **gsutil (migration) + Pub/Sub → Dataflow (real-time)**
-
-**Tiny mental image:** truck over the big crates once, then run a live conveyor for the daily flow.
-
-**Final answer:** C. gsutil for the migration; Pub/Sub and Dataflow for the real-time updates'''
-
-E["test_16_q25"] = '''### Step 4: Choose the answer
-
-- A changed windowing/triggering strategy is incompatible with an in-place --update, so Drain the running pipeline (finishing in-flight data) and start a new job.
-- It satisfies "no data loss": Drain flushes outstanding data before the incompatible pipeline is replaced.
-
-### Exam shortcut
-
-If you see:
-- update a streaming pipeline whose windowing/triggering changed
-- incompatible change (can't hot-update in place)
-- no data loss
-
-Think: **Drain the old job, deploy a new one** (vs --update for compatible changes)
-
-**Tiny mental image:** when the new machine takes different-shaped parts, empty the old line fully before swapping.
-
-**Final answer:** D. Stop the Cloud Dataflow pipeline with the Drain option. Create a new Cloud Dataflow job with the updated code'''
-
-E["test_16_q30"] = '''### Step 4: Choose the answer
-
-- Dataprep (by Trifacta) lets non-developer analysts build and maintain visual transformation recipes that run on a schedule, adapting as the schema changes.
-- It satisfies all three needs: scheduled execution, analyst-friendly editing, and a graphical design tool.
-
-### Exam shortcut
-
-If you see:
-- scheduled CSV transformations with evolving schema
-- non-developers modify them, graphical tool
-- no-code data prep
-
-Think: **Cloud Dataprep (Trifacta) recipes, scheduled**
-
-**Tiny mental image:** a visual recipe the analysts tweak each month, run automatically on a timer.
-
-**Final answer:** A. Use Dataprep by Trifacta to build and maintain the transformation recipes, and execute them on a scheduled basis'''
-
-E["test_16_q31"] = '''### Step 4: Choose the answer
-
-- Copying the ORC files to the master node and using the Hadoop utility to load them into HDFS (or using the Cloud Storage connector for external tables) gets Hive running on Dataproc.
-- It satisfies the goal: data replicated to local HDFS for performance, with Hive tables mounted from HDFS.
-
-### Exam shortcut
-
-If you see:
-- start Hive on Dataproc with ORC data in Cloud Storage
-- replicate to local HDFS for performance
-- two valid setup paths
-
-Think: **stage to master node → hadoop fs into HDFS (or use the Cloud Storage connector)**
-
-**Tiny mental image:** bring the parts into the workshop's own bench so the machine runs at full speed.
-
-**Final answer:** C. Run the gsutil utility to transfer all ORC files from the Cloud Storage bucket to the master node of the Dataproc cluster. Then run the Hadoop utility to copy them do HDFS. Mount the Hive tables from HDFS.'''
-
-E["test_16_q34"] = '''### Step 4: Choose the answer
-
-- Putting the disk-I/O-heavy job's intermediate data on native HDFS (persistent disk) avoids round-tripping transient data through the Cloud Storage connector.
-- It satisfies the fix: keep durable input/output in Cloud Storage but local-disk the I/O-intensive intermediates.
-
-### Exam shortcut
-
-If you see:
-- disk-I/O-bound Dataproc job using the Cloud Storage connector
-- intermediate/shuffle data is the bottleneck
-- speed up without re-architecting
-
-Think: **intermediate data on HDFS (persistent disk), not Cloud Storage**
-
-**Tiny mental image:** do the scratch work on the local desk, not by mailing every draft to the warehouse.
-
-**Final answer:** B. Allocate sufficient persistent disk space to the Hadoop cluster, and store the intermediate data of that particular Hadoop job on native HDFS'''
-
-E["test_16_q37"] = '''### Step 4: Choose the answer
-
-- A Dataflow job with KafkaIO and a sliding 1-hour window advancing every 5 minutes computes the moving average and alerts when it drops below 4000/sec.
-- It satisfies the goal: a continuously updated trailing-hour average a fixed window can't provide.
-
-### Exam shortcut
-
-If you see:
-- alert on a moving/rolling average over a trailing hour
-- frequently re-evaluated
-- stream from Kafka into Dataflow
-
-Think: **sliding window (size 1h, hop 5m)**
-
-**Tiny mental image:** a gliding spotlight on the last hour, re-checked every five minutes.
-
-**Final answer:** A. Consume the stream of data in Dataflow using Kafka IO. Set a sliding time window of 1 hour every 5 minutes. Compute the average when the window closes, and send an alert if the average is less than 4000 messages.'''
-
-E["test_16_q39"] = '''### Step 4: Choose the answer
-
-- Apache Kafka provides per-key ordering, offset seeking, and publish/subscribe across many topics - the distinctive offset/replay capability here.
-- It satisfies all the requirements, including seeking to a specific offset that Pub/Sub-style services don't expose directly.
-
-### Exam shortcut
-
-If you see:
-- per-key ordering + seek to a specific offset
-- pub/sub over many topics, centralized ingestion
-- consumer-controlled replay by offset
-
-Think: **Apache Kafka**
-
-**Tiny mental image:** a tape deck you can rewind to an exact counter mark on hundreds of channels.
-
-**Final answer:** A. Apache Kafka'''
-
-E["test_16_q40"] = '''### Step 4: Choose the answer
-
-- A Dataproc cluster with standard persistent disks, 50% preemptible workers, and data in Cloud Storage (gs:// not hdfs://) is the cost-effective, fault-tolerant managed Hadoop migration.
-- It satisfies both: preemptibles plus standard disks cut cost, and Cloud Storage decouples durable data from ephemeral compute.
-
-### Exam shortcut
-
-If you see:
-- migrate Hadoop to managed, cost-effective + fault-tolerant
-- preemptible workers, standard (not SSD) disks
-- data in Cloud Storage, swap hdfs:// → gs://
-
-Think: **Dataproc + preemptibles + standard PD + Cloud Storage**
-
-**Tiny mental image:** rent cheap temp workers and keep the goods in a permanent warehouse.
-
-**Final answer:** A. Deploy a Dataproc cluster. Use a standard persistent disk and 50% preemptible workers. Store data in Cloud Storage, and change references in scripts from hdfs:// to gs://'''
-
-E["test_16_q48"] = '''### Step 4: Choose the answer
-
-- Cloud Pub/Sub guarantees at-least-once delivery, so consumers must handle possible duplicates.
-- It satisfies the question: the default semantic is at-least-once (not at-most-once or best-effort).
-
-### Exam shortcut
-
-If you see:
-- "what delivery guarantee does Pub/Sub provide?"
-- duplicates possible, must be idempotent
-- at-least-once by default
-
-Think: **at-least-once delivery**
-
-**Tiny mental image:** the courier guarantees it arrives - occasionally twice - so you handle the duplicate.
-
-**Final answer:** B. Deliver at least once'''
-
-E["test_2_q12"] = '''### Step 4: Choose the answer
-
-- Airflow DAGs written in Python and run on Cloud Composer give a managed service for jobs with complex dependencies.
-- It satisfies the goal: dependency-aware orchestration, managed, with DAGs authored in Python (Airflow's language).
-
-### Exam shortcut
-
-If you see:
-- jobs with complex interdependencies, managed service
-- workflow orchestration
-- Airflow DAGs (authored in Python)
-
-Think: **Cloud Composer (Airflow DAGs in Python)**
-
-**Tiny mental image:** a managed conductor running a Python-scored dependency graph.
-
-**Final answer:** A. Write Airflow directed acyclic graphs in Python and execute them with Cloud Composer.'''
-
-E["test_3_q6"] = '''### Step 4: Choose the answer
-
-- Cloud Composer in a Shared VPC, with its resources placed in the service project, is the Google-managed Airflow option that fits the Shared VPC networking model.
-- It satisfies both: managed open-source orchestration and correct Shared VPC placement (service project consuming the host network).
-
-### Exam shortcut
-
-If you see:
-- managed open-source (Airflow) workflow scheduling
-- Shared VPC networking considerations
-- where do Composer resources live?
-
-Think: **Cloud Composer in Shared VPC, resources in the service project**
-
-**Tiny mental image:** the tenant (service project) runs its scheduler while borrowing the landlord's (host) network.
-
-**Final answer:** D. Use Cloud Composer in a Shared VPC configuration and place the Cloud Composer resources in the service project'''
-
-E["test_3_q10"] = '''### Step 4: Choose the answer
+E["test_14_q12"] = '''### Step 4: Choose the answer
 
 - A Pub/Sub push subscription triggering a Cloud Function that calls the Python API is a serverless, secure queue that scales with trade volume and uses minimal idle resources.
-- It satisfies the goal: event-driven processing with no always-on servers to manage.
+- It satisfies the goal: event-driven trade processing with no always-on servers.
 
 ### Exam shortcut
 
 If you see:
-- secure queue triggering code via an API, minimize resource usage
+- secure queue triggering jobs via an API, efficient
 - serverless, event-driven, high volume
 - Pub/Sub + Cloud Function
 
 Think: **Pub/Sub push → Cloud Function → API**
 
-**Tiny mental image:** each trade rings a doorbell that wakes a function only when needed, then it sleeps.
+**Tiny mental image:** each trade rings a doorbell that wakes a function only when needed.
 
-**Final answer:** A. Implement a Pub/Sub push subscription to trigger a Cloud Function that passes data to the Python API'''
+**Final answer:** A. Use a Pub/Sub push subscription to trigger a Cloud Function to pass the data to the Python API.'''
+
+E["test_14_q15"] = '''### Step 4: Choose the answer
+
+- Cloud Composer in a Shared VPC, with resources in the service project, is the Google-managed Airflow option that fits the Shared VPC model.
+- It satisfies both: managed open-source orchestration and correct Shared VPC placement.
+
+### Exam shortcut
+
+If you see:
+- managed open-source (Airflow) workflow scheduling
+- Shared VPC networking
+- where do Composer resources live?
+
+Think: **Cloud Composer in Shared VPC, resources in the service project**
+
+**Tiny mental image:** the tenant runs its scheduler while borrowing the landlord's network.
+
+**Final answer:** D. Use Cloud Composer in a Shared VPC configuration. Place the Cloud Composer resources in the service project.'''
+
+E["test_16_q32"] = '''### Step 4: Choose the answer
+
+- Cloud Composer (managed Airflow) orchestrates the interdependent steps in order, mixing shell, Hadoop, and BigQuery tasks with built-in retries.
+- It satisfies the goal: dependency-aware, long-running workflow orchestration with retry on failure.
+
+### Exam shortcut
+
+If you see:
+- multi-step workflow with dependencies/ordering
+- mixed task types (shell, Hadoop, BigQuery), retries
+- orchestrate, not just schedule
+
+Think: **Cloud Composer (Airflow DAG)**
+
+**Tiny mental image:** a conductor cueing each section in order and signaling a retry when one stumbles.
+
+**Final answer:** D. Cloud Composer'''
+
+E["test_11_q23"] = '''### Step 4: Choose the answer
+
+- Cloud Spanner gives horizontally scalable, strongly-consistent transactions at 10 TB, and secondary indexes optimize the range queries on non-key columns.
+- It satisfies both: scale-out relational transactions plus index support for the query patterns.
+
+### Exam shortcut
+
+If you see:
+- relational + horizontally scalable transactions at large scale
+- range/secondary-column query patterns
+- global consistency
+
+Think: **Cloud Spanner + secondary indexes**
+
+**Tiny mental image:** a relational database that grows sideways across machines, with extra indexes for fast range lookups.
+
+**Final answer:** A. Use Cloud Spanner for storage and add secondary indexes to support query patterns'''
+
+E["test_1_q9"] = '''### Step 4: Choose the answer
+
+- gcloud datastore export to the bucket with --async issues the backup and returns immediately while it runs in the background.
+- It satisfies the goal: a non-blocking managed export of Firestore/Datastore to Cloud Storage.
+
+### Exam shortcut
+
+If you see:
+- back up Firestore/Datastore to a Cloud Storage bucket
+- command returns immediately / runs in background
+- gcloud (not gsutil), export, --async
+
+Think: **gcloud datastore export gs://... --async**
+
+**Tiny mental image:** fire off the backup and walk away - the --async flag means you don't wait.
+
+**Final answer:** B. gcloud datastore export gs://game-ds-backup --async'''
+
+E["test_12_q15"] = '''### Step 4: Choose the answer
+
+- Bigtable delivers high-volume, low-latency writes at scale and exposes the HBase API, making it the managed successor to the company's HBase usage.
+- It satisfies both: massive write throughput for drone telemetry and a familiar HBase-compatible interface.
+
+### Exam shortcut
+
+If you see:
+- high-volume, low-latency writes (IoT/time-series)
+- migrating from Hadoop HBase to managed
+- scale to huge data
+
+Think: **Cloud Bigtable**
+
+**Tiny mental image:** a high-speed ledger built for nonstop sensor writes, speaking the HBase dialect.
+
+**Final answer:** D. Bigtable'''
+
+E["test_11_q53"] = '''### Step 4: Choose the answer
+
+- Cloud Firestore is the managed, document-oriented database that maps naturally from MongoDB's document model.
+- It satisfies the goal: a managed NoSQL document store for the migrated application.
+
+### Exam shortcut
+
+If you see:
+- migrate MongoDB (or a document database) to managed GCP
+- flexible document/JSON model
+- not wide-column or relational
+
+Think: **Cloud Firestore**
+
+**Tiny mental image:** swap one document drawer for a managed one with the same flexible folders.
+
+**Final answer:** D. Cloud Firestore'''
+
+E["test_11_q9"] = '''### Step 4: Choose the answer
+
+- In the Firestore data model, an entity (document) is analogous to a row in a relational table.
+- It satisfies the question: entity ≈ row, kind ≈ table, property ≈ column.
+
+### Exam shortcut
+
+If you see:
+- map Firestore/Datastore concepts to relational ones
+- "what is like a row?"
+- entity vs kind vs property
+
+Think: **entity = row** (kind = table)
+
+**Tiny mental image:** each entity is one record card; the kind is the whole filing drawer.
+
+**Final answer:** B. Entity'''
+
+E["test_11_q55"] = '''### Step 4: Choose the answer
+
+- Hot-spotting on one node means the row key groups time-adjacent writes together, sending them to a single node instead of spreading them.
+- It satisfies the diagnosis: sequential/time-based keys concentrate load; a better-distributed key fixes it.
+
+### Exam shortcut
+
+If you see:
+- Bigtable writes hitting one node, uneven distribution
+- time-series / sequential row keys
+- hot-spotting
+
+Think: **row key concentrates time-adjacent writes (bad key design)**
+
+**Tiny mental image:** everyone arriving at once lines up at one register because the tickets are numbered in order.
+
+**Final answer:** B. Using a row key that causes data that arrives close in time to be written to a single node, rather than evenly distributed.'''
+
+E["test_10_q48"] = '''### Step 4: Choose the answer
+
+- A document model stores each possession as a flexible document, absorbing frequent schema changes without costly normalized-schema migrations.
+- It satisfies the goal: schema flexibility for evolving game features and possession types.
+
+### Exam shortcut
+
+If you see:
+- frequent schema changes painful in a normalized relational model
+- flexible/evolving entity attributes
+- semi-structured records
+
+Think: **document data model**
+
+**Tiny mental image:** loose folders you can add fields to anytime, instead of rigid pre-cut table columns.
+
+**Final answer:** A. Document model'''
+
+E["test_11_q32"] = '''### Step 4: Choose the answer
+
+- Cloud Storage is the right home for large FASTQ files; Dataflow reads them from the bucket and writes results to BigQuery.
+- It satisfies the goal: cheap, scalable object storage for big files that the pipeline then processes.
+
+### Exam shortcut
+
+If you see:
+- store large raw files (genomic/FASTQ, media, blobs)
+- processed later by Dataflow/Dataproc
+- object, not table, storage
+
+Think: **Cloud Storage (files) → Dataflow → BigQuery (results)**
+
+**Tiny mental image:** keep the bulky raw reels in the warehouse; the mill turns them into shelved results.
+
+**Final answer:** A. Cloud Storage'''
+
+E["test_11_q57"] = '''### Step 4: Choose the answer
+
+- Interleaving the order-items table within the orders table co-locates the parent and child rows, making the one-to-many join fast in Spanner.
+- It satisfies the goal: physical data locality that speeds parent-child joins, the Spanner-native fix.
+
+### Exam shortcut
+
+If you see:
+- slow parent-child (one-to-many) joins in Cloud Spanner
+- co-locate related rows for performance
+- table interleaving
+
+Think: **interleaved tables (parent-child locality)**
+
+**Tiny mental image:** file each order's line items right behind the order, so the join doesn't hunt across the database.
+
+**Final answer:** A. Use interleaved tables'''
+
+E["test_12_q14"] = '''### Step 4: Choose the answer
+
+- The UUID prefix still hot-spots because the chosen UUID variant produces sequentially ordered strings, so keys remain monotonic.
+- It satisfies the diagnosis: a sequential UUID defeats the purpose; a truly random prefix spreads writes.
+
+### Exam shortcut
+
+If you see:
+- Bigtable still hot-spotting despite a UUID prefix
+- key ordering matters
+- sequential vs random UUID
+
+Think: **the UUID type is sequentially ordered (not random)**
+
+**Tiny mental image:** your "random" tickets are actually numbered in order, so everyone still queues at one window.
+
+**Final answer:** B. You have chosen a type of UUID that has sequentially ordered strings.'''
+
+E["test_2_q13"] = '''### Step 4: Choose the answer
+
+- Adding a second cluster to the Bigtable instance and using two app profiles isolates the heavy write traffic from the analytic batch jobs.
+- It satisfies the goal: workload isolation so batch reads don't degrade write performance.
+
+### Exam shortcut
+
+If you see:
+- Bigtable serving + batch/analytics contending
+- isolate workloads for performance
+- app profiles / multi-cluster routing
+
+Think: **second Bigtable cluster + separate app profiles**
+
+**Tiny mental image:** give the busy cashiers and the stocktaking crew their own copies of the store so they don't collide.
+
+**Final answer:** A. Isolate the write and batch workloads by adding a second cluster to the Bigtable instance and create two app profiles, one for write traffic and one for batch jobs.'''
+
+E["test_2_q19"] = '''### Step 4: Choose the answer
+
+- Cloud Bigtable provides low-latency writes and scales to petabytes for high-volume telemetry, the priority being scalability with willingness to change the app.
+- It satisfies the goal: massive, low-latency write throughput beyond what Cloud SQL/PostgreSQL can sustain.
+
+### Exam shortcut
+
+If you see:
+- ingestion outgrowing a relational DB, need PB scale + low-latency writes
+- scalability is the top priority, app changes acceptable
+- high-volume time-series/telemetry
+
+Think: **Cloud Bigtable**
+
+**Tiny mental image:** swap the single ledger book for a warehouse of ledgers that scales to petabytes.
+
+**Final answer:** C. Cloud Bigtable'''
+
+E["test_2_q25"] = '''### Step 4: Choose the answer
+
+- Performance suffers because 200 column families exceeds Bigtable's recommended limit of ~100 column families.
+- It satisfies the diagnosis: too many column families degrades performance; the schema should consolidate them.
+
+### Exam shortcut
+
+If you see:
+- Bigtable underperforming with many column families
+- recall the ~100 column-family guideline
+- schema-design limit
+
+Think: **too many column families (>100 recommended max)**
+
+**Tiny mental image:** the filing cabinet has hundreds of dividers when it's built for about a hundred - it jams.
+
+**Final answer:** B. 200 column families exceeds the recommended 100 column family limit'''
 
 append_entries(E)
