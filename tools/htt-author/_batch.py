@@ -2,171 +2,99 @@ from lib import append_entries
 
 E = {}
 
-E["test_5_q35"] = '''### Step 4: Choose the answer
+E["test_14_q9"] = '''### Step 4: Choose the answer
 
-- A neural network learns by adjusting its weights and biases during training; features and input values are given, not learned.
-- It satisfies the question: weights and biases are the trainable parameters.
-
-### Exam shortcut
-
-If you see:
-- "what does a neural network adjust as it learns?"
-- weights + biases are trainable
-- features/inputs are fixed data
-
-Think: **weights and biases**
-
-**Tiny mental image:** training tunes the dials (weights/biases), not the data you feed in.
-
-**Final answer:** A. Weights'''
-
-E["test_5_q41"] = '''### Step 4: Choose the answer
-
-- A deep neural network with multiple hidden layers automatically learns face features from the labeled images, far better than manual feature engineering or clustering.
-- It satisfies the goal: let deep learning discover the hierarchical visual features itself.
+- To fight overfitting, increase the training dataset and decrease the number of input features, both improving generalization.
+- It satisfies the goal: more examples plus a simpler feature set reduces overfitting.
 
 ### Exam shortcut
 
 If you see:
-- image recognition from labeled images
-- let the model learn features automatically
-- deep learning, multiple hidden layers
+- model overfitting, improve on new data
+- more data + fewer features
+- simplify and add examples
 
-Think: **deep neural network (auto feature learning)**
+Think: **more training data + fewer features**
 
-**Tiny mental image:** stack enough layers and the network learns "eyes, noses, faces" on its own.
+**Tiny mental image:** show more examples and trim noisy features so it stops memorizing.
 
-**Final answer:** C. Use deep learning by creating a neural network with multiple hidden layers to automatically detect features of faces.'''
+**Final answer:** B. Increase the size of the training dataset, and decrease the number of input features.'''
 
-E["test_5_q42"] = '''### Step 4: Choose the answer
+E["test_14_q10"] = '''### Step 4: Choose the answer
 
-- Training an AutoML Vision model on labeled package images and wrapping it in an API detects damage and flags items for human review in real time.
-- It satisfies the goal: a custom image classifier (the generic Vision API can't recognize "damaged") served via API.
-
-### Exam shortcut
-
-If you see:
-- custom image recognition (damage/defects) the prebuilt API can't do
-- real-time flagging, integrate via API
-- AutoML Vision on your labeled images
-
-Think: **AutoML Vision model + API**
-
-**Tiny mental image:** train a custom "is this damaged?" eye and expose it as a service.
-
-**Final answer:** B. Train an AutoML model on your corpus of images, and build an API around that model to integrate with the package tracking applications.'''
-
-E["test_6_q10"] = '''### Step 4: Choose the answer
-
-- Subsampling the training dataset reduces the data processed per epoch, speeding up training.
-- It satisfies the goal: faster training (more layers/features would slow it down).
+- Dialogflow implements the text-and-voice chatbot with no/low code by defining intents from the most common queries.
+- It satisfies the goal: keyword/intent-driven conversational responses without building a custom NLP app.
 
 ### Exam shortcut
 
 If you see:
-- neural network training too slow, speed it up
-- reduce data processed (subsample training set)
-- not the test set
+- chatbot for text + voice, low/no-code
+- train on keywords/intents
+- Dialogflow
 
-Think: **subsample the training dataset**
+Think: **Dialogflow (define intents)**
 
-**Tiny mental image:** train on a representative slice to iterate faster.
+**Tiny mental image:** map common questions to intents and let Dialogflow handle the conversation.
 
-**Final answer:** B. Subsample your training dataset.'''
+**Final answer:** D. Use Dialogflow to implement the chatbot, defining the intents based on the most common queries collected.'''
 
-E["test_6_q12"] = '''### Step 4: Choose the answer
+E["test_14_q20"] = '''### Step 4: Choose the answer
 
-- Hyperparameter tuning on the SVM is the principled way to raise AUC beyond the default-parameter baseline.
-- It satisfies the goal: improve the existing model by optimizing its parameters.
-
-### Exam shortcut
-
-If you see:
-- model trained with default parameters, improve a metric (AUC)
-- tune before switching algorithms
-- hyperparameter tuning
-
-Think: **hyperparameter tuning**
-
-**Tiny mental image:** dial in the model's settings before throwing it out for a different one.
-
-**Final answer:** A. Perform hyperparameter tuning'''
-
-E["test_6_q13"] = '''### Step 4: Choose the answer
-
-- With labeled outcomes you can use supervised learning for fraud and to predict location, and clustering to group transactions by similarity.
-- It satisfies the question: supervised fraud detection, clustering into categories, and supervised location prediction.
+- A GPU accelerator speeds the TensorFlow training cost-effectively and supports the custom ops that need a CPU, which TPUs don't accommodate.
+- It satisfies both: faster training and compatibility with custom/partial-CPU operations.
 
 ### Exam shortcut
 
 If you see:
-- "which ML applications fit this data?"
-- supervised = predict labeled outcomes (fraud, location)
-- clustering = group by similarity
+- speed up TensorFlow training with custom ops (need CPU)
+- TPU can't run arbitrary custom ops
+- GPU vs TPU
 
-Think: **supervised (fraud/location) + clustering (group by similarity)**
+Think: **GPU accelerator (custom ops → not TPU)**
 
-**Tiny mental image:** label-driven predictions plus unsupervised grouping of similar transactions.
+**Tiny mental image:** a GPU turbo that still runs your hand-written operations; a TPU would choke.
 
-**Final answer:** A. Supervised learning to determine which transactions are most likely to be fraudulent.'''
+**Final answer:** C. Train the model using a VM with a GPU hardware accelerator.'''
 
-E["test_6_q31"] = '''### Step 4: Choose the answer
+E["test_14_q57"] = '''### Step 4: Choose the answer
 
-- categorical_column_with_hash_bucket handles a categorical column when you don't know all possible values, hashing them into a fixed number of buckets.
-- It satisfies the goal: encode an open-ended/unknown vocabulary without enumerating it.
-
-### Exam shortcut
-
-If you see:
-- categorical feature with unknown/unbounded vocabulary
-- don't know all possible values
-- hash buckets vs vocabulary list
-
-Think: **categorical_column_with_hash_bucket**
-
-**Tiny mental image:** when you can't list every category, hash each into one of N bins.
-
-**Final answer:** B. categorical_column_with_hash_bucket'''
-
-E["test_6_q40"] = '''### Step 4: Choose the answer
-
-- BigQuery natively supports geospatial (GIS) functions and ML predictions over the 40 TB dataset, and feeds a dashboard of at-risk ships by region.
-- It satisfies all: storage at scale, native prediction (BigQuery ML), geospatial processing (GeoJSON/GIS), and BI dashboards.
+- With data processing finished, the next lifecycle step is to delineate which data goes to training versus testing.
+- It satisfies the sequence: after prep comes the train/test split, before training and evaluation.
 
 ### Exam shortcut
 
 If you see:
-- large analytics dataset needing native prediction (ML) + geospatial (GIS)
-- dashboard/reporting on top
-- SQL at TB+ scale
+- ML lifecycle ordering, "what's next after data prep?"
+- split into train/test before training
+- then train → evaluate → deploy → monitor
 
-Think: **BigQuery (BigQuery ML + GIS)**
+Think: **define the train/test split (next step)**
 
-**Tiny mental image:** one warehouse that maps the ships, predicts delays, and feeds the dashboard.
+**Tiny mental image:** before teaching the model, set aside the exam it won't see during study.
 
-**Final answer:** A. BigQuery'''
+**Final answer:** C. Delineate what data will be used for testing and what will be used for training the model.'''
 
-E["test_6_q41"] = '''### Step 4: Choose the answer
+E["test_15_q10"] = '''### Step 4: Choose the answer
 
-- You split into train and test so you can verify the model generalizes to unseen data, not just memorizes the training set.
-- It satisfies the question: the test set measures generalization.
+- Denormalizing the data and appending hourly status updates (instead of in-place UPDATEs) maximizes BigQuery performance and usability for the data science team.
+- It satisfies both: fewer joins via denormalization and efficient append-only ingestion at PB scale.
 
 ### Exam shortcut
 
 If you see:
-- "why split into train/test?"
-- evaluate on unseen data
-- generalization, not memorization
+- huge structured dataset into BigQuery for ML, maximize performance
+- denormalize + append (no UPDATEs)
+- avoid join-heavy normalized schema
 
-Think: **test set checks generalization to new data**
+Think: **denormalize + append-only status updates**
 
-**Tiny mental image:** hold back an exam the model hasn't studied to see if it really learned.
+**Tiny mental image:** one wide table you keep adding rows to, not a web of tables you keep editing.
 
-**Final answer:** B. To make sure your model is generalized for more than just the training data'''
+**Final answer:** A. Denormalize the data as must as possible.'''
 
-E["test_6_q42"] = '''### Step 4: Choose the answer
+E["test_15_q13"] = '''### Step 4: Choose the answer
 
-- Cloud Vision AutoML trained on the existing labeled dataset (≈1000 images per component) produces a custom classifier for the PoC within days.
+- Cloud Vision AutoML trained on the existing labeled dataset produces a custom component classifier for the PoC within days.
 - It satisfies both: custom recognition of 750 components and a fast, low-code build.
 
 ### Exam shortcut
@@ -178,11 +106,29 @@ If you see:
 
 Think: **Cloud Vision AutoML (existing dataset)**
 
-**Tiny mental image:** feed your labeled component photos into AutoML and get a custom recognizer in days.
+**Tiny mental image:** feed your labeled photos into AutoML and get a custom recognizer in days.
 
 **Final answer:** A. Use Cloud Vision AutoML with the existing dataset.'''
 
-E["test_7_q4"] = '''### Step 4: Choose the answer
+E["test_15_q16"] = '''### Step 4: Choose the answer
+
+- Dialogflow Enterprise Edition interprets the customer voice commands and drives orders into the backend systems, integrating with assistants like Google Home.
+- It satisfies the goal: a conversational agent that understands intent and connects to fulfillment.
+
+### Exam shortcut
+
+If you see:
+- interpret voice commands / conversational ordering
+- integrate with assistants, call backends
+- intent + fulfillment
+
+Think: **Dialogflow (Enterprise)**
+
+**Tiny mental image:** a voice-order taker that understands the request and rings it up.
+
+**Final answer:** C. Dialogflow Enterprise Edition'''
+
+E["test_15_q25"] = '''### Step 4: Choose the answer
 
 - Cloud GPUs accelerate training while supporting the custom C++ ops once you implement GPU kernel support, which TPUs can't easily run.
 - It satisfies both: faster, lower-cost training and compatibility with custom operations.
@@ -200,166 +146,220 @@ Think: **Cloud GPUs (after GPU kernel support)**
 
 **Final answer:** C. Use Cloud GPUs after implementing GPU kernel support for your customs ops.'''
 
-E["test_7_q17"] = '''### Step 4: Choose the answer
+E["test_15_q28"] = '''### Step 4: Choose the answer
 
-- Feature-crossing latitude and longitude, bucketized at the minute level with L1 regularization, captures the location's nonlinear effect on price while keeping the sparse cross compact.
-- It satisfies the goal: encode the physical location dependency effectively, with L1 pruning unhelpful buckets.
-
-### Exam shortcut
-
-If you see:
-- location (lat/long) strongly affects the target, nonlinearly
-- bucketize + feature cross lat/long
-- L1 regularization to control the sparse cross
-
-Think: **bucketized feature cross of lat × long + L1**
-
-**Tiny mental image:** chop the map into a grid and cross the coordinates so each neighborhood gets its own signal.
-
-**Final answer:** C. Create a feature cross of latitude and longitude, bucketize at the minute level and use L1 regularization during optimization.'''
-
-E["test_7_q35"] = '''### Step 4: Choose the answer
-
-- Combining highly co-dependent features into one representative feature reduces dimensionality and speeds training with minimal accuracy loss.
-- It satisfies the goal: fewer features without discarding the signal they share.
+- Higher error on the train set than the test set signals underfitting, so increasing model complexity (an extra layer, larger vocabularies/n-grams) improves performance.
+- It satisfies the diagnosis: the model is too simple to fit the training data, so add capacity.
 
 ### Exam shortcut
 
 If you see:
-- too many features, speed up training, keep accuracy
-- merge correlated/co-dependent features
-- dimensionality reduction
+- train error higher than test error (underfitting)
+- model too simple for the data
+- add capacity/complexity
 
-Think: **combine co-dependent features into one**
+Think: **increase model complexity (underfitting fix)**
 
-**Tiny mental image:** fold redundant columns that say the same thing into a single column.
+**Tiny mental image:** the model can't even ace the practice set - give it more capacity to learn.
 
-**Final answer:** B. Combine highly co-dependent features into one representative feature.'''
+**Final answer:** D. Increase the complexity of your model by, e.g., introducing an additional layer or increase sizing the size of vocabularies or n-grams used.'''
 
-E["test_7_q38"] = '''### Step 4: Choose the answer
+E["test_15_q37"] = '''### Step 4: Choose the answer
 
-- Linear regression predicts the continuous house price and runs cheaply on a single resource-constrained VM.
-- It satisfies both: a numeric prediction and a lightweight algorithm (neural nets are heavier; logistic is for classification).
-
-### Exam shortcut
-
-If you see:
-- predict a continuous value on limited compute
-- lightweight, low-resource algorithm
-- regression, not deep nets
-
-Think: **linear regression**
-
-**Tiny mental image:** a simple line-fit that runs on a shoestring machine.
-
-**Final answer:** A. Linear regression'''
-
-E["test_8_q14"] = '''### Step 4: Choose the answer
-
-- Training a (linear) regression to output a continuous credit-default risk score fits the labeled default data and the prediction goal.
-- It satisfies the goal: predict a default-risk score from the historical labeled applications.
+- One-hot encoding the city values into binary columns with SQL prepares the categorical predictor in the column form BigQuery ML needs, with minimal coding.
+- It satisfies the goal: efficient, in-warehouse encoding of city names for training and serving.
 
 ### Exam shortcut
 
 If you see:
-- predict a default rate / risk score from labeled history
-- continuous score output
-- regression on labeled data
+- categorical string feature (city) for BigQuery ML
+- represent as columns for training/serving, minimal code
+- one-hot encoding
 
-Think: **regression to a risk score**
+Think: **one-hot encode the categorical column in SQL**
 
-**Tiny mental image:** fit the past defaults to produce a risk number for new applicants.
+**Tiny mental image:** turn each city into its own yes/no column the model can read.
 
-**Final answer:** B. Train a linear regression to predict a credit default risk score.'''
+**Final answer:** B. Use SQL in BigQuery to transform the state column using a one-hot encoding method, and make each city a column with binary values.'''
 
-E["test_8_q29"] = '''### Step 4: Choose the answer
+E["test_15_q43"] = '''### Step 4: Choose the answer
 
-- To fight overfitting, increase the training dataset and remove some input features, both pushing the model toward generalization.
-- It satisfies the goal: more data plus a simpler feature set reduces overfitting.
-
-### Exam shortcut
-
-If you see:
-- model overfitting, improve with new data
-- more data + fewer features
-- simplify and add examples
-
-Think: **more training data + fewer features**
-
-**Tiny mental image:** show more examples and trim the noisy features so it stops memorizing.
-
-**Final answer:** A. Increase the size of the training dataset and remove some input features'''
-
-E["test_8_q34"] = '''### Step 4: Choose the answer
-
-- Predicting a continuous stock price from history is a regression task, so you use a regressor.
-- It satisfies the question: continuous numeric output = regressor (not classifier/clustering).
+- Defining preprocessing in BigQuery ML's TRANSFORM clause makes the model auto-apply the same steps at prediction, so you can feed raw data without re-transforming - eliminating training/serving skew.
+- It satisfies the goal: identical preprocessing at train and predict time, baked into the model.
 
 ### Exam shortcut
 
 If you see:
-- predict a continuous value (price)
-- numeric output
-- regressor vs classifier
+- avoid training/serving skew in BigQuery ML
+- predict on raw, untransformed data
+- TRANSFORM clause auto-applies preprocessing
 
-Think: **Regressor**
+Think: **BigQuery ML TRANSFORM clause (auto-applied at prediction)**
 
-**Tiny mental image:** forecasting a price on a continuous dial, not a category.
+**Tiny mental image:** bake the prep recipe into the model so it preps every input the same way automatically.
 
-**Final answer:** B. Regressor'''
+**Final answer:** A. When creating your model, use BigQuery‘s TRANSFORM clause to define preprocessing steps. At prediction time, use BigQuery‘s ML.EVALUATE clause without specifying any transformations on the raw input data.'''
 
-E["test_10_q12"] = '''### Step 4: Choose the answer
+E["test_16_q24"] = '''### Step 4: Choose the answer
 
-- Subsampling the training dataset reduces the data processed per epoch, speeding up the slow neural-network training.
-- It satisfies the goal: faster training (more layers/features would slow it down).
-
-### Exam shortcut
-
-If you see:
-- neural network training too slow, speed it up
-- reduce data processed (subsample training set)
-- not the test set
-
-Think: **subsample the training dataset**
-
-**Tiny mental image:** train on a representative slice to iterate faster.
-
-**Final answer:** D. Should you subsample your training dataset?'''
-
-E["test_13_q28"] = '''### Step 4: Choose the answer
-
-- Partitioning the table by the weather date and setting partition expiration to 30 days automatically drops old data, minimizing cost with no scheduled deletes.
-- It satisfies the goal: keep only the last 30 days by the data's own date, managed automatically.
+- Hyperparameter tuning on the SVM is the principled way to raise AUC beyond the default-parameter baseline.
+- It satisfies the goal: improve the existing model by optimizing its parameters.
 
 ### Exam shortcut
 
 If you see:
-- retain only the last N days, minimize cost
-- partition by the meaningful date + partition expiration
-- automatic cleanup (not scheduled DELETE)
+- model trained with default parameters, improve a metric (AUC)
+- tune before switching algorithms
+- hyperparameter tuning
 
-Think: **partition by the data date + partition expiration**
+Think: **hyperparameter tuning**
 
-**Tiny mental image:** dated drawers that auto-empty after 30 days, no janitor needed.
+**Tiny mental image:** dial in the model's settings before throwing it out for a different one.
 
-**Final answer:** B. Create a BigQuery table partitioned by datetime value of the weather date. Set up partition expiration to 30 days.'''
+**Final answer:** A. Perform hyperparameter tuning'''
 
-E["test_13_q34"] = '''### Step 4: Choose the answer
+E["test_16_q35"] = '''### Step 4: Choose the answer
 
-- Storing header rows with their line items as nested and repeated fields co-locates the tightly-coupled data, so joins are eliminated and analytics queries run efficiently.
-- It satisfies the goal: a single denormalized table reflecting the fixed header-to-lines relationship.
+- Running the existing Spark ML models on Dataproc, reading directly from BigQuery, migrates the retraining pipelines quickly with minimal change.
+- It satisfies the goal: reuse Spark code on managed Dataproc against the BigQuery data.
 
 ### Exam shortcut
 
 If you see:
-- closely related parent/child tables always joined (header/lines)
-- BigQuery efficiency, avoid joins
-- nested and repeated fields
+- migrate existing Spark ML training, data in BigQuery
+- reuse Spark code (don't rewrite in TensorFlow)
+- Dataproc + BigQuery connector
 
-Think: **nest the line items as repeated fields inside the header**
+Think: **Dataproc Spark ML reading from BigQuery**
 
-**Tiny mental image:** tuck each order's line items inside the order row so no join is needed.
+**Tiny mental image:** run the same Spark models on managed Dataproc, pulling straight from the warehouse.
 
-**Final answer:** A. Create a sales_transaction table that holds the sales_transaction_header information as rows and the sales_transaction_line rows as nested and repeated fields.'''
+**Final answer:** C. Use Dataproc for training existing Spark ML models, but start reading data directly from BigQuery'''
+
+E["test_16_q36"] = '''### Step 4: Choose the answer
+
+- BigQuery natively supports geospatial (GIS) functions and ML predictions over the 40 TB dataset, and feeds a dashboard of at-risk ships by region.
+- It satisfies all: storage at scale, native prediction (BigQuery ML), geospatial processing (GeoJSON/GIS), and BI.
+
+### Exam shortcut
+
+If you see:
+- large analytics dataset needing native prediction (ML) + geospatial (GIS)
+- dashboard/reporting on top
+- SQL at TB+ scale
+
+Think: **BigQuery (BigQuery ML + GIS)**
+
+**Tiny mental image:** one warehouse that maps the ships, predicts delays, and feeds the dashboard.
+
+**Final answer:** A. BigQuery'''
+
+E["test_15_q3"] = '''### Step 4: Choose the answer
+
+- Analytics Hub shares a live, governed view of the dataset with third parties, keeping data current with no copies and low cost.
+- It satisfies both goals: minimal data-sharing cost (no duplication) and always-current data.
+
+### Exam shortcut
+
+If you see:
+- share BigQuery data with external/third parties
+- low cost, always current
+- avoid exporting/copying
+
+Think: **Analytics Hub (in-place sharing)**
+
+**Tiny mental image:** publish one live listing they subscribe to, instead of mailing copies that go stale.
+
+**Final answer:** A. Use Analytics Hub to control data access, and provide third party companies with access to the dataset.'''
+
+E["test_4_q13"] = '''### Step 4: Choose the answer
+
+- Creating monthly tables and exporting them compressed to Cloud Storage gives recoverable, low-cost backups that let you restore the affected month after a late-detected error.
+- It satisfies both: granular recovery (per month) and minimized backup storage cost via compression in Cloud Storage.
+
+### Exam shortcut
+
+If you see:
+- errors undetected for weeks, need granular recovery + cheap backups
+- partition/shard by month, export compressed to Cloud Storage
+- restore an affected period
+
+Think: **monthly tables + compressed export to Cloud Storage**
+
+**Tiny mental image:** keep each month's data in its own zipped box so you can restore just the bad month.
+
+**Final answer:** B. Create separate tables for each month, then export, compress, and store the data in Cloud Storage'''
+
+E["test_5_q13"] = '''### Step 4: Choose the answer
+
+- Switching to flat-rate (capacity) pricing with reservations and a hierarchical priority model gives business units guaranteed slot allocations, fixing the contention without new projects.
+- It satisfies both: predictable slot capacity and priority-based sharing across units.
+
+### Exam shortcut
+
+If you see:
+- users starved of on-demand slots, avoid adding projects
+- guarantee/allocate capacity across teams
+- flat-rate / reservations + priorities
+
+Think: **flat-rate pricing + reservation hierarchy/priorities**
+
+**Tiny mental image:** buy a fixed pool of slots and divvy guaranteed shares to each business unit.
+
+**Final answer:** C. Switch to flat-rate pricing and establish a hierarchical priority model for your projects.'''
+
+E["test_5_q14"] = '''### Step 4: Choose the answer
+
+- For autoscaling Dataflow, the maximum number of workers is the parameter that bounds how far the job can scale (and thus cost/throughput).
+- It satisfies the goal: control the upper limit of the autoscaled worker pool.
+
+### Exam shortcut
+
+If you see:
+- limit/control Dataflow autoscaling cost or throughput
+- cap the worker pool
+- maxNumWorkers
+
+Think: **maximum number of workers**
+
+**Tiny mental image:** set the hiring ceiling for the autoscaling crew.
+
+**Final answer:** D. The maximum number of workers'''
+
+E["test_6_q6"] = '''### Step 4: Choose the answer
+
+- A BigQuery view that concatenates FirstName and LastName exposes FullName with no extra storage and no data rewrite, minimizing cost.
+- It satisfies the goal: a derived FullName field computed at query time, cheaply.
+
+### Exam shortcut
+
+If you see:
+- expose a derived/computed column, minimize cost
+- no data duplication or UPDATE
+- view computes it on the fly
+
+Think: **a BigQuery view (computed column)**
+
+**Tiny mental image:** a virtual column that stitches first + last names on demand, storing nothing extra.
+
+**Final answer:** A. Create a view in BigQuery that concatenates the FirstName and LastName field values to produce the FullName.'''
+
+E["test_6_q26"] = '''### Step 4: Choose the answer
+
+- A small set of generalized charts and tables bound to criteria filters lets users select values dynamically, instead of pre-building one chart per combination.
+- It satisfies the goal: flexible, filter-driven visualization that scales to many criteria combinations.
+
+### Exam shortcut
+
+If you see:
+- many possible criteria combinations to visualize
+- avoid one chart per combination
+- generalized charts with interactive filters
+
+Think: **generalized charts + criteria filters (parameterized)**
+
+**Tiny mental image:** one flexible dashboard with dropdown filters, not a thousand static charts.
+
+**Final answer:** B. Look through the current data and compose a small set of generalized charts and tables bound to criteria filters that allow value selection.'''
 
 append_entries(E)
