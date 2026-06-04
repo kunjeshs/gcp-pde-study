@@ -2,400 +2,400 @@ from lib import append_entries
 
 E = {}
 
-E["test_6_q28"] = '''### Step 4: Choose the answer
+E["test_3_q11"] = '''### Step 4: Choose the answer
 
-- Using device_id as the row key (with date and data_point as column data) keeps each device's time-series together and spreads writes across devices, avoiding the hot-spotting a date-led key causes.
-- It satisfies the goal: balanced writes and efficient per-device reads in Bigtable.
-
-### Exam shortcut
-
-If you see:
-- Bigtable row-key design for per-device time-series
-- avoid leading the key with a timestamp/date (hot-spotting)
-- lead with the entity (device_id)
-
-Think: **row key = device_id (not date-led)**
-
-**Tiny mental image:** file by device first so all devices' writes spread out instead of stacking on today's date.
-
-**Final answer:** C. Rowkey: device_id Column data: date, data_point'''
-
-E["test_7_q44"] = '''### Step 4: Choose the answer
-
-- Monthly tables exported compressed to Cloud Storage give recoverable, low-cost backups so you can restore the affected month after a late-detected ETL error.
-- It satisfies both: granular per-month recovery and minimized backup storage cost.
+- Dialogflow implements the text-and-voice chatbot with low/no code by defining intents from the most common queries.
+- It satisfies the goal: keyword/intent-driven responses without building a custom NLP app.
 
 ### Exam shortcut
 
 If you see:
-- errors undetected for weeks, need granular recovery + cheap backups
-- monthly tables + compressed export to Cloud Storage
-- restore an affected period
+- chatbot for text + voice, low/no-code
+- train on keywords/intents
+- Dialogflow
 
-Think: **monthly tables + compressed export to Cloud Storage**
+Think: **Dialogflow (define intents)**
 
-**Tiny mental image:** keep each month's data in its own zipped box so you can restore just the bad month.
+**Tiny mental image:** map common questions to intents and let Dialogflow run the conversation.
 
-**Final answer:** B. Organize your data in separate tables for each month, and export, compress, and store the data in Cloud Storage.'''
+**Final answer:** D. Use Dialogflow to implement the chatbot and define the intents based on the most common queries.'''
 
-E["test_13_q3"] = '''### Step 4: Choose the answer
+E["test_4_q43"] = '''### Step 4: Choose the answer
 
-- A materialized view aggregating the base table with a filter on the last year's partitions always reflects the latest data, while cutting compute cost and maintenance versus a scheduled rebuild.
-- It satisfies all: auto-fresh results, lower cost/duration, and no manual refresh job.
-
-### Exam shortcut
-
-If you see:
-- repeated aggregations (AVG/MAX/SUM) over recent partitions, always current
-- reduce cost/maintenance, no manual refresh
-- materialized view with a partition filter
-
-Think: **materialized view (filtered to recent partitions)**
-
-**Tiny mental image:** an auto-updating precomputed summary scoped to the last year.
-
-**Final answer:** A. Create a materialized view to aggregate the base table data. Include a filter clause to specify the last one year of partitions.'''
-
-E["test_13_q10"] = '''### Step 4: Choose the answer
-
-- Distributing worker nodes across multiple availability zones mitigates zone failures, giving the Dataproc cluster higher availability and fault tolerance.
-- It satisfies the goal: resilience against a single zone outage.
+- Switching to flat-rate (capacity) pricing with a hierarchical priority/reservation model gives business units guaranteed slot allocations, fixing the contention without new projects.
+- It satisfies both: predictable slot capacity and priority-based sharing across units.
 
 ### Exam shortcut
 
 If you see:
-- Dataproc high availability / fault tolerance
-- survive a zone failure
-- spread workers across zones
+- users starved of on-demand slots, avoid adding projects
+- guarantee/allocate capacity across teams
+- flat-rate / reservations + priorities
 
-Think: **distribute workers across multiple zones**
+Think: **flat-rate pricing + reservation hierarchy/priorities**
 
-**Tiny mental image:** don't put the whole crew in one building that might go dark.
+**Tiny mental image:** buy a fixed pool of slots and divvy guaranteed shares to each business unit.
 
-**Final answer:** D. Distribute worker nodes across multiple availability zones to mitigate the risk of zone failures.'''
+**Final answer:** C. Switch to flat-rate pricing and set up a hierarchical priority system for your projects'''
 
-E["test_13_q31"] = '''### Step 4: Choose the answer
+E["test_14_q16"] = '''### Step 4: Choose the answer
 
-- Bigtable garbage collection is not immediate, so applying a timestamp range filter in the query excludes data older than 30 days with minimal cost and overhead.
-- It satisfies the goal: hide stale rows at query time rather than running deletes or changing GC.
-
-### Exam shortcut
-
-If you see:
-- Bigtable shows data past the GC window (GC isn't instant)
-- exclude old data cheaply, no extra jobs
-- timestamp range filter at query time
-
-Think: **timestamp range filter in the query**
-
-**Tiny mental image:** GC hasn't swept yet, so just ask only for the last 30 days.
-
-**Final answer:** B. Use a timestamp range filter in the query to fetch the customer‘s data for a specific range.'''
-
-E["test_13_q46"] = '''### Step 4: Choose the answer
-
-- A BigQuery reservation at the project level applies dedicated slot capacity to the scan-intensive CDC process, giving predictable cost.
-- It satisfies the goal: assign reserved slots to the project running the CDC, moving off variable on-demand pricing.
+- Running the non-time-sensitive SQL pipelines as batch queries (which queue instead of failing) and ad-hoc queries as interactive jobs resolves the concurrency quota errors.
+- It satisfies the goal: batch jobs wait for slots rather than erroring, leaving interactive capacity for analysts.
 
 ### Exam shortcut
 
 If you see:
-- predictable BigQuery cost for a heavy/scan-intensive workload
-- reservations are assigned at project (or folder/org) level
-- move off on-demand
+- BigQuery concurrency/quota errors, some jobs not time-sensitive
+- batch queries queue (no concurrency error); interactive run immediately
+- separate batch vs interactive
 
-Think: **BigQuery reservation assigned to the project**
+Think: **pipelines → batch queries, ad-hoc → interactive**
 
-**Tiny mental image:** buy a fixed slot allotment and pin it to the project doing the heavy scanning.
+**Tiny mental image:** put the patient jobs in the queue lane and keep the express lane for live queries.
 
-**Final answer:** D. Create a BigQuery reservation for the project.'''
+**Final answer:** B. Update SQL pipelines to run as a batch query, and run ad-hoc queries as interactive query jobs.'''
 
-E["test_13_q52"] = '''### Step 4: Choose the answer
+E["test_1_q40"] = '''### Step 4: Choose the answer
 
-- A reservation with a fixed 500-slot baseline and no autoscaling gives the marketing team steady, predictable monthly spend.
-- It satisfies the goal: flat capacity-based cost with no variable autoscaling surprises.
-
-### Exam shortcut
-
-If you see:
-- make BigQuery spend predictable/steady each month
-- fixed baseline slots, autoscaling off
-- capacity reservation, bill back
-
-Think: **fixed-baseline reservation, no autoscaling**
-
-**Tiny mental image:** rent a fixed block of slots so the bill is the same every month.
-
-**Final answer:** C. Create a BigQuery reservation with a baseline of 500 slots with no autoscaling for the marketing team, and bill them back accordingly.'''
-
-E["test_14_q24"] = '''### Step 4: Choose the answer
-
-- Partitioning by create_date serves the recent-data filter, and clustering by location_id and device_version speeds the specific filtered queries.
-- It satisfies both: date pruning plus clustering on the exact filter columns for cost and performance.
+- Exporting Cloud Audit Logs to Cloud Storage with a locked retention policy (and a lifecycle rule to delete at 3 years) keeps the IAM-change logs immutable for the required period.
+- It satisfies the mandate: tamper-proof 3-year retention of IAM change logs, then automatic cleanup.
 
 ### Exam shortcut
 
 If you see:
-- recent-data (date) filter + filters on a few specific columns
-- partition by date, cluster by the filter columns
-- IoT/time-series in BigQuery
+- retain audit/IAM-change logs immutably for N years
+- export Cloud Audit Logs to Cloud Storage
+- locked retention policy + lifecycle delete
 
-Think: **partition by date, cluster by the filter columns**
+Think: **Audit Logs → Cloud Storage + locked retention + lifecycle**
 
-**Tiny mental image:** file by day, then sort within each day by location and device version.
+**Tiny mental image:** funnel the change logs into a time-locked vault that auto-empties after 3 years.
 
-**Final answer:** B. Partition table data by create_date, cluster table data by location_id, and device_version.'''
+**Final answer:** A. Use Cloud Audit Logs and export them to Cloud Storage. Create a retention policy and retention policy lock to prevent the logs from being deleted prior to them reaching 3 years of age. Define a lifecycle policy to delete the logs after three years.'''
 
-E["test_15_q14"] = '''### Step 4: Choose the answer
+E["test_2_q3"] = '''### Step 4: Choose the answer
 
-- Monthly tables exported compressed to Cloud Storage give recoverable, low-cost backups so you can restore the affected month after a late-detected ETL error.
-- It satisfies both: granular per-month recovery and minimized backup storage cost.
-
-### Exam shortcut
-
-If you see:
-- errors undetected for weeks, need granular recovery + cheap backups
-- monthly tables + compressed export to Cloud Storage
-- restore an affected period
-
-Think: **monthly tables + compressed export to Cloud Storage**
-
-**Tiny mental image:** keep each month's data in its own zipped box so you can restore just the bad month.
-
-**Final answer:** B. Organize your data in separate tables for each month, and export, compress, and store the data in Cloud Storage.'''
-
-E["test_15_q29"] = '''### Step 4: Choose the answer
-
-- Raising the maximum worker count (and/or using a larger worker instance type) adds the compute the maxed-out n1-standard-1 workers lack.
-- It satisfies the goal: more parallelism/compute to increase pipeline throughput.
+- Key Visualizer is the Bigtable tool that visualizes access patterns and hot row-key ranges to diagnose row-key design problems.
+- It satisfies the goal: review access patterns across row keys to find the imbalance.
 
 ### Exam shortcut
 
 If you see:
-- Dataflow pipeline underperforming, small/few workers
-- scale out (more workers) or up (bigger workers)
-- increase throughput
+- diagnose Bigtable performance / row-key hot-spotting
+- visualize access patterns across key ranges
+- Key Visualizer
 
-Think: **increase max workers (and/or larger worker type)**
+Think: **Bigtable Key Visualizer**
 
-**Tiny mental image:** add more lanes - or wider trucks - to clear the traffic.
+**Tiny mental image:** a heatmap of your row keys showing where the traffic piles up.
 
-**Final answer:** A. Increase the number of max workers'''
+**Final answer:** C. Key Visualizer'''
 
-E["test_15_q32"] = '''### Step 4: Choose the answer
+E["test_2_q4"] = '''### Step 4: Choose the answer
 
-- Copying the data to a new table clustered on the package-tracking ID co-locates each package's records, speeding the geospatial lifecycle queries.
-- It satisfies the goal: better performance via clustering on the queried entity.
-
-### Exam shortcut
-
-If you see:
-- partitioned table slowing over time, queries by a high-cardinality ID
-- improve performance with clustering
-- cluster on the queried entity
-
-Think: **cluster on the package-tracking ID**
-
-**Tiny mental image:** group each package's events so its lifecycle query reads one tight block.
-
-**Final answer:** B. Implement clustering in BigQuery on the package-tracking ID column.'''
-
-E["test_2_q31"] = '''### Step 4: Choose the answer
-
-- Setting the dataproc:dataproc.scheduler.max-concurrent-jobs cluster property at cluster creation caps the number of concurrent jobs.
-- It satisfies the goal: bound concurrency via the correct cluster property at creation time.
+- job/system_lag reports the maximum time an item has been waiting to be processed in the Dataflow pipeline.
+- It satisfies the goal: track the longest current processing delay.
 
 ### Exam shortcut
 
 If you see:
-- limit concurrent jobs on a Dataproc cluster
-- cluster property dataproc:dataproc.scheduler.max-concurrent-jobs
-- set at cluster creation
+- max time an element has waited in a Dataflow pipeline
+- processing latency / backlog age
+- system_lag
 
-Think: **dataproc:dataproc.scheduler.max-concurrent-jobs at create**
+Think: **job/system_lag**
 
-**Tiny mental image:** set the "max jobs at once" dial when you build the cluster.
+**Tiny mental image:** the longest any item has sat in the queue waiting its turn.
 
-**Final answer:** B. Set dataproc:dataproc.scheduler.max-concurrent-jobs property when creating a cluster.'''
+**Final answer:** B. job/system_lag'''
 
-E["test_3_q40"] = '''### Step 4: Choose the answer
+E["test_4_q12"] = '''### Step 4: Choose the answer
 
-- Cloud Build with Terraform provisions the specialized GKE infrastructure (GPUs, local SSDs, 8 Gbps) and launches containers with the latest registry configs in a managed, repeatable way.
-- It satisfies both: declarative infrastructure provisioning and CI/CD container deployment.
-
-### Exam shortcut
-
-If you see:
-- provision specialized GKE infra + deploy latest container configs
-- managed, repeatable deployment process
-- Cloud Build + Terraform (IaC)
-
-Think: **Cloud Build + Terraform (IaC + CI/CD)**
-
-**Tiny mental image:** code-defined infrastructure plus an automated build that ships the newest images.
-
-**Final answer:** B. Use Cloud Build with Terraform build to provision the infrastructure and launch containers with the latest available configurations from the container registry'''
-
-E["test_3_q45"] = '''### Step 4: Choose the answer
-
-- Automating the 10 intents that cover 70% of requests frees live agents to handle the complex 30%, maximizing impact quickly.
-- It satisfies the goal: automate the high-volume, simple intents first for the biggest deflection.
+- Loading the new records into a table and applying a single MERGE (writing to a new table) avoids the per-row UPDATE DML limit that triggers quotaExceeded.
+- It satisfies the goal: bulk-apply a million updates in one set-based operation instead of many UPDATEs.
 
 ### Exam shortcut
 
 If you see:
-- which chatbot intents to automate first
-- a small set of intents covers most volume
-- automate the high-frequency simple ones first
+- quotaExceeded on many BigQuery UPDATEs
+- bulk-apply updates via load + MERGE
+- set-based, not row-by-row
 
-Think: **automate the few intents covering most requests first**
+Think: **load to a table + single MERGE**
 
-**Tiny mental image:** knock out the common questions so humans focus on the hard ones.
+**Tiny mental image:** reconcile all the changes in one sweep, not a million separate edits.
 
-**Final answer:** A. Automate the 10 intents that cover 70% of the requests so that live agents can handle more complicated requests'''
+**Final answer:** D. Import the new records from the CSV file into a new BigQuery table. Merge the new records with the existing records using a BigQuery job and write the results to a new BigQuery table.'''
 
-E["test_4_q6"] = '''### Step 4: Choose the answer
+E["test_4_q19"] = '''### Step 4: Choose the answer
 
-- Cloud Composer (managed Airflow) orchestrates the interdependent Dataproc and Dataflow jobs as a daily DAG.
-- It satisfies the goal: managed, dependency-aware scheduling of a complex multi-job pipeline.
-
-### Exam shortcut
-
-If you see:
-- automate a multi-job pipeline with interdependencies, daily
-- managed orchestration (Dataproc + Dataflow steps)
-- DAG, not just a scheduler
-
-Think: **Cloud Composer (Airflow DAG)**
-
-**Tiny mental image:** a conductor running the daily score of dependent jobs in order.
-
-**Final answer:** B. Cloud Composer'''
-
-E["test_4_q14"] = '''### Step 4: Choose the answer
-
-- Exporting the Dataprep job as a Dataflow template and running it from a Cloud Composer DAG lets you reuse the recipe daily after the variable-time load completes.
-- It satisfies both: reusable templated execution and dependency on the upstream load finishing.
+- The redelivery (high message rate, no errors) means the subscriber can't keep up with volume and/or isn't acknowledging messages, so Pub/Sub re-delivers them.
+- It satisfies the diagnosis: unacked/too-slow processing causes at-least-once redelivery, inflating the rate.
 
 ### Exam shortcut
 
 If you see:
-- reuse a Dataprep recipe daily, after a variable-time upstream job
-- need dependency-aware orchestration (not a fixed cron)
-- Dataprep → Dataflow template → Composer
+- Pub/Sub processing rate higher than expected, no errors
+- duplicates from redelivery
+- subscriber too slow or not acking
 
-Think: **Dataprep → Dataflow template, run via Cloud Composer**
+Think: **subscriber can't keep up / doesn't ack → redelivery**
 
-**Tiny mental image:** turn the recipe into a reusable template and let the orchestrator run it once the load finishes.
+**Tiny mental image:** the courier keeps re-dropping parcels no one signs for fast enough.
 
-**Final answer:** D. Export the Dataprep job as a Dataflow template, and incorporate it into a Cloud Composer job.'''
+**Final answer:** D. The subscriber code is unable to keep up with the message volume.'''
 
-E["test_4_q31"] = '''### Step 4: Choose the answer
+E["test_4_q32"] = '''### Step 4: Choose the answer
 
-- Exporting Cloud Logging data daily to BigQuery and building views filtered by project, log type, resource, and user produces the daily consumption-and-user reports efficiently.
-- It satisfies the goal: SQL-queryable, filterable daily reports from the usage logs.
-
-### Exam shortcut
-
-If you see:
-- daily reports on resource consumption + who used them
-- source is Cloud Logging / audit logs
-- export to BigQuery and build views
-
-Think: **Cloud Logging → BigQuery export + filtered views**
-
-**Tiny mental image:** pour the logs into the warehouse each day and slice them with saved views.
-
-**Final answer:** A. Export Cloud Logging data to BigQuery daily and create views that filter by project, log type, resource, and user'''
-
-E["test_6_q49"] = '''### Step 4: Choose the answer
-
-- Exporting the Dataprep job as a Dataflow template and running it from a Cloud Composer DAG reuses the recipe daily after the variable-time load completes.
-- It satisfies both: reusable templated execution and dependency on the upstream load finishing.
+- A batch job that processes some elements and then fails with DoFn-specific errors points to runtime exceptions in the worker code (the DoFn logic).
+- It satisfies the diagnosis: validation/graph-construction errors fail before processing; this failed mid-run, so it's worker code.
 
 ### Exam shortcut
 
 If you see:
-- reuse a Dataprep recipe daily, after a variable-time upstream job
-- dependency-aware orchestration (not a fixed cron)
-- Dataprep → Dataflow template → Composer
+- Dataflow processes a few elements then fails, DoFn errors
+- runtime (not construction/validation) failure
+- worker code exception
 
-Think: **Dataprep → Dataflow template, run via Cloud Composer**
+Think: **errors in the worker (DoFn) code**
 
-**Tiny mental image:** turn the recipe into a reusable template and let the orchestrator run it once the load finishes.
+**Tiny mental image:** the line ran a bit, then a faulty step (DoFn) threw and stopped it.
 
-**Final answer:** D. Export the Cloud Dataprep job as a Cloud Dataflow template, and incorporate it into a Cloud Composer job.'''
+**Final answer:** B. Errors in the worker code'''
 
-E["test_6_q51"] = '''### Step 4: Choose the answer
+E["test_5_q40"] = '''### Step 4: Choose the answer
 
-- Cloud Composer (managed Airflow) orchestrates the interdependent Dataproc and Dataflow jobs as a daily DAG.
-- It satisfies the goal: managed, dependency-aware scheduling of a multi-step pipeline.
-
-### Exam shortcut
-
-If you see:
-- automate a multi-job pipeline with interdependencies, daily
-- managed orchestration (Dataproc + Dataflow)
-- DAG, not just a scheduler
-
-Think: **Cloud Composer (Airflow DAG)**
-
-**Tiny mental image:** a conductor running the daily score of dependent jobs in order.
-
-**Final answer:** B. Cloud Composer'''
-
-E["test_14_q44"] = '''### Step 4: Choose the answer
-
-- Enabling the Airflow REST API, having Cloud Storage notifications trigger a Cloud Function that calls the DAG via the Airflow REST API and web server URL (over VPC Serverless Access), triggers the DAG reactively without internet.
-- It satisfies the goal: event-driven DAG runs on file arrival within a no-internet Composer 2 subnetwork.
+- Loading the new records into a table and applying a single MERGE (writing to a new table) avoids the per-statement UPDATE DML limit that causes quotaExceeded.
+- It satisfies the goal: bulk-apply a million updates in one set-based operation.
 
 ### Exam shortcut
 
 If you see:
-- trigger a Composer DAG on new GCS file (event-driven, not scheduled)
-- no internet access on the subnetwork
-- GCS notification → Cloud Function → Airflow REST API
+- quotaExceeded on many BigQuery UPDATEs
+- bulk-apply via load + MERGE
+- set-based, not row-by-row
 
-Think: **GCS notification → Cloud Function → Airflow REST API (via private access)**
+Think: **load to a table + single MERGE**
 
-**Tiny mental image:** each new file pings a function that quietly tells Airflow to run the DAG.
+**Tiny mental image:** reconcile all changes in one sweep, not a million separate edits.
 
-**Final answer:** D. 1. Enable the Airflow REST API, and set up Cloud Storage notifications to trigger a Cloud Function instance. 2. Write a Cloud Function instance to call the DAG by using the Airflow REST API and the web server URL. 3. Use VPC Serverless Access to reach the web server URL.'''
+**Final answer:** D. Import the new records from the CSV file into a new BigQuery table. Create a BigQuery job that merges the new records with the existing records and writes the results to a new BigQuery table.'''
 
-E["test_15_q21"] = '''### Step 4: Choose the answer
+E["test_10_q33"] = '''### Step 4: Choose the answer
 
-- A Cloud Composer DAG models the mix of sequential and concurrent Spark jobs as task dependencies and automates the scheduled run.
-- It satisfies the goal: orchestrate complex inter-job ordering, not just submit jobs.
-
-### Exam shortcut
-
-If you see:
-- jobs with mixed sequential + concurrent dependencies, scheduled
-- automate a multi-job workflow
-- orchestration across steps
-
-Think: **Cloud Composer DAG**
-
-**Tiny mental image:** a dependency graph the conductor follows, some jobs in series, others in parallel.
-
-**Final answer:** C. Create a Directed Acyclic Graph in Cloud Composer'''
-
-E["test_15_q31"] = '''### Step 4: Choose the answer
-
-- Automating the 10 intents that cover 70% of requests frees live agents for the complex 30%, delivering the most value fastest.
-- It satisfies the goal: automate the high-volume, simple intents first.
+- A Cloud Monitoring dashboard on the BigQuery slots/allocated_for_project metric lets each team watch its own project's slot usage directly.
+- It satisfies the goal: per-project slot visibility from a built-in metric, no custom log pipeline.
 
 ### Exam shortcut
 
 If you see:
-- which chatbot intents to automate first
-- a small set of intents covers most volume
-- automate the high-frequency simple ones first
+- monitor BigQuery slot usage per project/team
+- built-in metric slots/allocated_for_project
+- Cloud Monitoring dashboard
 
-Think: **automate the few intents covering most requests first**
+Think: **Cloud Monitoring + slots/allocated_for_project**
 
-**Tiny mental image:** knock out the common questions so humans focus on the hard ones.
+**Tiny mental image:** a ready-made gauge of each project's slot consumption.
 
-**Final answer:** A. Automate the 10 intents that cover 70% of the requests so that live agents can handle more complicated requests.'''
+**Final answer:** B. Develop a Cloud Monitoring dashboard utilizing the BigQuery metric slots/allocated_for_project.'''
+
+E["test_13_q18"] = '''### Step 4: Choose the answer
+
+- Assigning notification logic to the operator's on_failure_callback fires when the at-risk task fails, alerting you.
+- It satisfies the goal: a callback that runs specifically on task failure (not retry or SLA miss).
+
+### Exam shortcut
+
+If you see:
+- notify when an Airflow task fails
+- operator callback parameter
+- on_failure_callback (vs on_retry/sla_miss)
+
+Think: **on_failure_callback**
+
+**Tiny mental image:** wire the alarm to the "task failed" hook on that operator.
+
+**Final answer:** C. Assign a function with notification logic to the on_failure_callback parameter tor the operator responsible for the task at risk.'''
+
+E["test_13_q36"] = '''### Step 4: Choose the answer
+
+- Checking for duplicate rows, using Audit logs to find the job IDs, and Cloud Monitoring to identify the Dataflow jobs/versions reveals that more than one pipeline is writing to the table - stop all but the latest.
+- It satisfies the goal: root-cause the doubled partition size (duplicate writes from overlapping pipeline versions) and fix it.
+
+### Exam shortcut
+
+If you see:
+- BigQuery partition size doubled, source volume unchanged
+- suspect duplicate writes from multiple pipeline versions
+- trace via Audit logs + Monitoring, stop extra writers
+
+Think: **find duplicate writers (Audit logs + Monitoring), keep only the latest pipeline**
+
+**Tiny mental image:** two pipelines were quietly pouring the same data in - shut the old one off.
+
+**Final answer:** C. 1. Check for duplicate rows in the BigQuery tables that have the daily partition data size doubled. 2. Check the BigQuery Audit logs to find job IDs. 3. Use Cloud Monitoring to determine when the identified Dataflow jobs started and the pipeline code version. 4. When more than one pipeline ingests data into a table, stop all versions except the latest one.'''
+
+E["test_14_q25"] = '''### Step 4: Choose the answer
+
+- Worker pod evictions from memory pressure are resolved by increasing the Composer environment size and giving the Airflow workers more memory.
+- It satisfies the goal: more memory headroom so tasks stop being OOM-evicted.
+
+### Exam shortcut
+
+If you see:
+- Cloud Composer worker pod evictions, high worker memory
+- tasks failing from memory pressure
+- bigger environment / more worker memory
+
+Think: **increase environment size + worker memory**
+
+**Tiny mental image:** the workers are running out of RAM - give them a bigger room.
+
+**Final answer:** B. Increase the Cloud Composer 2 environment size from medium to large.'''
+
+E["test_14_q55"] = '''### Step 4: Choose the answer
+
+- The administrative resource charts plus querying INFORMATION_SCHEMA reveal slot utilization and per-job performance over time, pinpointing queuing/contention.
+- It satisfies the goal: investigate job-level performance to find where the slowdowns occur.
+
+### Exam shortcut
+
+If you see:
+- investigate BigQuery slowness, slot contention/queuing
+- per-job performance over time
+- admin resource charts + INFORMATION_SCHEMA
+
+Think: **admin resource charts + INFORMATION_SCHEMA queries**
+
+**Tiny mental image:** read the slot-usage charts and query the job history to see what's stuck.
+
+**Final answer:** C. Use available administrative resource charts to determine how slots are being used and how jobs are performing over time. Run a query on the INFORMATION_SCHEMA to review query performance.'''
+
+E["test_15_q15"] = '''### Step 4: Choose the answer
+
+- Loading the new records into a table and applying a single MERGE (writing to a new table) avoids the per-statement UPDATE DML limit that causes quotaExceeded.
+- It satisfies the goal: bulk-apply a million updates in one set-based operation.
+
+### Exam shortcut
+
+If you see:
+- quotaExceeded on many BigQuery UPDATEs
+- bulk-apply via load + MERGE
+- set-based, not row-by-row
+
+Think: **load to a table + single MERGE**
+
+**Tiny mental image:** reconcile all changes in one sweep, not a million separate edits.
+
+**Final answer:** D. Import the new records from the CSV file into a new BigQuery table. Create a BigQuery job that merges the new records with the existing records and writes the results to a new BigQuery table.'''
+
+E["test_15_q30"] = '''### Step 4: Choose the answer
+
+- A Cloud Monitoring dashboard on the BigQuery slots/allocated_for_project metric lets each team watch its own project's slot usage directly.
+- It satisfies the goal: per-project slot visibility from a built-in metric, no custom log pipeline.
+
+### Exam shortcut
+
+If you see:
+- monitor BigQuery slot usage per project/team
+- built-in metric slots/allocated_for_project
+- Cloud Monitoring dashboard
+
+Think: **Cloud Monitoring + slots/allocated_for_project**
+
+**Tiny mental image:** a ready-made gauge of each project's slot consumption.
+
+**Final answer:** B. Create a Cloud Monitoring dashboard based on the BigQuery metric slots/allocated_for_project'''
+
+E["test_15_q57"] = '''### Step 4: Choose the answer
+
+- A batch job that processes a few elements then fails with DoFn-specific errors points to runtime exceptions in the worker code.
+- It satisfies the diagnosis: validation/graph-construction errors fail before processing; this failed mid-run, so it's worker code.
+
+### Exam shortcut
+
+If you see:
+- Dataflow processes a few elements then fails, DoFn errors
+- runtime (not construction/validation) failure
+- worker code exception
+
+Think: **exceptions in the worker (DoFn) code**
+
+**Tiny mental image:** the line ran a bit, then a faulty step threw and stopped it.
+
+**Final answer:** B. Exceptions in worker code'''
+
+E["test_16_q4"] = '''### Step 4: Choose the answer
+
+- subscription/num_undelivered_messages shows the backlog on a pull subscription, signaling when subscribers aren't keeping up with ingestion.
+- It satisfies the goal: monitor consumer lag at the subscription level.
+
+### Exam shortcut
+
+If you see:
+- subscribers not keeping up with Pub/Sub ingestion
+- backlog on a pull subscription
+- num_undelivered_messages (subscription)
+
+Think: **subscription/num_undelivered_messages**
+
+**Tiny mental image:** the pile of unread messages growing on the subscription tells you it's falling behind.
+
+**Final answer:** D. subscription/num_undelivered_messages'''
+
+E["test_14_q3"] = '''### Step 4: Choose the answer
+
+- A dual-region Cloud Storage bucket with turbo replication minimizes RPO during a regional failure while keeping a single, transparent bucket for the applications.
+- It satisfies the goal: low-RPO resilience with no application changes (one bucket, replicated across regions).
+
+### Exam shortcut
+
+If you see:
+- survive a regional failure, minimize RPO, no app disruption
+- single transparent bucket, fast cross-region replication
+- dual-region + turbo replication
+
+Think: **dual-region bucket + turbo replication**
+
+**Tiny mental image:** one bucket backed by a synced twin region, replicated fast, invisible to the apps.
+
+**Final answer:** C. Adopt a dual-region Cloud Storage bucket, and enable turbo replication in your architecture.'''
+
+E["test_15_q11"] = '''### Step 4: Choose the answer
+
+- A multi-regional Cloud Storage bucket maximizes availability and is directly accessible by Dataproc, BigQuery, and Compute Engine for any file format.
+- It satisfies the goal: a single highly-available store for CSV/Avro/PDF that all tools read, with performance not a concern.
+
+### Exam shortcut
+
+If you see:
+- one store shared by Dataproc + BigQuery + Compute Engine
+- mixed formats (CSV/Avro/PDF), maximize availability
+- performance not the priority
+
+Think: **multi-regional Cloud Storage bucket**
+
+**Tiny mental image:** one highly-available warehouse every department can enter, holding boxes of any shape.
+
+**Final answer:** D. Store the data in a multi-regional Cloud Storage bucket. Access the data directly using Dataproc, BigQuery, and Compute Engine.'''
+
+E["test_15_q34"] = '''### Step 4: Choose the answer
+
+- Scheduling a daily export of the table to a dual/multi-region Cloud Storage bucket gives an RPO under 24 hours at minimal cost.
+- It satisfies the goal: cheap, region-resilient backup meeting the sub-24h recovery point.
+
+### Exam shortcut
+
+If you see:
+- protect a BigQuery table from regional failure, RPO < 24h, minimize cost
+- daily export to a multi/dual-region bucket
+- cheaper than snapshots/dual-write
+
+Think: **daily export to a dual/multi-region Cloud Storage bucket**
+
+**Tiny mental image:** dump a daily copy into a cross-region bucket - cheap insurance within a day's RPO.
+
+**Final answer:** A. Schedule a daily export of the table to a Cloud Storage dual or multi-region bucket.'''
 
 append_entries(E)
