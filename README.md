@@ -85,6 +85,7 @@ login.html              # password gate
 chapters.html           # chapter index
 chapter.html            # ?slug=… chapter detail
 question-bank.html      # full bank + topic filter + search
+official-sample.html    # Google's 26 official sample questions + How-to-Think
 quiz.html               # ?topic=… per-topic quiz
 review.html             # flagged + missed
 weak-areas.html         # topic scoreboard

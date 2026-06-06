@@ -1,5 +1,5 @@
 {
- "total_questions": 592,
+ "total_questions": 618,
  "topics": [
   {
    "topic": "1.1 Designing for security and compliance",
@@ -95,6 +95,11 @@
    "topic": "5.5 Maintaining awareness of failures and mitigating impact",
    "slug": "5-5-maintaining-awareness-of-failures-and-mitigating-impact",
    "question_count": 3
+  },
+  {
+   "topic": "6.0 Google Official Sample Questions",
+   "slug": "6-0-google-official-sample-questions",
+   "question_count": 26
   }
  ]
 }

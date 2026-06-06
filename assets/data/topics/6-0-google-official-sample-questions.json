@@ -1,0 +1,350 @@
+{
+ "topic": "6.0 Google Official Sample Questions",
+ "slug": "6-0-google-official-sample-questions",
+ "question_count": 26,
+ "note": "Google's official Professional Data Engineer sample test. Open the dedicated 'Official Sample' tab for full How-to-Think breakdowns and Why-You-Missed-It analysis on the four missed questions.",
+ "questions": [
+  {
+   "id": "official_q1",
+   "source": "Google Official Sample",
+   "question": "One of your encryption keys stored in Cloud Key Management Service (Cloud KMS) was exposed. You need to re-encrypt all of your CMEK-protected Cloud Storage data that used that key, and then delete the compromised key. You also want to reduce the risk of objects getting written without customer-managed encryption key (CMEK) protection in the future. What should you do?",
+   "options": [
+    "Rotate the Cloud KMS key version. Continue to use the same Cloud Storage bucket.",
+    "Create a new Cloud KMS key. Set the default CMEK key on the existing Cloud Storage bucket to the new one.",
+    "Create a new Cloud KMS key. Create a new Cloud Storage bucket. Copy all objects from the old bucket to the new one bucket while specifying the new Cloud KMS key in the copy command.",
+    "Create a new Cloud KMS key. Create a new Cloud Storage bucket configured to use the new key as the default CMEK key. Copy all objects from the old bucket to the new bucket without specifying a key."
+   ],
+   "answer": ["Create a new Cloud KMS key. Create a new Cloud Storage bucket configured to use the new key as the default CMEK key. Copy all objects from the old bucket to the new bucket without specifying a key."],
+   "explanation": "D — A new bucket with default CMEK guarantees the copy itself re-encrypts (no key specified = default key) and any future writes inherit the default key. Rotation alone leaves existing objects bound to the compromised version. Setting default CMEK on the old bucket only affects new writes, not existing data. See the Official Sample tab for the full How-to-Think breakdown."
+  },
+  {
+   "id": "official_q2",
+   "source": "Google Official Sample",
+   "question": "You need to connect multiple applications with dynamic public IP addresses to a Cloud SQL instance. You configured users with strong passwords and enforced the SSL connection to your Cloud SQL instance. You want to use Cloud SQL public IP and ensure that you have secured connections. What should you do?",
+   "options": [
+    "Add all application networks to Authorized Network and regularly update them.",
+    "Add CIDR 0.0.0.0/0 network to Authorized Network. Use Identity and Access Management (IAM) to add users.",
+    "Add CIDR 0.0.0.0/0 network to Authorized Network. Use Cloud SQL Auth proxy on all applications.",
+    "Leave the Authorized Network empty. Use Cloud SQL Auth proxy on all applications."
+   ],
+   "answer": ["Leave the Authorized Network empty. Use Cloud SQL Auth proxy on all applications."],
+   "explanation": "D — Cloud SQL Auth Proxy authenticates via IAM and builds an encrypted tunnel; it REPLACES Authorized Networks. Stacking 0.0.0.0/0 with Auth Proxy is the textbook trap: it opens the public endpoint to the world and nullifies the proxy's value. ⚠ YOU MISSED THIS ONE — see the Official Sample tab for the full Why-You-Missed-It deep dive."
+  },
+  {
+   "id": "official_q3",
+   "source": "Google Official Sample",
+   "question": "You are preparing an organization-wide dataset. You need to preprocess customer data stored in a restricted bucket in Cloud Storage. The data will be used to create consumer analyses. You need to comply with data privacy requirements. What should you do?",
+   "options": [
+    "Use Dataflow and Cloud KMS to encrypt sensitive fields and write the encrypted data in BigQuery. Share the encryption key by following the principle of least privilege.",
+    "Use the Cloud Data Loss Prevention API and Dataflow to detect and remove sensitive fields from the data in Cloud Storage. Write the filtered data in BigQuery.",
+    "Use Dataflow and the Cloud Data Loss Prevention API to mask sensitive data. Write the processed data in BigQuery.",
+    "Use customer-managed encryption keys (CMEK) to directly encrypt the data in Cloud Storage. Use federated queries from BigQuery. Share the encryption key by following the principle of least privilege."
+   ],
+   "answer": ["Use Dataflow and the Cloud Data Loss Prevention API to mask sensitive data. Write the processed data in BigQuery."],
+   "explanation": "C — DLP masking via Dataflow scales (parallel), preserves the schema, and keeps the data analyzable. Removing fields (B) destroys analytic value; field-level KMS (A) doesn't scale; bucket CMEK + federated queries (D) doesn't enforce field-level privacy."
+  },
+  {
+   "id": "official_q4",
+   "source": "Google Official Sample",
+   "question": "Your organization has two Google Cloud projects, project A and project B. In project A, you have a Pub/Sub topic that receives data from confidential sources. Only the resources in project A should be able to access the data in that topic. You want to ensure that project B and any future project cannot access data in the project A topic. What should you do?",
+   "options": [
+    "Configure VPC Service Controls in the organization with a perimeter around project A.",
+    "Configure VPC Service Controls in the organization with a perimeter around the VPC of project A.",
+    "Add firewall rules in project A so only traffic from the VPC in project A is permitted.",
+    "Use Identity and Access Management conditions to ensure that only users and service accounts in project A can access resources in project A."
+   ],
+   "answer": ["Configure VPC Service Controls in the organization with a perimeter around project A."],
+   "explanation": "A — Pub/Sub is serverless and supported by VPC-SC. A project-level perimeter blocks Pub/Sub API calls from outside the perimeter, including any future project (which starts outside by default). Firewalls (C) don't apply to serverless APIs; IAM conditions (D) don't accept project membership."
+  },
+  {
+   "id": "official_q5",
+   "source": "Google Official Sample",
+   "question": "You are on the data governance team and are implementing security requirements. You need to encrypt all your data in BigQuery by using an encryption key managed by your team. You must implement a mechanism to generate and store encryption material only on your on-premises hardware security module (HSM). You want to rely on Google managed solutions. What should you do?",
+   "options": [
+    "Create the encryption key in the on-premises HSM, and import it into a Cloud Key Management Service (Cloud KMS) key. Associate the created Cloud KMS key while creating the BigQuery resources.",
+    "Create the encryption key in the on-premises HSM, and import it into Cloud Key Management Service (Cloud HSM) key. Associate the created Cloud HSM key while creating the BigQuery resources.",
+    "Create the encryption key in the on-premises HSM and link it to a Cloud External Key Manager (Cloud EKM) key. Associate the created Cloud KMS key while creating the BigQuery resources.",
+    "Create the encryption key in the on-premises HSM. Create BigQuery resources and encrypt data while ingesting them into BigQuery."
+   ],
+   "answer": ["Create the encryption key in the on-premises HSM and link it to a Cloud External Key Manager (Cloud EKM) key. Associate the created Cloud KMS key while creating the BigQuery resources."],
+   "explanation": "C — Cloud EKM links Google services to an external HSM; the key material never leaves on-prem. Cloud HSM and Cloud KMS would require importing (and thus exporting) the key material from on-prem. Cloud EKM = 'rent the keyhole, not the key.'"
+  },
+  {
+   "id": "official_q6",
+   "source": "Google Official Sample",
+   "question": "You have an upstream process that writes data to Cloud Storage. This data is then read by an Apache Spark job that runs on Dataproc. These jobs are run in the us-central1 region, but the data could be stored anywhere in the United States. You need to have a recovery process in place in case of a catastrophic single region failure. You need an approach with a maximum of 15 minutes of data loss (RPO=15 mins). You want to ensure that there is minimal latency when reading the data. What should you do?",
+   "options": [
+    "First, create a Cloud Storage bucket in the US multi-region. Then run the Dataproc cluster in a zone in the us-central1 region, reading data from the US multi-region bucket. In case of a regional failure, redeploy the Dataproc cluster to the us-central2 region and continue reading from the same bucket.",
+    "First, create a dual-region Cloud Storage bucket in the us-central1 and us-south1 regions. Enable turbo replication. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in the same region. In case of a regional failure, redeploy the Dataproc clusters to the us-south1 region and read from the same bucket.",
+    "First, create two regional Cloud Storage buckets, one in the us-central1 region and one in the us-south1 region. Have the upstream process write data to the us-central1 bucket. Use the Storage Transfer Service to copy data hourly from the us-central1 bucket to the us-south1 bucket. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in that region. In case of regional failure, redeploy your Dataproc clusters to the us-south1 region and read from the bucket in that region instead.",
+    "First, create a dual-region Cloud Storage bucket in the us-central1 and us-south1 regions. Enable turbo replication. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in the us-south1 region. In case of a regional failure, redeploy your Dataproc cluster to the us-south1 region and continue reading from the same bucket."
+   ],
+   "answer": ["First, create a dual-region Cloud Storage bucket in the us-central1 and us-south1 regions. Enable turbo replication. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in the same region. In case of a regional failure, redeploy the Dataproc clusters to the us-south1 region and read from the same bucket."],
+   "explanation": "B — Dual-region + Turbo Replication = 15-min RPO (the only Cloud Storage option that does). Co-locate Dataproc with the primary region for low latency. Multi-region (A) ≈ 1h RPO; STS hourly (C) ≈ 1h RPO; cross-region reads (D) increase daily latency."
+  },
+  {
+   "id": "official_q7",
+   "source": "Google Official Sample",
+   "question": "You maintain ETL pipelines. You notice that a streaming pipeline running on Dataflow is taking a long time to process incoming data, which causes output delays. You also noticed that the pipeline graph was automatically optimized by Dataflow and merged into one step. You want to identify where the potential bottleneck is occurring. What should you do?",
+   "options": [
+    "Insert output sinks after each key processing step, and observe the writing throughput of each block.",
+    "Log debug information in each ParDo function, and analyze the logs at execution time.",
+    "Insert a Reshuffle operation after each processing step, and monitor the execution details in the Dataflow console.",
+    "Verify that the Dataflow service accounts have appropriate permissions to write the processed data to the output sinks."
+   ],
+   "answer": ["Insert a Reshuffle operation after each processing step, and monitor the execution details in the Dataflow console."],
+   "explanation": "C — Dataflow fuses ParDos into a single physical step, hiding per-step metrics. Reshuffle is the official optimization barrier that breaks fusion and surfaces per-stage throughput in the console."
+  },
+  {
+   "id": "official_q8",
+   "source": "Google Official Sample",
+   "question": "You need to modernize your existing on-premises data strategy. Your organization currently uses: Apache Hadoop clusters for processing multiple large data sets, including on-premises HDFS for data replication; and Apache Airflow to orchestrate hundreds of ETL pipelines with thousands of job steps. You need to set up a new architecture in Google Cloud that can handle your Hadoop workloads and requires minimal changes to your existing orchestration processes. What should you do?",
+   "options": [
+    "Use Dataproc to migrate Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Convert your ETL pipelines to Dataflow.",
+    "Use Dataproc to migrate Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Orchestrate your pipelines with Cloud Composer.",
+    "Use Bigtable for your large workloads, with connections to Cloud Storage to handle any HDFS use cases. Orchestrate your pipelines with Cloud Composer.",
+    "Use Dataproc to migrate your Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Use Cloud Data Fusion to visually design and deploy your ETL pipelines."
+   ],
+   "answer": ["Use Dataproc to migrate Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Orchestrate your pipelines with Cloud Composer."],
+   "explanation": "B — Direct 1:1 mapping: Hadoop → Dataproc, HDFS → Cloud Storage, Airflow → Cloud Composer (managed Airflow). Minimal-change lift-and-shift."
+  },
+  {
+   "id": "official_q9",
+   "source": "Google Official Sample",
+   "question": "You are designing the architecture of your application to store data in Cloud Storage. Your application consists of pipelines that read data from a Cloud Storage bucket that contains raw data, and write the data to a second bucket after processing. You want to design an architecture with Cloud Storage resources that are capable of being resilient if a Google Cloud regional failure occurs. You want to minimize the recovery point objective (RPO) if a failure occurs, with no impact on applications that use the stored data. What should you do?",
+   "options": [
+    "Adopt multi-regional Cloud Storage buckets in your architecture.",
+    "Adopt two regional Cloud Storage buckets, and update your application to write the output on both buckets.",
+    "Adopt a dual-region Cloud Storage bucket, and enable turbo replication in your architecture.",
+    "Adopt two regional Cloud Storage buckets, and create a daily task to copy from one bucket to the other."
+   ],
+   "answer": ["Adopt a dual-region Cloud Storage bucket, and enable turbo replication in your architecture."],
+   "explanation": "C — Dual-region + Turbo = 15-min RPO and a single bucket name (transparent to apps). Multi-region ≈ 1h RPO; dual-writes (B) require app changes; daily copy (D) ≈ 24h RPO."
+  },
+  {
+   "id": "official_q10",
+   "source": "Google Official Sample",
+   "question": "You are building an ELT solution in BigQuery by using Dataform. You need to perform uniqueness and null value checks on your final tables. What should you do to efficiently integrate these checks into your pipeline?",
+   "options": [
+    "Build Dataform assertions into your code.",
+    "Create Dataplex data quality tasks.",
+    "Build BigQuery user-defined functions (UDFs).",
+    "Write a Spark-based stored procedure."
+   ],
+   "answer": ["Build Dataform assertions into your code."],
+   "explanation": "A — Dataform assertions are native data-quality checks (uniqueness, non-null, custom SQL) that run as part of the same Dataform job. Dataplex tasks (B) run outside your pipeline."
+  },
+  {
+   "id": "official_q11",
+   "source": "Google Official Sample",
+   "question": "You recently deployed several data processing jobs into your Cloud Composer 2 environment. You notice that some tasks are failing in Apache Airflow. On the monitoring dashboard, you see an increase in the total workers memory usage, and there were worker pod evictions. You need to resolve these errors. What should you do? (Choose two)",
+   "options": [
+    "Increase the directed acyclic graph (DAG) file parsing interval.",
+    "Increase the Cloud Composer 2 environment size from medium to large.",
+    "Increase the memory available to the Airflow workers.",
+    "Increase the memory available to the Airflow triggerer.",
+    "Increase the maximum number of workers and reduce worker concurrency."
+   ],
+   "answer": [
+    "Increase the memory available to the Airflow workers.",
+    "Increase the maximum number of workers and reduce worker concurrency."
+   ],
+   "explanation": "C + E — Worker OOM is fixed at the worker level: raise per-worker memory (C) or spread work over more workers each doing fewer concurrent tasks (E). Environment size (B) scales backend (DB, queue, web server), NOT workers. ⚠ YOU MISSED THIS ONE — see the Official Sample tab for the Why-You-Missed-It deep dive."
+  },
+  {
+   "id": "official_q12",
+   "source": "Google Official Sample",
+   "question": "Your business users need a way to clean and prepare data before using the data for analysis. Your business users are less technically savvy and prefer to work with graphical user interfaces to define their transformations. After the data has been transformed, the business users want to perform their analysis directly in a spreadsheet. You need to recommend a solution that they can use. What should you do?",
+   "options": [
+    "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.",
+    "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Looker Studio.",
+    "Use Dataflow to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.",
+    "Use Dataflow to clean the data, and write the results to BigQuery. Analyze the data by using Looker Studio."
+   ],
+   "answer": ["Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets."],
+   "explanation": "A — Dataprep = GUI data prep; Connected Sheets = BigQuery inside Google Sheets (matches 'spreadsheet' clue). Looker Studio is a dashboard, not a spreadsheet."
+  },
+  {
+   "id": "official_q13",
+   "source": "Google Official Sample",
+   "question": "You are designing a Dataflow pipeline for a batch processing job. You want to mitigate multiple zonal failures at job submission time. What should you do?",
+   "options": [
+    "Specify a worker region by using the --region flag.",
+    "Create an Eventarc trigger to resubmit the job in case of zonal failure when submitting the job.",
+    "Submit duplicate pipelines in two different zones by using the --zone flag.",
+    "Set the pipeline staging location as a regional Cloud Storage bucket."
+   ],
+   "answer": ["Specify a worker region by using the --region flag."],
+   "explanation": "A — Specifying a region lets Dataflow choose the best zone; pinning to --zone defeats HA. Staging bucket location ≠ worker location."
+  },
+  {
+   "id": "official_q14",
+   "source": "Google Official Sample",
+   "question": "Different teams in your organization store customer and performance data in BigQuery. Each team needs to keep full control of their collected data, be able to query data within their projects, and be able to exchange their data with other teams. You need to implement an organization-wide solution, while minimizing operational tasks and costs. What should you do?",
+   "options": [
+    "Ask each team to create authorized views of their data. Grant the bigquery.jobUser role to each team.",
+    "Ask each team to publish their data in BigQuery sharing (Analytics Hub). Direct the other teams to subscribe to them.",
+    "Create a BigQuery scheduled query to replicate all customer data into team projects.",
+    "Enable each team to create materialized views of the data they need to access in their projects."
+   ],
+   "answer": ["Ask each team to publish their data in BigQuery sharing (Analytics Hub). Direct the other teams to subscribe to them."],
+   "explanation": "B — Analytics Hub creates an authorized dataset at subscription time, no data movement, minimal ops. Authorized views (A) need manual setup; replication (C, D) duplicates data and adds cost."
+  },
+  {
+   "id": "official_q15",
+   "source": "Google Official Sample",
+   "question": "You are part of a healthcare organization where data is organized and managed by respective data owners in various storage services. As a result of this decentralized ecosystem, discovering and managing data has become difficult. You need to quickly identify and implement a cost-optimized solution to assist your organization with: Data management and discovery, Data lineage tracking, and Data quality validation. How should you build the solution?",
+   "options": [
+    "Build a new data discovery tool on Google Kubernetes Engine that helps with new source onboarding and data lineage tracking.",
+    "Use BigLake to convert the current solution into a data lake architecture.",
+    "Use Dataplex to manage data, track data lineage, and perform data quality validation.",
+    "Use BigQuery to track data lineage, and use Dataprep to manage data and perform data quality validation."
+   ],
+   "answer": ["Use Dataplex to manage data, track data lineage, and perform data quality validation."],
+   "explanation": "C — Dataplex is the unified governance fabric across BigQuery + Cloud Storage: catalog + lineage + quality in one platform."
+  },
+  {
+   "id": "official_q16",
+   "source": "Google Official Sample",
+   "question": "You want to store your team's shared tables in a single dataset to make data easily accessible to various analysts. You want to make this data readable but unmodifiable by analysts. At the same time, you want to provide the analysts with individual workspaces in the same project, where they can create and store tables for their own use, without the tables being accessible by other analysts. What should you do?",
+   "options": [
+    "Give analysts the BigQuery Data Viewer role at the project level. Create one other dataset, and give the analysts the BigQuery Data Editor role on that dataset.",
+    "Give analysts the BigQuery Data Viewer role at the project level. Create a dataset for each analyst, and give each analyst the BigQuery Data Editor role at the project level.",
+    "Give analysts the BigQuery Data Viewer role on the shared dataset. Create a dataset for each analyst, and give each analyst the BigQuery Data Editor role at the dataset level for their assigned dataset.",
+    "Give analysts the BigQuery Data Viewer role on the shared dataset. Create one other dataset and give the analysts the BigQuery Data Editor role on that dataset."
+   ],
+   "answer": ["Give analysts the BigQuery Data Viewer role on the shared dataset. Create a dataset for each analyst, and give each analyst the BigQuery Data Editor role at the dataset level for their assigned dataset."],
+   "explanation": "C — Per-user privacy requires one dataset per user with role at the dataset scope. Project-level roles are too broad; a single shared editor dataset breaks privacy."
+  },
+  {
+   "id": "official_q17",
+   "source": "Google Official Sample",
+   "question": "You have several different file type data sources, such as Apache Parquet and CSV. You want to store the data in Cloud Storage. You need to set up an object sink for your data that allows you to use your own encryption keys. You want to use a GUI-based solution. What should you do?",
+   "options": [
+    "Use Storage Transfer Service to move files into Cloud Storage.",
+    "Use Dataflow to move files into Cloud Storage.",
+    "Use Cloud Data Fusion to move files into Cloud Storage.",
+    "Use BigQuery Data Transfer Service to move files into BigQuery."
+   ],
+   "answer": ["Use Cloud Data Fusion to move files into Cloud Storage."],
+   "explanation": "C — Cloud Data Fusion is GUI-based and supports CMEK. STS (A) lacks CMEK on write; Dataflow (B) is code-based; BQ DTS (D) targets BigQuery, not Cloud Storage."
+  },
+  {
+   "id": "official_q18",
+   "source": "Google Official Sample",
+   "question": "You are designing a real-time system for a ride hailing app that identifies areas with high demand for rides to effectively reroute available drivers to meet the demand. The system ingests data from multiple sources to Pub/Sub, processes the data, and stores the results for visualization and analysis in real-time dashboards. The data sources include driver location updates every 5 seconds and app-based booking events from riders. The data processing involves real-time aggregation of supply and demand data for the last 30 seconds, every 2 seconds, and storing the results in a low-latency system for visualization. What should you do?",
+   "options": [
+    "Group the data by using a tumbling window in a Dataflow pipeline, and write the aggregated data to Memorystore.",
+    "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore.",
+    "Group the data by using a session window in a Dataflow pipeline, and write the aggregated data to BigQuery.",
+    "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to BigQuery."
+   ],
+   "answer": ["Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore."],
+   "explanation": "B — Hopping window 30s/2s for overlapping aggregations + Memorystore (Redis) for millisecond dashboard reads. BigQuery streaming buffer is too slow for sub-second user-facing dashboards. ⚠ YOU MISSED THIS ONE — you picked D (right window, wrong sink). See the Why-You-Missed-It section in the Official Sample tab."
+  },
+  {
+   "id": "official_q19",
+   "source": "Google Official Sample",
+   "question": "You have terabytes of customer behavioral data streaming from Google Analytics into BigQuery daily. Your customers' information, such as their preferences, is hosted on a Cloud SQL for MySQL database. Your CRM database is hosted on a Cloud SQL for PostgreSQL instance. The marketing team wants to use your customers' information from the two databases and the customer behavioral data to create marketing campaigns for yearly active customers. You need to ensure that the marketing team can run the campaigns over 100 times a day on typical days and up to 300 during sales. At the same time you want to keep the load on the Cloud SQL databases to a minimum. What should you do?",
+   "options": [
+    "Create BigQuery connections to both Cloud SQL databases. Use BigQuery federated queries on the two databases and the Google Analytics data on BigQuery to run these queries.",
+    "Create a Dataproc cluster with Trino to establish connections to both Cloud SQL databases and BigQuery, to execute the queries.",
+    "Create streams in Datastream to replicate the required tables from both Cloud SQL databases to BigQuery for these queries.",
+    "Create a job on Apache Spark with Dataproc Serverless to query both Cloud SQL databases and the Google Analytics data on BigQuery for these queries."
+   ],
+   "answer": ["Create streams in Datastream to replicate the required tables from both Cloud SQL databases to BigQuery for these queries."],
+   "explanation": "C — Datastream CDC keeps a near-real-time BigQuery copy; campaigns run against BigQuery, so Cloud SQL load stays minimal. Federated queries (A) and Trino (B) both hit the OLTP DB on every run."
+  },
+  {
+   "id": "official_q20",
+   "source": "Google Official Sample",
+   "question": "You have an Oracle database deployed in a VM as part of a Virtual Private Cloud (VPC) network. You want to replicate and continuously synchronize 50 tables to BigQuery. You want to minimize the need to manage infrastructure. What should you do?",
+   "options": [
+    "Deploy Apache Kafka in the same VPC network, use Kafka Connect Oracle change data capture (CDC), and the Kafka Connect Google BigQuery Sink Connector.",
+    "Deploy Apache Kafka in the same VPC network, use Kafka Connect Oracle Change Data Capture (CDC), and Dataflow to stream the Kafka topic to BigQuery.",
+    "Create a Datastream service from Oracle to BigQuery, use a private connectivity configuration to the same VPC network, and a connection profile to BigQuery.",
+    "Create a Pub/Sub subscription to write to BigQuery directly. Deploy the Debezium Oracle connector to capture changes in the Oracle database, and sink to the Pub/Sub topic."
+   ],
+   "answer": ["Create a Datastream service from Oracle to BigQuery, use a private connectivity configuration to the same VPC network, and a connection profile to BigQuery."],
+   "explanation": "C — Datastream is serverless CDC for Oracle/MySQL/Postgres. Every other option requires running a Kafka or Debezium VM/cluster."
+  },
+  {
+   "id": "official_q21",
+   "source": "Google Official Sample",
+   "question": "You are using Workflows to call an API that returns a 1KB JSON response, apply some complex business logic on this response, wait for the logic to complete, and then perform a load from a Cloud Storage file to BigQuery. The Workflows standard library does not have sufficient capabilities to perform your complex logic, and you want to use Python's standard library instead. You want to optimize your workflow for simplicity and speed of execution. What should you do?",
+   "options": [
+    "Create a Dataproc cluster, and use PySpark to apply the logic on your JSON file.",
+    "Invoke a Cloud Run function instance that uses Python to apply the logic on your JSON file.",
+    "Invoke a subworkflow in Workflows to apply the logic on your JSON file.",
+    "Create a Cloud Composer environment and run the logic in Cloud Composer."
+   ],
+   "answer": ["Invoke a Cloud Run function instance that uses Python to apply the logic on your JSON file."],
+   "explanation": "B — Cloud Run function is fast, simple, supports Python stdlib. 1KB doesn't justify Dataproc/Composer. Subworkflows still use the Workflows DSL."
+  },
+  {
+   "id": "official_q22",
+   "source": "Google Official Sample",
+   "question": "You need to look at BigQuery data from a specific table multiple times a day. The underlying table you are querying is several petabytes in size, but you want to filter your data and provide simple aggregations to downstream users. You want to run queries faster and get up-to-date insights quicker. What should you do?",
+   "options": [
+    "Run a scheduled query to pull the necessary data at specific intervals daily.",
+    "Use a cached query to accelerate time to results.",
+    "Limit the query columns being pulled in the final result.",
+    "Create a materialized view based off of the query being run."
+   ],
+   "answer": ["Create a materialized view based off of the query being run."],
+   "explanation": "D — Materialized views pre-aggregate, auto-refresh, and BigQuery transparently rewrites matching queries — fast + fresh + low cost."
+  },
+  {
+   "id": "official_q23",
+   "source": "Google Official Sample",
+   "question": "You are administering a BigQuery on-demand environment. Your business intelligence tool is submitting hundreds of queries each day that aggregate a large (50 TB) sales history fact table at the day and month levels. These queries have a slow response time and are exceeding cost expectations. You need to decrease response time, lower query costs, and minimize maintenance. What should you do?",
+   "options": [
+    "Build materialized views on top of the sales table to aggregate data at the day and month level.",
+    "Build authorized views on top of the sales table to aggregate data at the day and month level.",
+    "Enable BI Engine and add your sales table as a preferred table.",
+    "Create a scheduled query to build sales day and sales month aggregate tables on an hourly basis."
+   ],
+   "answer": ["Build materialized views on top of the sales table to aggregate data at the day and month level."],
+   "explanation": "A — Materialized views reduce bytes scanned (the cost lever in on-demand), auto-refresh, and BigQuery rewrites matching queries to them. BI Engine (C) has a memory cap and CANNOT hold a 50 TB table; it doesn't lower on-demand scan cost. ⚠ YOU MISSED THIS ONE — see the Why-You-Missed-It section in the Official Sample tab for the full mental fix."
+  },
+  {
+   "id": "official_q24",
+   "source": "Google Official Sample",
+   "question": "You designed a data warehouse in BigQuery to analyze sales data. You want a self-serving, low-maintenance, and cost-effective solution to share the sales dataset to other business units in your organization. What should you do?",
+   "options": [
+    "Use the BigQuery Data Transfer Service to create a schedule that copies the sales dataset to the other business units' projects.",
+    "Create and share views with the users in the other business units.",
+    "Create a BigQuery sharing (Analytics Hub) private exchange, and publish the sales dataset.",
+    "Enable the other business units' projects to access the authorized views of the sales dataset."
+   ],
+   "answer": ["Create a BigQuery sharing (Analytics Hub) private exchange, and publish the sales dataset."],
+   "explanation": "C — Analytics Hub is self-serve (subscribers discover and subscribe themselves), no data copy, minimum ops. DTS copies = double storage. Authorized views require reauthorization on every change."
+  },
+  {
+   "id": "official_q25",
+   "source": "Google Official Sample",
+   "question": "You orchestrate ETL pipelines by using Cloud Composer. One of the tasks in the Airflow DAG relies on a third-party service. You want to be notified when the task does not succeed. What should you do?",
+   "options": [
+    "Assign a function with notification logic to the on_failure_callback parameter for the operator responsible for the task at risk.",
+    "Assign a function with notification logic to the sla_miss_callback parameter for the operator responsible for the task at risk.",
+    "Assign a function with notification logic to the on_retry_callback parameter for the operator responsible for the task at risk.",
+    "Configure a Cloud Monitoring alert on the sla_missed metric associated with the task at risk to trigger a notification."
+   ],
+   "answer": ["Assign a function with notification logic to the on_failure_callback parameter for the operator responsible for the task at risk."],
+   "explanation": "A — 'Task does not succeed' = failure → on_failure_callback. SLA miss ≠ failure; on_retry_callback fires on retries, not final failure."
+  },
+  {
+   "id": "official_q26",
+   "source": "Google Official Sample",
+   "question": "You need to create a SQL pipeline. The pipeline runs an aggregate SQL transformation on a BigQuery table every two hours and appends the result to another existing BigQuery table. You need to configure the pipeline to retry if errors occur. You want the pipeline to send an email notification after three consecutive failures. What should you do?",
+   "options": [
+    "Create a BigQuery scheduled query to run the SQL transformation with schedule options that repeats every two hours, and enable email notifications.",
+    "Use the BigQueryUpsertTableOperator in Cloud Composer, set the retry parameter to three, and set the email_on_failure parameter to true.",
+    "Create a BigQuery scheduled query to run the SQL transformation with schedule options that repeats every two hours, and enable notification to Pub/Sub topic. Use Pub/Sub and Cloud Run functions to send an email after three failed executions.",
+    "Use the BigQueryInsertJobOperator in Cloud Composer, set the retry parameter to three, and set the email_on_failure parameter to true."
+   ],
+   "answer": ["Use the BigQueryInsertJobOperator in Cloud Composer, set the retry parameter to three, and set the email_on_failure parameter to true."],
+   "explanation": "D — BigQueryInsertJobOperator runs arbitrary SQL jobs; Airflow retries 3× and email_on_failure sends mail after all retries exhaust. Scheduled queries lack retry-with-final-email semantics; UpsertTableOperator manages table metadata, not SQL transformations."
+  }
+ ]
+}

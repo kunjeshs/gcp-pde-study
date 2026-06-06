@@ -62,6 +62,7 @@ const NAV_ITEMS = [
   ["index.html", "Home"],
   ["chapters.html", "Chapters"],
   ["question-bank.html", "Question Bank"],
+  ["official-sample.html", "Official Sample"],
   ["quiz.html", "Quiz"],
   ["review.html", "Review"],
   ["weak-areas.html", "Weak Areas"],
