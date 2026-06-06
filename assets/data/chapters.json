@@ -8407,6 +8407,72 @@
                                                                                                                       "Dead-letter topics isolate poison messages; retries alone do not fix deterministic bad input.",
                                                                                                                       "Bigtable replication improves serving availability; Bigtable backups restore from accidental mutation/deletion."
                                                                                                                   ]
-                                                                                     }
+                                                                                     },
+                     "6.0 Google Official Sample Questions": {
+                       "exam_weight": "Critical",
+                       "official_guide_section": "Google Sample Test",
+                       "what_the_exam_tests": "Google's official 26-question sample test, scored 22/26 (84.6%). Each question is treated as its own topic with maximum-depth 'how to think' breakdowns: clue word extraction, option-by-option elimination, decision pattern, mental model, exam pattern shortcut, and watch-outs. The four missed questions (Q2, Q11, Q18, Q23) include an explicit 'why you missed it' section that names the trap and prescribes the mental fix.",
+                       "must_know_services": [
+                         "Cloud KMS / Cloud HSM / Cloud EKM — re-encryption and key residency",
+                         "Cloud SQL Auth Proxy — replaces Authorized Networks for dynamic clients",
+                         "VPC Service Controls — exfiltration perimeter for serverless APIs",
+                         "Dataflow windows — tumbling vs hopping vs session",
+                         "Cloud Storage dual-region + Turbo Replication — 15-min RPO",
+                         "Datastream — serverless CDC from Oracle/MySQL/Postgres to BigQuery",
+                         "Cloud Composer 2 — environment size vs worker config",
+                         "BigQuery Materialized Views — precompute + auto-rewrite",
+                         "BigQuery BI Engine — memory-bounded RAM cache, not for TB-scale aggregations",
+                         "Dataplex — decentralized data governance, lineage, quality",
+                         "Analytics Hub — self-serve org-wide BigQuery sharing",
+                         "Cloud Data Fusion — GUI ETL with CMEK",
+                         "Dataform assertions — quality checks inside the pipeline",
+                         "Airflow callbacks — on_failure_callback for failure notifications"
+                       ],
+                       "exam_pattern_notes": [
+                         {"if": "Compromised KMS key + prevent future omissions", "then": "New key + NEW bucket with default CMEK + copy without specifying key"},
+                         {"if": "Cloud SQL + dynamic client IP", "then": "Cloud SQL Auth Proxy + EMPTY Authorized Networks (never 0.0.0.0/0)"},
+                         {"if": "Prevent data exfiltration of a serverless API", "then": "VPC Service Controls perimeter at PROJECT scope"},
+                         {"if": "Key material must never leave on-prem", "then": "Cloud EKM (not Cloud HSM)"},
+                         {"if": "Cloud Storage RPO = 15 minutes", "then": "Dual-region + Turbo Replication (only this combo)"},
+                         {"if": "Dataflow fused steps, want per-step diagnostics", "then": "Insert Reshuffle to break fusion"},
+                         {"if": "Hadoop + Airflow lift-and-shift", "then": "Dataproc + Cloud Storage + Cloud Composer"},
+                         {"if": "Dataform pipeline + uniqueness/null checks", "then": "Dataform assertions (not Dataplex tasks)"},
+                         {"if": "Composer 2 worker OOM / pod eviction", "then": "Raise worker memory AND/OR more workers with lower concurrency (NOT environment size)"},
+                         {"if": "Non-technical user + GUI + spreadsheet output", "then": "Dataprep + Connected Sheets"},
+                         {"if": "Dataflow zonal-failure mitigation", "then": "--region flag (not --zone)"},
+                         {"if": "Org-wide BigQuery sharing, low maintenance", "then": "Analytics Hub"},
+                         {"if": "Decentralized data + need lineage + quality + discovery", "then": "Dataplex"},
+                         {"if": "Real-time DASHBOARD with sub-second reads", "then": "Memorystore (NOT BigQuery)"},
+                         {"if": "Window aggregates last N seconds, emits every M seconds (N > M)", "then": "Hopping window"},
+                         {"if": "Reduce load on Cloud SQL while running many analytical queries", "then": "Datastream CDC to BigQuery"},
+                         {"if": "Replicate Oracle to BigQuery with minimal infra", "then": "Datastream private connectivity"},
+                         {"if": "Workflows needs Python", "then": "Cloud Run function callable from Workflows"},
+                         {"if": "Same aggregation many times/day on a big table, want fresh + cheap", "then": "Materialized view"},
+                         {"if": "50 TB table aggregated by BI tool, lower cost AND latency", "then": "Materialized view (BI Engine cannot fit 50 TB in memory)"},
+                         {"if": "Self-serve BigQuery sharing across business units", "then": "Analytics Hub private exchange"},
+                         {"if": "Airflow task fails on third-party service", "then": "on_failure_callback (not sla_miss_callback)"},
+                         {"if": "Run BigQuery SQL on schedule from Airflow with retries + email", "then": "BigQueryInsertJobOperator with retries=3 and email_on_failure=True"}
+                       ],
+                       "common_traps": [
+                         "Stacking Cloud SQL Auth Proxy with 0.0.0.0/0 in Authorized Networks (Q2) — the open network nullifies the proxy.",
+                         "Confusing Composer 2 environment size with worker capacity (Q11) — env size scales backend, not workers.",
+                         "Picking BigQuery for 'real-time dashboards' (Q18) — BigQuery is for analytical latency, not sub-second user reads.",
+                         "Picking BI Engine for any 'BI tool slow' question (Q23) — BI Engine has memory limits and cannot accelerate TB-scale aggregations on its own.",
+                         "Confusing Cloud HSM (Google's HSM) with Cloud EKM (external HSM) (Q5).",
+                         "Picking multi-region bucket for 15-min RPO — only dual-region+Turbo achieves it (Q6, Q9).",
+                         "Using federated queries when the goal is to MINIMIZE load on the source DB (Q19).",
+                         "Picking Looker Studio when the prompt literally says 'spreadsheet' (Q12)."
+                       ],
+                       "final_review_bullets": [
+                         "Re-derive any 'real-time dashboard' question by asking 'is the user expecting millisecond or second latency?' Millisecond = Memorystore.",
+                         "When two security knobs appear in the same option, check that the second one doesn't undo the first.",
+                         "Always size-check BI Engine against the table size in the prompt.",
+                         "Materialized views reduce bytes scanned — pick them whenever the metric being optimized is on-demand cost.",
+                         "Datastream is the default CDC answer; Kafka/Debezium are wrong unless the prompt says you already run Kafka.",
+                         "Cloud EKM = external HSM. Cloud HSM = Google's HSM. Cloud KMS = software keys. Memorize this triple.",
+                         "Dual-region + Turbo is the only Cloud Storage option that hits a 15-minute RPO.",
+                         "In Composer 2, 'environment size' does NOT touch workers. Worker memory and concurrency are independent."
+                       ]
+                     }
                  }
 }

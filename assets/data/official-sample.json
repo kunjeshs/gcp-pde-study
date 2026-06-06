@@ -1,0 +1,714 @@
+{
+  "title": "Google Official Sample Questions",
+  "source": "Google Cloud Professional Data Engineer — Official Sample Questions",
+  "your_score": {
+    "correct": 22,
+    "total": 26,
+    "percentage": "84.6%",
+    "result": "PASSED",
+    "incorrect_questions": [2, 11, 18, 23]
+  },
+  "how_to_use": "Each question is a topic. Read the **prompt**, try to answer in your head, then expand the **How to Think** section to compare your reasoning. For the 4 questions you got wrong, read the **Why You Missed It** block first — that's the mental model you need to fix.",
+  "questions": [
+    {
+      "qid": 1,
+      "topic_area": "Security · Cloud KMS · Cloud Storage CMEK",
+      "your_answer": "D",
+      "correct_answer": "D",
+      "result": "correct",
+      "question": "One of your encryption keys stored in Cloud Key Management Service (Cloud KMS) was exposed. You need to re-encrypt all of your CMEK-protected Cloud Storage data that used that key, and then delete the compromised key. You also want to reduce the risk of objects getting written without customer-managed encryption key (CMEK) protection in the future. What should you do?",
+      "options": {
+        "A": "Rotate the Cloud KMS key version. Continue to use the same Cloud Storage bucket.",
+        "B": "Create a new Cloud KMS key. Set the default CMEK key on the existing Cloud Storage bucket to the new one.",
+        "C": "Create a new Cloud KMS key. Create a new Cloud Storage bucket. Copy all objects from the old bucket to the new one while specifying the new Cloud KMS key in the copy command.",
+        "D": "Create a new Cloud KMS key. Create a new Cloud Storage bucket configured to use the new key as the default CMEK key. Copy all objects from the old bucket to the new bucket without specifying a key."
+      },
+      "clue_words": ["re-encrypt all existing data", "delete the compromised key", "reduce risk of writes without CMEK"],
+      "what_is_tested": "Difference between key rotation and re-encryption, and how bucket-level default CMEK enforces protection on all future writes.",
+      "decision_pattern": "When a key is COMPROMISED → you cannot just rotate (old ciphertext still bound to old key version). You must re-write the data with a brand-new key. To prevent CMEK being skipped in future, set the new key as the bucket DEFAULT — every new object inherits it automatically.",
+      "elimination": {
+        "A": "Rotation creates a new key VERSION but the prior versions still exist and existing objects are still encrypted with the compromised version. You cannot delete the compromised version while objects depend on it.",
+        "B": "Default CMEK on a bucket only applies to NEW writes. Existing objects keep the old key — compromise not contained.",
+        "C": "Works for re-encryption, but because the bucket has no default CMEK set, future uploads can omit the key and land unencrypted-by-CMEK. Fails the 'reduce future risk' clause.",
+        "D": "Correct. New bucket with default CMEK = the copy itself re-encrypts (because no key specified means the default key is used), and any future upload that forgets to pass a key still gets the default key applied."
+      },
+      "mental_model": "CMEK = the bucket's 'house key.' Set it once at the bucket level and every new object automatically gets that key — no need to remember --kms-key on every gsutil/upload call.",
+      "exam_pattern": "Whenever you see 'compromised key' + 'prevent future omissions' → look for: new key + new bucket with DEFAULT CMEK + copy without specifying key.",
+      "watch_out_for": "Rotation ≠ re-encryption. Setting default CMEK does NOT re-encrypt existing data."
+    },
+    {
+      "qid": 2,
+      "topic_area": "Security · Cloud SQL · Network access",
+      "your_answer": "C",
+      "correct_answer": "D",
+      "result": "incorrect",
+      "question": "You need to connect multiple applications with dynamic public IP addresses to a Cloud SQL instance. You configured users with strong passwords and enforced the SSL connection to your Cloud SQL instance. You want to use Cloud SQL public IP and ensure that you have secured connections. What should you do?",
+      "options": {
+        "A": "Add all application networks to Authorized Network and regularly update them.",
+        "B": "Add CIDR 0.0.0.0/0 network to Authorized Network. Use Identity and Access Management (IAM) to add users.",
+        "C": "Add CIDR 0.0.0.0/0 network to Authorized Network. Use Cloud SQL Auth proxy on all applications.",
+        "D": "Leave the Authorized Network empty. Use Cloud SQL Auth proxy on all applications."
+      },
+      "why_you_missed_it": "You picked C — '0.0.0.0/0 + Auth Proxy.' The trap is thinking that **two defenses are stronger than one**. They're not: opening 0.0.0.0/0 in Authorized Networks **completely undoes** the security you got from the proxy. The proxy creates an authenticated, encrypted tunnel using IAM credentials — it does NOT need the IP to be allowlisted. Adding 0.0.0.0/0 just exposes the public endpoint to the entire internet, where attackers can still try SQL-level password brute-force. The mental fix: **Auth Proxy replaces Authorized Networks, it does not stack with them.** When you see Auth Proxy in an option, the Authorized Network field should be EMPTY.",
+      "clue_words": ["dynamic public IP addresses", "multiple applications", "secured connections"],
+      "what_is_tested": "Cloud SQL connection patterns. Auth Proxy is the Google-preferred path for any client that doesn't have a stable IP, because it authenticates via IAM, not by IP.",
+      "decision_pattern": "Dynamic/unknown client IPs → **Cloud SQL Auth Proxy** (uses IAM service account, builds an encrypted tunnel, no need to allowlist IPs at all).\nStatic client IPs and no proxy possible → Authorized Networks with the specific CIDR.\nNever use 0.0.0.0/0 in Authorized Networks — that's 'allow the whole internet.'",
+      "elimination": {
+        "A": "Authorized Networks needs static IPs. Application IPs are dynamic, so the allowlist will be wrong most of the time → connection failures or, worse, race-condition holes when the IP gets reused by someone else.",
+        "B": "0.0.0.0/0 = the whole internet can hit your DB. IAM users do not protect against password attacks at the network layer.",
+        "C": "Same fatal flaw as B (opens the world). The Auth Proxy here is correct in spirit but redundantly weakened by the open Authorized Network. Defense-in-depth must not include a step that bypasses every other defense.",
+        "D": "Correct. Auth Proxy + empty Authorized Network = only IAM-authenticated, encrypted connections work. No network surface area to attack."
+      },
+      "mental_model": "Cloud SQL Auth Proxy is essentially 'IAM-authenticated VPN to the DB.' Once it's on, treat Authorized Networks as deprecated for that workload.",
+      "exam_pattern": "Cloud SQL + 'dynamic IP' or 'unknown client IP' or 'secure connection' → **Auth Proxy + empty Authorized Networks.** If both 'Auth Proxy' AND 'Authorized Network with 0.0.0.0/0' appear in the same option, that option is wrong by construction.",
+      "watch_out_for": "Two correct-looking pieces in one option do not equal one correct answer. If the second piece negates the first, it's a trap."
+    },
+    {
+      "qid": 3,
+      "topic_area": "Security · Data privacy · DLP",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You are preparing an organization-wide dataset. You need to preprocess customer data stored in a restricted bucket in Cloud Storage. The data will be used to create consumer analyses. You need to comply with data privacy requirements. What should you do?",
+      "options": {
+        "A": "Use Dataflow and Cloud KMS to encrypt sensitive fields and write the encrypted data in BigQuery. Share the encryption key by following the principle of least privilege.",
+        "B": "Use the Cloud Data Loss Prevention API and Dataflow to detect and remove sensitive fields from the data in Cloud Storage. Write the filtered data in BigQuery.",
+        "C": "Use Dataflow and the Cloud Data Loss Prevention API to mask sensitive data. Write the processed data in BigQuery.",
+        "D": "Use customer-managed encryption keys (CMEK) to directly encrypt the data in Cloud Storage. Use federated queries from BigQuery. Share the encryption key by following the principle of least privilege."
+      },
+      "clue_words": ["organization-wide", "data privacy requirements", "consumer analyses"],
+      "what_is_tested": "Three DLP transformations: **mask** (preserves analytic value), **redact/remove** (loses value), **tokenize/encrypt** (analytic value depends on tokenization scheme).",
+      "decision_pattern": "Privacy + downstream analysis → MASK (you keep schema and most data utility). Privacy + no need to ever recover the value → REMOVE. Privacy + need to re-identify later → TOKENIZE/FPE.",
+      "elimination": {
+        "A": "Field-level encryption with KMS does not scale org-wide (key sprawl, every consumer needs decrypt rights, breaks analytics). Wrong tool for the job.",
+        "B": "Removing sensitive fields is too aggressive — you lose data that analysts could have safely consumed in masked form.",
+        "C": "Correct. DLP masking via Dataflow scales (parallel), preserves the schema, and keeps the data analyzable while obscuring sensitive values.",
+        "D": "CMEK encrypts data at rest at bucket level, not field level. Federated queries still expose decrypted data to anyone who can read the bucket. Not a privacy control for analysts."
+      },
+      "mental_model": "DLP is the 'privacy preprocessor.' KMS protects data from the storage layer down. They solve different problems — privacy lives at the row/cell layer.",
+      "exam_pattern": "'Privacy/PII' + 'analyze later' → DLP + Dataflow + BigQuery. Never use KMS for field-level privacy on the exam.",
+      "watch_out_for": "'Encrypt sensitive fields' sounds privacy-aware but it's an anti-pattern — analysts can't analyze ciphertext."
+    },
+    {
+      "qid": 4,
+      "topic_area": "Security · VPC Service Controls · Pub/Sub",
+      "your_answer": "A",
+      "correct_answer": "A",
+      "result": "correct",
+      "question": "Your organization has two Google Cloud projects, project A and project B. In project A, you have a Pub/Sub topic that receives data from confidential sources. Only the resources in project A should be able to access the data in that topic. You want to ensure that project B and any future project cannot access data in the project A topic. What should you do?",
+      "options": {
+        "A": "Configure VPC Service Controls in the organization with a perimeter around project A.",
+        "B": "Configure VPC Service Controls in the organization with a perimeter around the VPC of project A.",
+        "C": "Add firewall rules in project A so only traffic from the VPC in project A is permitted.",
+        "D": "Use Identity and Access Management conditions to ensure that only users and service accounts in project A can access resources in project A."
+      },
+      "clue_words": ["serverless product (Pub/Sub)", "prevent ANY future project", "data exfiltration"],
+      "what_is_tested": "VPC-SC vs IAM vs firewalls for **serverless** APIs. Firewalls and VPC-bound perimeters do not apply to serverless products — they have no VPC.",
+      "decision_pattern": "Goal = stop data leaving a project boundary via a Google API → **VPC Service Controls with a perimeter at the PROJECT level**. VPC-SC supports Pub/Sub.",
+      "elimination": {
+        "A": "Correct. Perimeter around project A blocks Pub/Sub API calls from outside the perimeter. Future projects start outside the perimeter by default.",
+        "B": "Pub/Sub is serverless. A perimeter around 'the VPC of project A' makes no sense — Pub/Sub APIs are not reached through the project's VPC.",
+        "C": "Firewall rules can't filter Google API endpoints used by Pub/Sub.",
+        "D": "IAM conditions don't accept project membership as a condition, and 'users in project A' isn't a real concept (users belong to the org, not projects). Also, IAM is about identity, not exfiltration."
+      },
+      "mental_model": "VPC-SC = invisible fence around an API surface. IAM = lock on the door. Firewalls = walls of a VPC. Use the right one for the threat.",
+      "exam_pattern": "'Prevent data exfiltration of a Google API from a project, including unknown future actors' → VPC-SC perimeter at the **project** level.",
+      "watch_out_for": "VPC in 'VPC Service Controls' is misleading — it works on serverless APIs that have nothing to do with VPCs."
+    },
+    {
+      "qid": 5,
+      "topic_area": "Security · Encryption · External KMS",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You are on the data governance team and are implementing security requirements. You need to encrypt all your data in BigQuery by using an encryption key managed by your team. You must implement a mechanism to generate and store encryption material only on your on-premises hardware security module (HSM). You want to rely on Google managed solutions. What should you do?",
+      "options": {
+        "A": "Create the encryption key in the on-premises HSM, and import it into a Cloud Key Management Service (Cloud KMS) key. Associate the created Cloud KMS key while creating the BigQuery resources.",
+        "B": "Create the encryption key in the on-premises HSM, and import it into Cloud Key Management Service (Cloud HSM) key. Associate the created Cloud HSM key while creating the BigQuery resources.",
+        "C": "Create the encryption key in the on-premises HSM and link it to a Cloud External Key Manager (Cloud EKM) key. Associate the created Cloud KMS key while creating the BigQuery resources.",
+        "D": "Create the encryption key in the on-premises HSM. Create BigQuery resources and encrypt data while ingesting them into BigQuery."
+      },
+      "clue_words": ["key material ONLY on-premises", "key never leaves on-prem HSM"],
+      "what_is_tested": "Cloud KMS variants: Software KMS, Cloud HSM (Google's HSM), and **Cloud EKM** (key stays at a third-party / on-prem HSM; Google never sees the material).",
+      "decision_pattern": "Key material must live OUTSIDE Google forever → Cloud EKM. Key material can be generated in Google's HSM → Cloud HSM. Key material can be generated/stored anywhere in Google → Cloud KMS.",
+      "elimination": {
+        "A": "Importing a key into Cloud KMS means Google now has the key material. Violates 'only on the on-prem HSM.'",
+        "B": "Same problem: Cloud HSM holds the material in Google's HSM. Key has left on-prem.",
+        "C": "Correct. EKM **links** to the external HSM — Cloud KMS holds a reference, key material never leaves the on-prem HSM. Every encrypt/decrypt is a call back to the HSM.",
+        "D": "Not a Google-managed pattern. You can't natively associate BigQuery with a raw on-prem HSM without EKM."
+      },
+      "mental_model": "EKM = 'rent a keyhole, not the key.' Google's services call your HSM through Cloud KMS each time they need to decrypt.",
+      "exam_pattern": "'Key must never leave on-prem' / 'sovereign control of keys' → Cloud EKM. 'FIPS 140-2 Level 3 in Google' → Cloud HSM. 'Default protection' → Google-managed encryption.",
+      "watch_out_for": "Cloud HSM vs Cloud EKM is the favorite trap — Cloud HSM is still Google."
+    },
+    {
+      "qid": 6,
+      "topic_area": "Reliability · Cloud Storage · Dual-region · Dataproc",
+      "your_answer": "B",
+      "correct_answer": "B",
+      "result": "correct",
+      "question": "You have an upstream process that writes data to Cloud Storage. This data is then read by an Apache Spark job that runs on Dataproc. These jobs are run in the us-central1 region, but the data could be stored anywhere in the United States. You need to have a recovery process in place in case of a catastrophic single region failure. You need an approach with a maximum of 15 minutes of data loss (RPO=15 mins). You want to ensure that there is minimal latency when reading the data. What should you do?",
+      "options": {
+        "A": "First, create a Cloud Storage bucket in the US multi-region. Then run the Dataproc cluster in a zone in the us-central1 region, reading data from the US multi-region bucket. In case of a regional failure, redeploy the Dataproc cluster to the us-central2 region and continue reading from the same bucket.",
+        "B": "First, create a dual-region Cloud Storage bucket in the us-central1 and us-south1 regions. Enable turbo replication. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in the same region. In case of a regional failure, redeploy the Dataproc clusters to the us-south1 region and read from the same bucket.",
+        "C": "First, create two regional Cloud Storage buckets, one in the us-central1 region and one in the us-south1 region. Have the upstream process write data to the us-central1 bucket. Use the Storage Transfer Service to copy data hourly from the us-central1 bucket to the us-south1 bucket. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in that region. In case of regional failure, redeploy your Dataproc clusters to the us-south1 region and read from the bucket in that region instead.",
+        "D": "First, create a dual-region Cloud Storage bucket in the us-central1 and us-south1 regions. Enable turbo replication. Then run the Dataproc cluster in a zone in the us-central1 region, reading from the bucket in the us-south1 region. In case of a regional failure, redeploy your Dataproc cluster to the us-south1 region and continue reading from the same bucket."
+      },
+      "clue_words": ["RPO = 15 minutes", "minimal latency on read", "regional failure"],
+      "what_is_tested": "Cloud Storage location types and their RPO: **Regional** (no replication), **Multi-region** (RPO ~1 hour), **Dual-region** (RPO ~1 hour), **Dual-region with Turbo Replication** (RPO 15 minutes).",
+      "decision_pattern": "RPO 15 min → Dual-region + Turbo. Co-locate the compute with the primary bucket region for low latency. On failover, move compute to the other region of the same dual-region bucket.",
+      "elimination": {
+        "A": "Multi-region buckets have RPO ~1 hour and higher latency / lower bandwidth than regional. Fails both RPO and latency.",
+        "B": "Correct. Turbo replication = 15 min RPO. Dataproc co-located = low latency. Failover = move Dataproc to peer region; bucket survives.",
+        "C": "Hourly STS = RPO = 1 hour. Fails the 15-min target.",
+        "D": "Dataproc reads cross-region from the start = extra latency every day. Fails the 'minimal latency' clause."
+      },
+      "mental_model": "Dual-region + Turbo is the only Cloud Storage option that explicitly guarantees 15-min RPO. Memorize that fact.",
+      "exam_pattern": "RPO ≤ 15 min on Cloud Storage → Dual-region + Turbo. RPO ≤ 1 hour and cost matters → multi-region or dual-region without Turbo. RPO = whatever, daily acceptable → STS.",
+      "watch_out_for": "Dual-region WITHOUT Turbo is also ~1 hour RPO. Turbo must be explicitly enabled."
+    },
+    {
+      "qid": 7,
+      "topic_area": "Pipelines · Dataflow · Performance debugging",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You maintain ETL pipelines. You notice that a streaming pipeline running on Dataflow is taking a long time to process incoming data, which causes output delays. You also noticed that the pipeline graph was automatically optimized by Dataflow and merged into one step. You want to identify where the potential bottleneck is occurring. What should you do?",
+      "options": {
+        "A": "Insert output sinks after each key processing step, and observe the writing throughput of each block.",
+        "B": "Log debug information in each ParDo function, and analyze the logs at execution time.",
+        "C": "Insert a Reshuffle operation after each processing step, and monitor the execution details in the Dataflow console.",
+        "D": "Verify that the Dataflow service accounts have appropriate permissions to write the processed data to the output sinks."
+      },
+      "clue_words": ["fusion / merged into one step", "identify the bottleneck", "Dataflow streaming"],
+      "what_is_tested": "Dataflow's **fusion optimization** merges ParDos into a single physical step. When fused, you can't see per-step metrics. **Reshuffle** is the official way to break fusion.",
+      "decision_pattern": "Fused steps + want per-step visibility → insert Reshuffle (or GroupByKey) between them → per-step metrics appear in the console.",
+      "elimination": {
+        "A": "Inserting sinks is expensive and noisy. Not the recommended diagnostic.",
+        "B": "Excess logs, doesn't expose throughput per step.",
+        "C": "Correct. Reshuffle prevents fusion → each prior step becomes its own observable stage.",
+        "D": "The problem statement says data is flowing slowly, not failing. Permissions would cause errors, not lag."
+      },
+      "mental_model": "Fusion = compiler-style optimization. Reshuffle = optimization barrier. Use it as a debug probe.",
+      "exam_pattern": "'Dataflow + fused step + diagnose bottleneck' → Reshuffle.",
+      "watch_out_for": "Reshuffle has runtime cost. Use it only for diagnostics or for genuine parallelism-rebalance needs."
+    },
+    {
+      "qid": 8,
+      "topic_area": "Migration · Hadoop → GCP · Airflow → Composer",
+      "your_answer": "B",
+      "correct_answer": "B",
+      "result": "correct",
+      "question": "You need to modernize your existing on-premises data strategy. Your organization currently uses: Apache Hadoop clusters for processing multiple large data sets, including on-premises HDFS for data replication; and Apache Airflow to orchestrate hundreds of ETL pipelines with thousands of job steps. You need to set up a new architecture in Google Cloud that can handle your Hadoop workloads and requires minimal changes to your existing orchestration processes. What should you do?",
+      "options": {
+        "A": "Use Dataproc to migrate Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Convert your ETL pipelines to Dataflow.",
+        "B": "Use Dataproc to migrate Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Orchestrate your pipelines with Cloud Composer.",
+        "C": "Use Bigtable for your large workloads, with connections to Cloud Storage to handle any HDFS use cases. Orchestrate your pipelines with Cloud Composer.",
+        "D": "Use Dataproc to migrate your Hadoop clusters to Google Cloud, and Cloud Storage to handle any HDFS use cases. Use Cloud Data Fusion to visually design and deploy your ETL pipelines."
+      },
+      "clue_words": ["Hadoop", "Airflow", "minimal changes to orchestration"],
+      "what_is_tested": "1-to-1 mappings: Hadoop → Dataproc; HDFS → Cloud Storage; Airflow → Cloud Composer.",
+      "decision_pattern": "Match each on-prem component to its managed GCP equivalent. 'Minimal changes' = lift-and-shift, not re-architect.",
+      "elimination": {
+        "A": "Converting ETL to Dataflow rewrites everything — not 'minimal change.'",
+        "B": "Correct. Direct 1:1 mapping for all three components.",
+        "C": "Bigtable is NoSQL key-value. Not a replacement for Hadoop MapReduce/Spark.",
+        "D": "Data Fusion is ETL design, not orchestration. Replaces the wrong tool."
+      },
+      "mental_model": "When the prompt names a tool (Hadoop, Airflow, Kafka), find the managed equivalent. Don't rewrite unless the prompt asks.",
+      "exam_pattern": "Hadoop = Dataproc · HDFS = Cloud Storage · Hive = BigQuery/Dataproc Metastore · Airflow = Cloud Composer · Kafka = Pub/Sub or self-managed · Spark = Dataproc/Dataproc Serverless · HBase = Bigtable.",
+      "watch_out_for": "'Minimal changes' is a strong clue word — it eliminates anything that involves rewriting."
+    },
+    {
+      "qid": 9,
+      "topic_area": "Reliability · Cloud Storage · RPO",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You are designing the architecture of your application to store data in Cloud Storage. Your application consists of pipelines that read data from a Cloud Storage bucket that contains raw data, and write the data to a second bucket after processing. You want to design an architecture with Cloud Storage resources that are capable of being resilient if a Google Cloud regional failure occurs. You want to minimize the recovery point objective (RPO) if a failure occurs, with no impact on applications that use the stored data. What should you do?",
+      "options": {
+        "A": "Adopt multi-regional Cloud Storage buckets in your architecture.",
+        "B": "Adopt two regional Cloud Storage buckets, and update your application to write the output on both buckets.",
+        "C": "Adopt a dual-region Cloud Storage bucket, and enable turbo replication in your architecture.",
+        "D": "Adopt two regional Cloud Storage buckets, and create a daily task to copy from one bucket to the other."
+      },
+      "clue_words": ["minimize RPO", "no impact on applications", "regional failure"],
+      "what_is_tested": "Same as Q6: Dual-region + Turbo = 15 min RPO, and importantly **transparent** to the application (same bucket name, no app changes).",
+      "decision_pattern": "Minimum RPO + no app changes → Dual-region + Turbo (single bucket, replicated automatically).",
+      "elimination": {
+        "A": "Multi-region RPO ~1 hour. Not 'minimum.'",
+        "B": "Dual-writes from the app = application change. Fails 'no impact on applications.'",
+        "C": "Correct. One bucket address, 15-min RPO, no app changes.",
+        "D": "Daily copy = up to 24h RPO."
+      },
+      "mental_model": "If the bucket itself replicates, the app doesn't need to know. If the app has to handle replication, you broke 'no impact.'",
+      "exam_pattern": "'Lowest RPO + transparent to app' → Dual-region + Turbo.",
+      "watch_out_for": "Don't confuse 'multi-region' (regions across a continent, ~1h RPO) with 'dual-region' (two specified regions, can have Turbo)."
+    },
+    {
+      "qid": 10,
+      "topic_area": "Data quality · Dataform · ELT",
+      "your_answer": "A",
+      "correct_answer": "A",
+      "result": "correct",
+      "question": "You are building an ELT solution in BigQuery by using Dataform. You need to perform uniqueness and null value checks on your final tables. What should you do to efficiently integrate these checks into your pipeline?",
+      "options": {
+        "A": "Build Dataform assertions into your code.",
+        "B": "Create Dataplex data quality tasks.",
+        "C": "Build BigQuery user-defined functions (UDFs).",
+        "D": "Write a Spark-based stored procedure."
+      },
+      "clue_words": ["uniqueness and null checks", "Dataform pipeline", "integrate into pipeline"],
+      "what_is_tested": "Dataform's built-in assertion framework runs data-quality checks as a step in the same job. Dataplex runs OUTSIDE the pipeline.",
+      "decision_pattern": "Quality checks inside the same Dataform pipeline → use Dataform **assertions**. Org-wide governance checks across many sources → Dataplex.",
+      "elimination": {
+        "A": "Correct. Assertions are a native Dataform feature for uniqueness, non-null, row counts, and custom SQL conditions.",
+        "B": "Dataplex tasks are separate jobs — not 'integrated into your pipeline.'",
+        "C": "UDFs are for transformations, not validations.",
+        "D": "Heavy hammer for simple null/unique checks."
+      },
+      "mental_model": "If a tool ships a feature with the exact name 'assertion' or 'data quality check,' it's almost always the right answer when that tool is named in the prompt.",
+      "exam_pattern": "'Dataform' + 'quality check' → assertions. 'Decentralized lake' + 'quality + lineage' → Dataplex.",
+      "watch_out_for": "Both Dataplex and Dataform handle data quality. The deciding factor is *where in the pipeline* the check runs."
+    },
+    {
+      "qid": 11,
+      "topic_area": "Composer · Airflow workers · Memory eviction",
+      "your_answer": "B",
+      "correct_answer": "C, E",
+      "result": "incorrect",
+      "question": "You recently deployed several data processing jobs into your Cloud Composer 2 environment. You notice that some tasks are failing in Apache Airflow. On the monitoring dashboard, you see an increase in the total workers memory usage, and there were worker pod evictions. You need to resolve these errors. What should you do? (Choose two)",
+      "options": {
+        "A": "Increase the directed acyclic graph (DAG) file parsing interval.",
+        "B": "Increase the Cloud Composer 2 environment size from medium to large.",
+        "C": "Increase the memory available to the Airflow workers.",
+        "D": "Increase the memory available to the Airflow triggerer.",
+        "E": "Increase the maximum number of workers and reduce worker concurrency."
+      },
+      "why_you_missed_it": "You picked B (environment size medium → large). The trap is the word 'size' — it sounds like it covers everything. It doesn't. In Cloud Composer 2, **environment size** scales the *backend* (Airflow metadata DB, web server, Redis queue). It does NOT change worker CPU, worker memory, or worker concurrency. Worker pods are configured **separately**. The actual root cause was 'workers running out of memory' — so you fix it where workers are configured: (1) raise worker memory directly (C), or (2) spread the same workload over MORE workers each doing FEWER tasks at once (E). The mental fix: in Composer 2, separate the three knobs in your head — **environment size = backend**, **workers = scheduler-runtime**, **DAG-parsing interval = scheduler**. Pick a knob that touches the part actually under pressure.",
+      "clue_words": ["worker pod evictions", "total worker memory increasing", "Composer 2", "choose two"],
+      "what_is_tested": "Composer 2 architecture: which knob controls which subsystem.",
+      "decision_pattern": "Worker OOM → either give each worker more memory, or reduce per-worker load. Both are valid. So the two right answers are the two that touch the workers' memory pressure.",
+      "elimination": {
+        "A": "DAG parsing interval affects the SCHEDULER, not the workers. Wrong subsystem.",
+        "B": "Environment size = backend capacity (DB, queue, web server). Does NOT affect worker memory.",
+        "C": "Correct. Direct fix — more RAM per worker pod.",
+        "D": "Triggerer handles deferrable operators; it's a separate component. Workers are the ones evicting.",
+        "E": "Correct. More workers × less concurrency = same throughput, less memory pressure per worker."
+      },
+      "mental_model": "In Composer 2, ask: 'where is the pressure?' If it's on workers → tune workers (memory, count, concurrency). Don't tune the backend, the scheduler, or the triggerer.",
+      "exam_pattern": "'Worker evictions / worker OOM in Composer 2' → (raise worker memory) AND (more workers, lower concurrency). Two-pick questions expect ONE-cause-two-fixes patterns.",
+      "watch_out_for": "Composer 1 vs Composer 2 differ here. The exam now defaults to Composer 2 where worker scaling is separate from environment size."
+    },
+    {
+      "qid": 12,
+      "topic_area": "Self-service · Dataprep · Connected Sheets",
+      "your_answer": "A",
+      "correct_answer": "A",
+      "result": "correct",
+      "question": "Your business users need a way to clean and prepare data before using the data for analysis. Your business users are less technically savvy and prefer to work with graphical user interfaces to define their transformations. After the data has been transformed, the business users want to perform their analysis directly in a spreadsheet. You need to recommend a solution that they can use. What should you do?",
+      "options": {
+        "A": "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.",
+        "B": "Use Dataprep to clean the data, and write the results to BigQuery. Analyze the data by using Looker Studio.",
+        "C": "Use Dataflow to clean the data, and write the results to BigQuery. Analyze the data by using Connected Sheets.",
+        "D": "Use Dataflow to clean the data, and write the results to BigQuery. Analyze the data by using Looker Studio."
+      },
+      "clue_words": ["less technically savvy", "graphical user interface", "spreadsheet"],
+      "what_is_tested": "Tool match for non-technical users: Dataprep (GUI for prep) + Connected Sheets (BigQuery inside Sheets).",
+      "decision_pattern": "Non-technical + GUI for prep → Dataprep. Output to spreadsheet → Connected Sheets. Output to dashboard → Looker Studio.",
+      "elimination": {
+        "A": "Correct.",
+        "B": "Looker Studio is a dashboard tool, not a spreadsheet.",
+        "C": "Dataflow needs code (Apache Beam) — not GUI.",
+        "D": "Both halves wrong."
+      },
+      "mental_model": "'Spreadsheet' is a literal clue → Connected Sheets. Looker Studio is a dashboard.",
+      "exam_pattern": "Map clues to tool: GUI prep = Dataprep · Sheet output = Connected Sheets · Dashboard output = Looker Studio · Code-based prep = Dataflow.",
+      "watch_out_for": "'Spreadsheet' ≠ 'dashboard.' Don't confuse Looker Studio with Sheets."
+    },
+    {
+      "qid": 13,
+      "topic_area": "Dataflow · Regional vs zonal · DR",
+      "your_answer": "A",
+      "correct_answer": "A",
+      "result": "correct",
+      "question": "You are designing a Dataflow pipeline for a batch processing job. You want to mitigate multiple zonal failures at job submission time. What should you do?",
+      "options": {
+        "A": "Specify a worker region by using the --region flag.",
+        "B": "Create an Eventarc trigger to resubmit the job in case of zonal failure when submitting the job.",
+        "C": "Submit duplicate pipelines in two different zones by using the --zone flag.",
+        "D": "Set the pipeline staging location as a regional Cloud Storage bucket."
+      },
+      "clue_words": ["zonal failures", "at job submission time"],
+      "what_is_tested": "Dataflow's --region flag lets Dataflow pick the best zone in that region; --zone pins to one zone (anti-pattern for HA).",
+      "decision_pattern": "Mitigate zonal failure → let Dataflow pick the zone → --region flag.",
+      "elimination": {
+        "A": "Correct.",
+        "B": "Reactive retry is more expensive and slower than just letting Dataflow choose the zone.",
+        "C": "Duplicates double cost and complexity.",
+        "D": "Staging bucket location ≠ worker location."
+      },
+      "mental_model": "Region = the menu of zones. Specify the menu, not a specific item, when you want resilience.",
+      "exam_pattern": "Mitigate zonal failures on a managed service → specify region, not zone.",
+      "watch_out_for": "--zone is rarely correct on the exam; it's a niche flag."
+    },
+    {
+      "qid": 14,
+      "topic_area": "BigQuery · Data sharing · Analytics Hub",
+      "your_answer": "B",
+      "correct_answer": "B",
+      "result": "correct",
+      "question": "Different teams in your organization store customer and performance data in BigQuery. Each team needs to keep full control of their collected data, be able to query data within their projects, and be able to exchange their data with other teams. You need to implement an organization-wide solution, while minimizing operational tasks and costs. What should you do?",
+      "options": {
+        "A": "Ask each team to create authorized views of their data. Grant the bigquery.jobUser role to each team.",
+        "B": "Ask each team to publish their data in BigQuery sharing (Analytics Hub). Direct the other teams to subscribe to them.",
+        "C": "Create a BigQuery scheduled query to replicate all customer data into team projects.",
+        "D": "Enable each team to create materialized views of the data they need to access in their projects."
+      },
+      "clue_words": ["each team keeps control", "exchange with other teams", "minimize ops + cost"],
+      "what_is_tested": "Analytics Hub: publish-subscribe model for BigQuery datasets. No data movement, automatic authorized dataset at subscription.",
+      "decision_pattern": "Org-wide data sharing + decentralized ownership + low ops → Analytics Hub.",
+      "elimination": {
+        "A": "Authorized views require manual per-team setup and bigquery.jobUser doesn't grant data access.",
+        "B": "Correct. Publisher controls, subscribers consume in-place, no copies.",
+        "C": "Replication = data duplication = more cost + sync ops.",
+        "D": "Materialized views can't span projects easily; not designed for sharing."
+      },
+      "mental_model": "Analytics Hub = the BigQuery equivalent of a marketplace. Producers list, consumers subscribe.",
+      "exam_pattern": "'Decentralized data ownership + sharing' → Analytics Hub. 'Within one team, fast joins' → authorized views or shared dataset.",
+      "watch_out_for": "Analytics Hub is the modern answer; older course material may still say 'authorized views' — exam favors Analytics Hub now."
+    },
+    {
+      "qid": 15,
+      "topic_area": "Governance · Dataplex",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You are part of a healthcare organization where data is organized and managed by respective data owners in various storage services. As a result of this decentralized ecosystem, discovering and managing data has become difficult. You need to quickly identify and implement a cost-optimized solution to assist your organization with: Data management and discovery, Data lineage tracking, and Data quality validation. How should you build the solution?",
+      "options": {
+        "A": "Build a new data discovery tool on Google Kubernetes Engine that helps with new source onboarding and data lineage tracking.",
+        "B": "Use BigLake to convert the current solution into a data lake architecture.",
+        "C": "Use Dataplex to manage data, track data lineage, and perform data quality validation.",
+        "D": "Use BigQuery to track data lineage, and use Dataprep to manage data and perform data quality validation."
+      },
+      "clue_words": ["decentralized", "discovery + lineage + quality"],
+      "what_is_tested": "Dataplex is the unified data fabric for governance across BigQuery + Cloud Storage.",
+      "decision_pattern": "Three-in-one (catalog + lineage + quality) → Dataplex.",
+      "elimination": {
+        "A": "Building from scratch on GKE = high cost + time.",
+        "B": "BigLake is for unified table access (BQ + GCS + S3); not a governance platform.",
+        "C": "Correct.",
+        "D": "BigQuery lineage only covers BigQuery; Dataprep is for prep, not governance."
+      },
+      "mental_model": "Whenever you see three governance concerns together (discover, lineage, quality), Dataplex.",
+      "exam_pattern": "Governance + decentralized + multi-source → Dataplex.",
+      "watch_out_for": "Don't confuse Dataplex with Data Catalog (Data Catalog is now PART of Dataplex)."
+    },
+    {
+      "qid": 16,
+      "topic_area": "BigQuery · IAM · Dataset-level permissions",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You want to store your team's shared tables in a single dataset to make data easily accessible to various analysts. You want to make this data readable but unmodifiable by analysts. At the same time, you want to provide the analysts with individual workspaces in the same project, where they can create and store tables for their own use, without the tables being accessible by other analysts. What should you do?",
+      "options": {
+        "A": "Give analysts the BigQuery Data Viewer role at the project level. Create one other dataset, and give the analysts the BigQuery Data Editor role on that dataset.",
+        "B": "Give analysts the BigQuery Data Viewer role at the project level. Create a dataset for each analyst, and give each analyst the BigQuery Data Editor role at the project level.",
+        "C": "Give analysts the BigQuery Data Viewer role on the shared dataset. Create a dataset for each analyst, and give each analyst the BigQuery Data Editor role at the dataset level for their assigned dataset.",
+        "D": "Give analysts the BigQuery Data Viewer role on the shared dataset. Create one other dataset and give the analysts the BigQuery Data Editor role on that dataset."
+      },
+      "clue_words": ["read but not modify shared data", "private workspace each", "no cross-analyst visibility"],
+      "what_is_tested": "Granting roles at the right SCOPE (project vs dataset). 'Per-user privacy' requires per-user datasets with dataset-level grants.",
+      "decision_pattern": "Per-user privacy → one dataset per user, role at dataset level only.",
+      "elimination": {
+        "A": "Viewer at project level grants viewer on EVERYTHING — too broad. One shared editor dataset = no privacy.",
+        "B": "Editor at project level = analysts can edit each other's data. Catastrophic.",
+        "C": "Correct. Viewer only on the shared dataset. Each analyst is editor only on their own dataset.",
+        "D": "One shared editor dataset = analysts step on each other."
+      },
+      "mental_model": "Scope the role to the smallest object that needs it. 'Project-level Viewer' is almost always too broad.",
+      "exam_pattern": "'Private workspace per user' → one dataset per user, role at dataset scope.",
+      "watch_out_for": "Project-level grants are convenient but rarely correct when privacy is the goal."
+    },
+    {
+      "qid": 17,
+      "topic_area": "Ingestion · Cloud Data Fusion · CMEK",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You have several different file type data sources, such as Apache Parquet and CSV. You want to store the data in Cloud Storage. You need to set up an object sink for your data that allows you to use your own encryption keys. You want to use a GUI-based solution. What should you do?",
+      "options": {
+        "A": "Use Storage Transfer Service to move files into Cloud Storage.",
+        "B": "Use Dataflow to move files into Cloud Storage.",
+        "C": "Use Cloud Data Fusion to move files into Cloud Storage.",
+        "D": "Use BigQuery Data Transfer Service to move files into BigQuery."
+      },
+      "clue_words": ["GUI-based", "customer-managed keys (CMEK)", "Cloud Storage sink"],
+      "what_is_tested": "Cloud Data Fusion = GUI ETL with CMEK support. STS does not support CMEK on writes (at the time of the question). BQ DTS targets BigQuery, not GCS.",
+      "decision_pattern": "GUI + CMEK + Cloud Storage sink → Data Fusion.",
+      "elimination": {
+        "A": "STS = simpler GUI but no CMEK on the write.",
+        "B": "Dataflow = code (Apache Beam), not GUI.",
+        "C": "Correct.",
+        "D": "Wrong sink."
+      },
+      "mental_model": "Two constraints that rarely combine — GUI AND CMEK — point straight to Data Fusion.",
+      "exam_pattern": "'GUI + ETL' → Data Fusion. Add CMEK to the same prompt → still Data Fusion.",
+      "watch_out_for": "Don't pick STS just because it has 'Transfer' in the name. STS lacks GUI-driven transformations and CMEK-on-write."
+    },
+    {
+      "qid": 18,
+      "topic_area": "Streaming · Dataflow windows · Real-time dashboards",
+      "your_answer": "D",
+      "correct_answer": "B",
+      "result": "incorrect",
+      "question": "You are designing a real-time system for a ride hailing app that identifies areas with high demand for rides to effectively reroute available drivers to meet the demand. The system ingests data from multiple sources to Pub/Sub, processes the data, and stores the results for visualization and analysis in real-time dashboards. The data sources include driver location updates every 5 seconds and app-based booking events from riders. The data processing involves real-time aggregation of supply and demand data for the last 30 seconds, every 2 seconds, and storing the results in a low-latency system for visualization. What should you do?",
+      "options": {
+        "A": "Group the data by using a tumbling window in a Dataflow pipeline, and write the aggregated data to Memorystore.",
+        "B": "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to Memorystore.",
+        "C": "Group the data by using a session window in a Dataflow pipeline, and write the aggregated data to BigQuery.",
+        "D": "Group the data by using a hopping window in a Dataflow pipeline, and write the aggregated data to BigQuery."
+      },
+      "why_you_missed_it": "You got the window right (hopping) but picked **BigQuery** as the sink. The trap: 'real-time dashboards' sounds analytical and BigQuery is the analytical default in your head. But 'real-time dashboard' in the exam means **sub-second user-facing reads**. BigQuery streaming inserts go through a streaming buffer with seconds of latency, and dashboard queries against the buffer scan unbounded data. **Memorystore (Redis) is in-memory and gives millisecond reads** — that's what a live demand-heatmap dashboard needs. The mental fix: when you see 'real-time dashboard' or 'low-latency visualization,' don't assume BigQuery. Ask: 'do users need this in milliseconds or in seconds?' Milliseconds → Memorystore / Bigtable. Seconds-to-minutes for analytics → BigQuery.\n\nAlso re-derive the window: last 30s, computed every 2s → **overlapping windows** → hopping (sliding) window with size 30s, period 2s. Tumbling = non-overlapping. Session = bursts of activity per key.",
+      "clue_words": ["last 30 seconds", "every 2 seconds", "real-time dashboard", "low-latency"],
+      "what_is_tested": "Dataflow window types AND choice of low-latency sink.",
+      "decision_pattern": "Two-clue framework. Clue 1 — windowing: window_size > period → hopping; window_size == period → tumbling; gap-based grouping → session. Clue 2 — sink: ms-latency UI → Memorystore (or Bigtable); analytical reporting → BigQuery; ad-hoc OLTP → Spanner.",
+      "elimination": {
+        "A": "Tumbling = non-overlapping fixed windows. With 30s windows you get one update every 30s, not every 2s. Wrong shape.",
+        "B": "Correct. Hopping window 30s/2s + Memorystore for ms read latency.",
+        "C": "Session = groups by activity bursts per key. Wrong concept. BigQuery also wrong sink.",
+        "D": "Right window, wrong sink. BigQuery streaming buffer not appropriate for sub-second dashboard refreshes."
+      },
+      "mental_model": "Hopping = 'rolling last N, refreshed every M.' Tumbling = 'snapshot every N.' Session = 'group while activity continues.' Sinks: low-latency UI ≠ low-latency analytics.",
+      "exam_pattern": "Window size > emit period → hopping. 'Real-time dashboard / live UI / driver app' → Memorystore. 'Real-time analytics / ad-hoc SQL' → BigQuery.",
+      "watch_out_for": "BigQuery has gotten faster (storage API, BI Engine) but on the exam, sub-second user-facing reads = NOT BigQuery."
+    },
+    {
+      "qid": 19,
+      "topic_area": "Replication · Datastream · Cloud SQL → BigQuery",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You have terabytes of customer behavioral data streaming from Google Analytics into BigQuery daily. Your customers' information, such as their preferences, is hosted on a Cloud SQL for MySQL database. Your CRM database is hosted on a Cloud SQL for PostgreSQL instance. The marketing team wants to use your customers' information from the two databases and the customer behavioral data to create marketing campaigns for yearly active customers. You need to ensure that the marketing team can run the campaigns over 100 times a day on typical days and up to 300 during sales. At the same time you want to keep the load on the Cloud SQL databases to a minimum. What should you do?",
+      "options": {
+        "A": "Create BigQuery connections to both Cloud SQL databases. Use BigQuery federated queries on the two databases and the Google Analytics data on BigQuery to run these queries.",
+        "B": "Create a Dataproc cluster with Trino to establish connections to both Cloud SQL databases and BigQuery, to execute the queries.",
+        "C": "Create streams in Datastream to replicate the required tables from both Cloud SQL databases to BigQuery for these queries.",
+        "D": "Create a job on Apache Spark with Dataproc Serverless to query both Cloud SQL databases and the Google Analytics data on BigQuery for these queries."
+      },
+      "clue_words": ["100–300 campaign runs / day", "minimize load on Cloud SQL"],
+      "what_is_tested": "Datastream = serverless CDC from OLTP to BigQuery. Each campaign query then runs against BigQuery, not the source DB.",
+      "decision_pattern": "High query volume + don't hit the OLTP DB → CDC-replicate to BigQuery → query BigQuery.",
+      "elimination": {
+        "A": "Federated queries hit Cloud SQL every time = 100–300 full table scans/day on the OLTP DBs. Kills the source DBs.",
+        "B": "Trino still queries Cloud SQL on each run.",
+        "C": "Correct. Datastream CDC keeps a near-real-time copy in BigQuery; campaigns run only against BigQuery.",
+        "D": "Same load problem as B + Spark serverless is the wrong shape."
+      },
+      "mental_model": "When you must minimize OLTP load, the answer is 'replicate, then query the copy.' Datastream is the CDC tool.",
+      "exam_pattern": "'Reduce load on Cloud SQL / Oracle / Postgres' + 'run many analytical queries' → Datastream → BigQuery.",
+      "watch_out_for": "Federated queries are tempting but always run on the source DB at query time."
+    },
+    {
+      "qid": 20,
+      "topic_area": "Replication · Datastream · Oracle → BigQuery",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You have an Oracle database deployed in a VM as part of a Virtual Private Cloud (VPC) network. You want to replicate and continuously synchronize 50 tables to BigQuery. You want to minimize the need to manage infrastructure. What should you do?",
+      "options": {
+        "A": "Deploy Apache Kafka in the same VPC network, use Kafka Connect Oracle change data capture (CDC), and the Kafka Connect Google BigQuery Sink Connector.",
+        "B": "Deploy Apache Kafka in the same VPC network, use Kafka Connect Oracle Change Data Capture (CDC), and Dataflow to stream the Kafka topic to BigQuery.",
+        "C": "Create a Datastream service from Oracle to BigQuery, use a private connectivity configuration to the same VPC network, and a connection profile to BigQuery.",
+        "D": "Create a Pub/Sub subscription to write to BigQuery directly. Deploy the Debezium Oracle connector to capture changes in the Oracle database, and sink to the Pub/Sub topic."
+      },
+      "clue_words": ["Oracle", "minimize infrastructure", "continuous sync"],
+      "what_is_tested": "Datastream natively supports Oracle and is fully serverless. Every other option introduces a VM/cluster you must manage.",
+      "decision_pattern": "Oracle/MySQL/Postgres → BigQuery + serverless → Datastream.",
+      "elimination": {
+        "A": "Kafka cluster = VMs to manage.",
+        "B": "Same.",
+        "C": "Correct.",
+        "D": "Debezium runs on a Kafka Connect host = VM."
+      },
+      "mental_model": "Datastream is to CDC what Pub/Sub is to messaging — serverless first.",
+      "exam_pattern": "CDC + serverless + Oracle/MySQL/Postgres → Datastream.",
+      "watch_out_for": "Don't pick Kafka/Debezium unless the prompt specifically says 'we already run Kafka.'"
+    },
+    {
+      "qid": 21,
+      "topic_area": "Orchestration · Workflows · Cloud Run functions",
+      "your_answer": "B",
+      "correct_answer": "B",
+      "result": "correct",
+      "question": "You are using Workflows to call an API that returns a 1KB JSON response, apply some complex business logic on this response, wait for the logic to complete, and then perform a load from a Cloud Storage file to BigQuery. The Workflows standard library does not have sufficient capabilities to perform your complex logic, and you want to use Python's standard library instead. You want to optimize your workflow for simplicity and speed of execution. What should you do?",
+      "options": {
+        "A": "Create a Dataproc cluster, and use PySpark to apply the logic on your JSON file.",
+        "B": "Invoke a Cloud Run function instance that uses Python to apply the logic on your JSON file.",
+        "C": "Invoke a subworkflow in Workflows to apply the logic on your JSON file.",
+        "D": "Create a Cloud Composer environment and run the logic in Cloud Composer."
+      },
+      "clue_words": ["1KB payload", "Python stdlib", "simplicity + speed"],
+      "what_is_tested": "Small custom logic + Python → Cloud Run (or functions). Avoid heavy frameworks for tiny tasks.",
+      "decision_pattern": "Tiny payload + need a real programming language → Cloud Run function (fast cold start, simple deploy).",
+      "elimination": {
+        "A": "Dataproc cluster for 1KB? Vastly over-engineered.",
+        "B": "Correct.",
+        "C": "Subworkflows can't escape the Workflows DSL — you'd hit the same standard-library limit.",
+        "D": "Composer for one step = overkill and slow."
+      },
+      "mental_model": "Right-size compute. 1KB → function, not cluster.",
+      "exam_pattern": "Workflows + 'I need Python or more logic' → call a Cloud Run function from the workflow.",
+      "watch_out_for": "Subworkflow is a tempting trap because it sounds 'inside Workflows.' But it can't fix language limitations."
+    },
+    {
+      "qid": 22,
+      "topic_area": "BigQuery · Materialized views",
+      "your_answer": "D",
+      "correct_answer": "D",
+      "result": "correct",
+      "question": "You need to look at BigQuery data from a specific table multiple times a day. The underlying table you are querying is several petabytes in size, but you want to filter your data and provide simple aggregations to downstream users. You want to run queries faster and get up-to-date insights quicker. What should you do?",
+      "options": {
+        "A": "Run a scheduled query to pull the necessary data at specific intervals daily.",
+        "B": "Use a cached query to accelerate time to results.",
+        "C": "Limit the query columns being pulled in the final result.",
+        "D": "Create a materialized view based off of the query being run."
+      },
+      "clue_words": ["multiple times a day", "PB-scale", "filter + simple aggregations", "fresh"],
+      "what_is_tested": "Materialized views = precomputed + auto-refresh + query-rewrite (BigQuery transparently routes matching queries to the MV).",
+      "decision_pattern": "Repeated aggregation/filter on big table + want freshness + want speed + want low cost → materialized view.",
+      "elimination": {
+        "A": "Scheduled query = stale between runs + rigid.",
+        "B": "Query cache only helps identical re-queries within 24h and disappears as source data changes.",
+        "C": "Column pruning helps modestly but doesn't precompute.",
+        "D": "Correct."
+      },
+      "mental_model": "Materialized view = a partial pre-aggregated cache that BigQuery refreshes for you.",
+      "exam_pattern": "'Same query many times / day on a big table' → materialized view. 'Once daily report' → scheduled query.",
+      "watch_out_for": "Materialized views only work for supported SQL shapes (most simple aggregations and filters)."
+    },
+    {
+      "qid": 23,
+      "topic_area": "BigQuery · BI Engine vs Materialized views",
+      "your_answer": "C",
+      "correct_answer": "A",
+      "result": "incorrect",
+      "question": "You are administering a BigQuery on-demand environment. Your business intelligence tool is submitting hundreds of queries each day that aggregate a large (50 TB) sales history fact table at the day and month levels. These queries have a slow response time and are exceeding cost expectations. You need to decrease response time, lower query costs, and minimize maintenance. What should you do?",
+      "options": {
+        "A": "Build materialized views on top of the sales table to aggregate data at the day and month level.",
+        "B": "Build authorized views on top of the sales table to aggregate data at the day and month level.",
+        "C": "Enable BI Engine and add your sales table as a preferred table.",
+        "D": "Create a scheduled query to build sales day and sales month aggregate tables on an hourly basis."
+      },
+      "why_you_missed_it": "You picked C (BI Engine). The trap: BI Engine is marketed as 'the in-memory accelerator for BigQuery dashboards,' so when a BI tool is involved you reach for it. But BI Engine has a **memory reservation cap** (typically up to 250 GB per project at the time of the exam) and accelerates by **caching dimension data in RAM**. A **50 TB** fact table cannot fit in BI Engine memory — only a small slice can be cached, and a query that aggregates the full table will still scan the underlying storage and pay full on-demand cost. So BI Engine does not help meaningfully with response time AND **does not lower scan cost at all** (you still pay for the bytes scanned to refresh the cache and for queries that miss it).\n\nMaterialized views (A) are different in kind: they **precompute** day and month aggregates and persist them. The BI tool's queries get **automatically rewritten** by BigQuery to read from the MV — fewer bytes scanned, so cheaper AND faster, AND auto-refreshed so no maintenance. The mental fix: **MV = precomputed answer (saves bytes scanned). BI Engine = RAM cache (helps small/medium hot data, doesn't reduce on-demand cost on a TB-scale scan).** When the prompt says 'lower QUERY COST,' the lever is bytes-scanned, and MVs reduce bytes scanned. BI Engine doesn't.",
+      "clue_words": ["50 TB fact table", "hundreds of queries / day", "lower cost AND latency AND maintenance"],
+      "what_is_tested": "MV vs BI Engine vs authorized views vs scheduled queries — and specifically the SIZE-fit of BI Engine.",
+      "decision_pattern": "Big fact table + repeated aggregation + need to lower cost → MV. Small/medium dimension data + dashboard → BI Engine. Just hide complex SQL from users → authorized view.",
+      "elimination": {
+        "A": "Correct. Pre-aggregated, auto-refreshed, BigQuery auto-routes matching queries, slashes bytes-scanned.",
+        "B": "Authorized views do not precompute. They just expose SQL with delegated access. Same scan cost.",
+        "C": "BI Engine can't hold 50 TB. Doesn't reduce on-demand scan cost. Adds reservation cost on top.",
+        "D": "Scheduled query = stale up to an hour + you maintain the script + DDL maintenance for the aggregate tables. Same data movement cost."
+      },
+      "mental_model": "Materialized View = 'cached answer rewritten transparently.' BI Engine = 'small in-memory cache for hot data only.' When data > BI Engine memory, MV wins on all three axes (speed, cost, maintenance).",
+      "exam_pattern": "Large fact table + aggregation pattern + cost + speed → materialized view. BI Engine appears in the right answer only when the underlying dataset is small enough to cache.",
+      "watch_out_for": "BI Engine sounds like 'press button, dashboards faster.' Always size-check before picking it."
+    },
+    {
+      "qid": 24,
+      "topic_area": "BigQuery · Analytics Hub · Data sharing",
+      "your_answer": "C",
+      "correct_answer": "C",
+      "result": "correct",
+      "question": "You designed a data warehouse in BigQuery to analyze sales data. You want a self-serving, low-maintenance, and cost-effective solution to share the sales dataset to other business units in your organization. What should you do?",
+      "options": {
+        "A": "Use the BigQuery Data Transfer Service to create a schedule that copies the sales dataset to the other business units' projects.",
+        "B": "Create and share views with the users in the other business units.",
+        "C": "Create a BigQuery sharing (Analytics Hub) private exchange, and publish the sales dataset.",
+        "D": "Enable the other business units' projects to access the authorized views of the sales dataset."
+      },
+      "clue_words": ["self-serving", "low-maintenance", "cost-effective"],
+      "what_is_tested": "Same theme as Q14 — Analytics Hub for org-wide sharing.",
+      "decision_pattern": "Self-serve + no data copy + central producer → Analytics Hub.",
+      "elimination": {
+        "A": "DTS copies data = double storage cost + lag.",
+        "B": "Shared views require subscribers to have access to underlying data; high maintenance.",
+        "C": "Correct.",
+        "D": "Authorized views work but every change requires reauthorization — high ops."
+      },
+      "mental_model": "If 'self-serve discovery' is in the prompt, think marketplace → Analytics Hub.",
+      "exam_pattern": "'Self-service + sharing + minimize ops' → Analytics Hub.",
+      "watch_out_for": "Analytics Hub and authorized views both 'work.' The deciding clue is self-service + low maintenance."
+    },
+    {
+      "qid": 25,
+      "topic_area": "Composer · Airflow callbacks",
+      "your_answer": "A",
+      "correct_answer": "A",
+      "result": "correct",
+      "question": "You orchestrate ETL pipelines by using Cloud Composer. One of the tasks in the Airflow DAG relies on a third-party service. You want to be notified when the task does not succeed. What should you do?",
+      "options": {
+        "A": "Assign a function with notification logic to the on_failure_callback parameter for the operator responsible for the task at risk.",
+        "B": "Assign a function with notification logic to the sla_miss_callback parameter for the operator responsible for the task at risk.",
+        "C": "Assign a function with notification logic to the on_retry_callback parameter for the operator responsible for the task at risk.",
+        "D": "Configure a Cloud Monitoring alert on the sla_missed metric associated with the task at risk to trigger a notification."
+      },
+      "clue_words": ["task does not succeed", "third-party service"],
+      "what_is_tested": "Airflow callback hooks: on_failure_callback (fail), on_retry_callback (retry attempted), sla_miss_callback (missed SLA), on_success_callback (success).",
+      "decision_pattern": "'Task fails' → on_failure_callback. 'Task is taking too long' → sla_miss_callback.",
+      "elimination": {
+        "A": "Correct.",
+        "B": "SLA miss ≠ failure; SLA can be missed even on a successful late run.",
+        "C": "Fires on retry, not on final failure.",
+        "D": "Wrong metric + extra wiring."
+      },
+      "mental_model": "Map the prompt phrase to the callback name. 'does not succeed' = failure callback.",
+      "exam_pattern": "'Notify on task failure in Airflow' → on_failure_callback.",
+      "watch_out_for": "on_retry_callback fires on retries, not final failures."
+    },
+    {
+      "qid": 26,
+      "topic_area": "BigQuery · Composer · BigQueryInsertJobOperator",
+      "your_answer": "D",
+      "correct_answer": "D",
+      "result": "correct",
+      "question": "You need to create a SQL pipeline. The pipeline runs an aggregate SQL transformation on a BigQuery table every two hours and appends the result to another existing BigQuery table. You need to configure the pipeline to retry if errors occur. You want the pipeline to send an email notification after three consecutive failures. What should you do?",
+      "options": {
+        "A": "Create a BigQuery scheduled query to run the SQL transformation with schedule options that repeats every two hours, and enable email notifications.",
+        "B": "Use the BigQueryUpsertTableOperator in Cloud Composer, set the retry parameter to three, and set the email_on_failure parameter to true.",
+        "C": "Create a BigQuery scheduled query to run the SQL transformation with schedule options that repeats every two hours, and enable notification to Pub/Sub topic. Use Pub/Sub and Cloud Run functions to send an email after three failed executions.",
+        "D": "Use the BigQueryInsertJobOperator in Cloud Composer, set the retry parameter to three, and set the email_on_failure parameter to true."
+      },
+      "clue_words": ["retry", "email after 3 failures", "scheduled SQL append"],
+      "what_is_tested": "Choosing the correct BigQuery operator and using Airflow's retry + email_on_failure semantics.",
+      "decision_pattern": "Run arbitrary SQL job from Airflow → BigQueryInsertJobOperator. Retries + email = standard Airflow operator params.",
+      "elimination": {
+        "A": "Scheduled queries don't have retry-with-final-email semantics.",
+        "B": "UpsertTableOperator manages table metadata, not arbitrary SQL.",
+        "C": "Scheduled queries can't natively retry.",
+        "D": "Correct."
+      },
+      "mental_model": "BigQueryInsertJobOperator = 'run any BigQuery job from Airflow.' It's the Swiss-army operator.",
+      "exam_pattern": "'Run a BigQuery SQL transform on a schedule + retry semantics' → BigQueryInsertJobOperator in Composer.",
+      "watch_out_for": "Don't confuse the family of BigQuery operators: BigQueryInsertJobOperator (run anything) ≠ BigQueryUpsertTableOperator (manage table) ≠ BigQueryCheckOperator (data quality)."
+    }
+  ],
+  "key_takeaways": [
+    "When two security mechanisms are stacked in one option, check whether the second one nullifies the first (Q2).",
+    "In Composer 2, environment size scales the BACKEND, not the workers. Worker memory and concurrency are separate knobs (Q11).",
+    "'Real-time dashboard' = sub-second user-facing read = Memorystore, not BigQuery (Q18).",
+    "BI Engine has a small memory budget and caches hot data; it cannot accelerate a 50 TB aggregation. Materialized views reduce bytes scanned and thus reduce cost (Q23).",
+    "Dual-region + Turbo Replication is the only Cloud Storage option that explicitly guarantees 15-min RPO (Q6, Q9).",
+    "Cloud SQL Auth Proxy REPLACES Authorized Networks for dynamic clients — don't stack them with 0.0.0.0/0 (Q2).",
+    "Dataform assertions = quality inside the pipeline. Dataplex = quality across the org (Q10, Q15).",
+    "Analytics Hub = self-serve, low-maintenance org-wide BigQuery sharing (Q14, Q24).",
+    "Datastream = serverless CDC; pick it whenever the prompt says 'minimize infra' or 'reduce OLTP load' (Q19, Q20).",
+    "Window types: tumbling = non-overlapping; hopping = overlapping (size > period); session = activity gaps (Q18)."
+  ],
+  "wrong_questions_focus": {
+    "Q2": "Auth Proxy and Authorized Networks are NOT additive defenses. Auth Proxy replaces network allowlists.",
+    "Q11": "Composer 2 worker memory and concurrency are tuned independently from environment size. Environment size scales the backend, not workers.",
+    "Q18": "'Real-time dashboard' = ms-latency reads = Memorystore. BigQuery is for analytical latency (seconds-to-minutes).",
+    "Q23": "BI Engine cannot fit a 50 TB table in memory; it doesn't reduce on-demand scan cost. Materialized views precompute and rewrite queries — cheaper AND faster."
+  }
+}
