@@ -61,6 +61,7 @@
   --pde-border: #2b3138;
   --pde-accent: #6fd0a0;
   --pde-accent-soft: #1a2e25;
+  --pde-on-accent: #0e1114;
   --pde-warn: #e4954e;
   --pde-danger: #e16a6a;
 }
@@ -74,6 +75,7 @@ html[data-theme="dark"] .pde-redesign {
   --pde-border: #2b3138;
   --pde-accent: #6fd0a0;
   --pde-accent-soft: #1a2e25;
+  --pde-on-accent: #0e1114;
   --pde-warn: #e4954e;
   --pde-danger: #e16a6a;
 }
