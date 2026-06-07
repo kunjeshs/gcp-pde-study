@@ -5,63 +5,86 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=10">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=10">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=10">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=10">
+  <link rel="stylesheet" href="assets/css/app.css?v=11">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=11">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=11">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=11">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/icons/icon-192.png">
+  <style>
+    .home-step { display: grid; grid-template-columns: 56px 1fr; gap: 16px; padding: 16px; border: 1px solid var(--pde-border); border-radius: 12px; background: var(--pde-surface, #161a1f); margin-bottom: 12px; }
+    .home-step__num { width: 40px; height: 40px; border-radius: 50%; background: var(--pde-accent); color: var(--pde-on-accent, #0e1114); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+    .home-step__body h3 { margin: 0 0 4px; font-size: 17px; }
+    .home-step__body p { margin: 0; line-height: 1.55; color: var(--pde-muted); }
+    .home-step__body a { color: var(--pde-accent); text-decoration: none; font-weight: 600; }
+    .home-step__body a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
   <div class="page">
     <header class="topbar" data-appbar></header>
     <main class="pde-wrap">
-      <div id="root"><p class="muted">Loading…</p></div>
+      <section class="pde-hero">
+        <p class="pde-eyebrow">Welcome</p>
+        <h1>Study companion for the GCP Professional Data Engineer exam</h1>
+        <p>Learn the official exam guide chapter-by-chapter, recognize the clue words Google uses, drill scenario patterns, and check your reasoning against the 26 official sample questions.</p>
+        <a class="pde-cta" href="chapters.html">Start with chapters →</a>
+        <a class="pde-cta" href="official-sample.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Official sample</a>
+      </section>
+
+      <section style="margin-top:32px">
+        <h2>How to use this site</h2>
+        <p class="muted" style="margin:0 0 18px">A suggested order. Skip around once you know the material.</p>
+
+        <div class="home-step">
+          <div class="home-step__num">1</div>
+          <div class="home-step__body">
+            <h3>Read the chapters</h3>
+            <p>Each of the 19 official sub-objectives has a <strong>Learn</strong> tab (what the exam tests, key services), a <strong>Decide</strong> tab (clue words, decision tables, common traps), and a <strong>Drill</strong> tab (scenario practice). <a href="chapters.html">Open chapters →</a></p>
+          </div>
+        </div>
+
+        <div class="home-step">
+          <div class="home-step__num">2</div>
+          <div class="home-step__body">
+            <h3>Look up services</h3>
+            <p>A quick reference of every GCP service that shows up on the exam, grouped by category, with "best for" hints and decision pointers. Also includes real-world case studies. <a href="services.html">Open services →</a></p>
+          </div>
+        </div>
+
+        <div class="home-step">
+          <div class="home-step__num">3</div>
+          <div class="home-step__body">
+            <h3>Work through Google's 26 sample questions</h3>
+            <p>The official sample with a step-by-step <strong>how to think</strong> walkthrough for each question: clue words to underline, option-by-option elimination, mental model to lock in. <a href="official-sample.html">Open official sample →</a></p>
+          </div>
+        </div>
+
+        <div class="home-step">
+          <div class="home-step__num">4</div>
+          <div class="home-step__body">
+            <h3>Drill exam traps</h3>
+            <p>All scenario drills across every chapter, searchable and filterable by topic. Each card shows the temptation, the right call, and why the other options fail. <a href="exam-traps.html">Open exam traps →</a></p>
+          </div>
+        </div>
+
+        <div class="home-step">
+          <div class="home-step__num">5</div>
+          <div class="home-step__body">
+            <h3>Confirm against the official exam guide</h3>
+            <p>Google's PDF — the source of truth for what's tested. Bookmark it and come back when you want to verify a chapter is still in scope. <a href="exam-guide.html">Open exam guide →</a></p>
+          </div>
+        </div>
+      </section>
+
+      <p class="muted center" style="margin-top:32px"><small>Tip — on iOS, "Add to Home Screen" from the share menu installs this site as an offline app.</small></p>
     </main>
   </div>
 
   <script type="module">
     import { boot } from "./assets/js/app.js";
-    import { Data } from "./assets/js/data.js";
-
     if (boot()) {
-      const esc = (s) => (s == null ? "" : String(s)).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-      Promise.all([Data.chapters(), Data.topicsManifest()]).then(([cd, tm]) => {
-        const chapters = cd.chapters || {};
-
-        const heroHtml = `
-          <section class="pde-hero">
-            <p class="pde-eyebrow">Welcome</p>
-            <h1>Learn, decide, drill.</h1>
-            <p>Nineteen chapters of the official GCP Professional Data Engineer exam guide, plus Google's sample questions and scenario drills.</p>
-            <a class="pde-cta" href="chapters.html">Open chapters →</a>
-            <a class="pde-cta" href="exam-traps.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Exam traps</a>
-          </section>`;
-
-        const allHtml = `
-          <section>
-            <h2>All chapters</h2>
-            <div class="pde-cards">
-              ${(tm.topics || []).map((t) => {
-                const ch = chapters[t.topic] || {};
-                return `
-                <div class="pde-card">
-                  <h3>${esc(t.topic)}</h3>
-                  <p class="pde-card-meta">${ch.exam_weight ? esc(ch.exam_weight) + " weight" : ""}</p>
-                  <a href="chapter.html?slug=${encodeURIComponent(t.slug)}">Open →</a>
-                </div>`;
-              }).join("")}
-            </div>
-          </section>`;
-
-        document.getElementById("root").innerHTML = heroHtml + allHtml;
-
-        if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
-      }).catch((err) => {
-        document.getElementById("root").innerHTML =
-          `<section class="pde-hero"><h1>Failed to load</h1><p>${esc(err.message)}</p></section>`;
-      });
+      if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
     }
   </script>
 </body>

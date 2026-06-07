@@ -81,11 +81,14 @@
         return btn ? btn.dataset.cat : "";
       }
 
+      function displayName(s) {
+        return s.name || s.service || s.company || "?";
+      }
       function bestFor(s) {
-        return s.best_for || s.pde_snippet || s.purpose || s.summary || s.description || "";
+        return s.best_for || s.pde_snippet || s.purpose || s.summary || s.description || s.title || s.pde_takeaway || "";
       }
       function typePill(s) {
-        return s.type || s.managed || "";
+        return s.type || s.managed || s.industry || "";
       }
 
       function render() {
@@ -104,7 +107,8 @@
               </div>
               <div class="svc-tools">
                 ${filtered.map((s) => {
-                  const initials = (s.name || s.service || "?").split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+                  const nm = displayName(s);
+                  const initials = nm.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase() || "?";
                   const bf = bestFor(s);
                   const tp = typePill(s);
                   return `
@@ -112,7 +116,7 @@
                       <button class="svc-row__head" type="button">
                         <span class="svc-row__icon">${esc(initials)}</span>
                         <div class="svc-row__body">
-                          <div class="svc-row__name">${esc(s.name || s.service || "?")}</div>
+                          <div class="svc-row__name">${esc(nm)}</div>
                           ${bf ? `<div class="svc-row__best">${esc(bf).slice(0, 110)}${bf.length > 110 ? "…" : ""}</div>` : ""}
                         </div>
                         ${tp ? `<span class="svc-row__type">${esc(tp)}</span>` : ""}
@@ -128,7 +132,7 @@
       }
 
       function detailHtml(s) {
-        const skip = new Set(["id","name","service","summary","purpose","description"]);
+        const skip = new Set(["id","name","service","summary","purpose","description","company","title","industry"]);
         const renderVal = (v) => {
           if (v == null || v === "") return "";
           if (Array.isArray(v)) {

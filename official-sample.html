@@ -5,33 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>Official Sample · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=9">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=9">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=9">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=9">
+  <link rel="stylesheet" href="assets/css/app.css?v=11">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=11">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=11">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=11">
   <style>
-    .os-hero { background: var(--pde-surface, #161a1f); border: 1px solid var(--pde-border); border-radius: 14px; padding: 22px; margin-bottom: 22px; }
-    .os-score { display: flex; gap: 18px; flex-wrap: wrap; align-items: baseline; margin-top: 10px; }
-    .os-score .big { font-size: 32px; font-weight: 700; color: var(--pde-accent); }
-    .os-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--pde-border); font-size: 12px; margin-right: 6px; }
-    .os-pill.correct { background: rgba(34,197,94,0.12); color: #22c55e; border-color: rgba(34,197,94,0.35); }
-    .os-pill.incorrect { background: rgba(239,68,68,0.14); color: #f87171; border-color: rgba(239,68,68,0.4); }
-    .os-pill.area { background: rgba(59,130,246,0.12); color: #60a5fa; border-color: rgba(59,130,246,0.35); }
     .os-filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 22px; align-items: center; }
     .os-filters button { background: transparent; color: var(--pde-fg); border: 1px solid var(--pde-border); padding: 6px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; }
     .os-filters button.active { background: var(--pde-accent); color: var(--pde-on-accent, #0e1114); border-color: var(--pde-accent); }
     .os-q { border: 1px solid var(--pde-border); border-radius: 14px; padding: 18px 20px; margin: 14px 0; background: var(--pde-surface, #161a1f); }
-    .os-q.is-wrong { border-color: rgba(239,68,68,0.55); box-shadow: 0 0 0 1px rgba(239,68,68,0.25) inset; }
     .os-q h3 { margin: 8px 0 6px; font-size: 18px; line-height: 1.4; }
-    .os-q .qmeta { font-size: 12px; color: var(--pde-muted); margin-top: 4px; }
+    .os-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--pde-border); font-size: 12px; margin-right: 6px; }
+    .os-pill.area { background: rgba(59,130,246,0.12); color: #60a5fa; border-color: rgba(59,130,246,0.35); }
+    .os-pill.answer { background: rgba(34,197,94,0.12); color: #22c55e; border-color: rgba(34,197,94,0.35); }
     .os-opts { margin: 14px 0; padding: 0; list-style: none; }
     .os-opt { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--pde-border); margin-bottom: 6px; display: flex; gap: 10px; align-items: flex-start; }
     .os-opt .letter { font-weight: 700; min-width: 22px; }
     .os-opt.is-correct { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.4); }
-    .os-opt.is-your-wrong { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0.4); }
     .os-tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
     .os-tag.correct { background: rgba(34,197,94,0.18); color: #22c55e; }
-    .os-tag.yours { background: rgba(239,68,68,0.18); color: #f87171; }
     .os-think { margin-top: 14px; }
     .os-think summary { cursor: pointer; font-weight: 600; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--pde-border); }
     .os-think[open] summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
@@ -39,8 +31,6 @@
     .os-section { margin: 14px 0; }
     .os-section h4 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--pde-muted); }
     .os-section p, .os-section li { line-height: 1.55; }
-    .os-section.danger { border-left: 3px solid #f87171; padding-left: 12px; background: rgba(239,68,68,0.06); border-radius: 0 6px 6px 0; padding: 12px 14px; }
-    .os-section.danger h4 { color: #f87171; }
     .os-section.win { border-left: 3px solid #22c55e; padding-left: 12px; background: rgba(34,197,94,0.06); border-radius: 0 6px 6px 0; padding: 12px 14px; }
     .os-section.win h4 { color: #22c55e; }
     .os-elim { display: grid; grid-template-columns: 28px 1fr; gap: 6px 10px; margin: 8px 0; }
@@ -50,7 +40,6 @@
     .os-takeaways { background: var(--pde-surface, #161a1f); border: 1px solid var(--pde-border); border-radius: 14px; padding: 20px; margin-top: 26px; }
     .os-takeaways ol { padding-left: 20px; }
     .os-takeaways li { margin: 6px 0; line-height: 1.55; }
-    .os-toc { position: sticky; top: 12px; }
   </style>
 </head>
 <body>
@@ -71,45 +60,35 @@
         const res = await fetch("./assets/data/official-sample.json", { cache: "force-cache" });
         const d = await res.json();
 
-        const initialFilter = (new URLSearchParams(location.search).get("filter") || "all").toLowerCase();
         const initialQ = parseInt(new URLSearchParams(location.search).get("q") || "0", 10);
+        const initialGroup = (new URLSearchParams(location.search).get("group") || "all").toLowerCase();
 
-        const hero = `
-          <section class="os-hero">
-            <p class="eyebrow">Google official sample</p>
-            <h1 style="margin:6px 0 4px">${esc(d.title)}</h1>
-            <p class="muted">${esc(d.source)}</p>
-            <div class="os-score">
-              <span class="big">${d.your_score.percentage}</span>
-              <span class="os-pill correct">${d.your_score.correct}/${d.your_score.total} correct</span>
-              <span class="os-pill ${d.your_score.result === "PASSED" ? "correct" : "incorrect"}">${esc(d.your_score.result)}</span>
-              <span class="os-pill incorrect">Missed: Q${d.your_score.incorrect_questions.join(", Q")}</span>
-            </div>
-            <p style="margin-top:14px;line-height:1.55">${md(d.how_to_use)}</p>
-          </section>`;
+        const intro = `
+          <p class="eyebrow">Google official sample</p>
+          <h1 style="margin:6px 0 4px">${esc(d.title)}</h1>
+          <p class="muted">${esc(d.source)}</p>
+          <p style="margin-top:14px;line-height:1.55">Read each prompt, try to answer in your head, then expand <strong>How to think</strong> to compare your reasoning to the clue-words, elimination steps, and mental model behind the correct answer.</p>`;
 
+        const groupOf = (q) => ((q.topic_area || "").split("·")[0] || "Other").trim();
+        const groups = [...new Set(d.questions.map(groupOf))].sort();
         const filtersHtml = `
           <div class="os-filters">
             <strong style="margin-right:6px">Filter:</strong>
-            <button data-filter="all">All 26</button>
-            <button data-filter="wrong">Just the 4 I missed</button>
-            <button data-filter="correct">22 correct</button>
+            <button data-group="all">All ${d.questions.length}</button>
+            ${groups.map((g) => {
+              const n = d.questions.filter((q) => groupOf(q) === g).length;
+              return `<button data-group="${esc(g.toLowerCase())}">${esc(g)} (${n})</button>`;
+            }).join("")}
             <a href="#takeaways" style="margin-left:auto;color:var(--pde-accent);font-size:13px;text-decoration:none">↓ Key takeaways</a>
           </div>`;
 
         const renderQ = (q) => {
-          const isWrong = q.result === "incorrect";
-          const correctSet = String(q.correct_answer).split(/[,\s]+/).filter(Boolean);
-          const yourSet = String(q.your_answer).split(/[,\s]+/).filter(Boolean);
-          const optsHtml = Object.entries(q.options).map(([L, txt]) => {
+          const correctSet = String(q.correct_answer || "").split(/[,\s]+/).filter(Boolean);
+          const optsHtml = Object.entries(q.options || {}).map(([L, txt]) => {
             const correct = correctSet.includes(L);
-            const yourWrong = isWrong && yourSet.includes(L) && !correct;
-            const tags = [];
-            if (correct) tags.push('<span class="os-tag correct">correct</span>');
-            if (yourSet.includes(L)) tags.push(`<span class="os-tag ${correct ? "correct" : "yours"}">your answer</span>`);
-            return `<li class="os-opt ${correct ? "is-correct" : ""} ${yourWrong ? "is-your-wrong" : ""}">
+            return `<li class="os-opt ${correct ? "is-correct" : ""}">
               <span class="letter">${esc(L)}.</span>
-              <span>${esc(txt)}${tags.join("")}</span>
+              <span>${esc(txt)}${correct ? '<span class="os-tag correct">correct</span>' : ""}</span>
             </li>`;
           }).join("");
 
@@ -121,33 +100,26 @@
               ${Object.entries(q.elimination).map(([L, t]) => `<div class="os-elim"><span class="let">${esc(L)}.</span><span>${md(t)}</span></div>`).join("")}
             </div>` : "";
 
-          const whyWrongHtml = q.why_you_missed_it ? `
-            <div class="os-section danger">
-              <h4>⚠ Why you missed it</h4>
-              <p>${md(q.why_you_missed_it)}</p>
-            </div>` : "";
-
           const thinkingHtml = `
-            <details class="os-think" ${isWrong ? "open" : ""}>
-              <summary>How to think · clue words · elimination · mental model${isWrong ? " · WHY YOU MISSED IT" : ""}</summary>
+            <details class="os-think">
+              <summary>How to think · clue words · elimination · mental model</summary>
               <div class="body">
-                ${whyWrongHtml}
                 ${clueWordsHtml ? `<div class="os-section"><h4>Clue words to underline</h4><div class="os-clues">${clueWordsHtml}</div></div>` : ""}
                 ${q.what_is_tested ? `<div class="os-section"><h4>What's being tested</h4><p>${md(q.what_is_tested)}</p></div>` : ""}
                 ${q.decision_pattern ? `<div class="os-section"><h4>Decision pattern</h4><p>${md(q.decision_pattern)}</p></div>` : ""}
                 ${elimHtml}
-                ${q.mental_model ? `<div class="os-section win"><h4>✓ Mental model to lock in</h4><p>${md(q.mental_model)}</p></div>` : ""}
+                ${q.mental_model ? `<div class="os-section win"><h4>Mental model to lock in</h4><p>${md(q.mental_model)}</p></div>` : ""}
                 ${q.exam_pattern ? `<div class="os-section"><h4>Exam pattern shortcut</h4><p>${md(q.exam_pattern)}</p></div>` : ""}
                 ${q.watch_out_for ? `<div class="os-section"><h4>Watch out for</h4><p>${md(q.watch_out_for)}</p></div>` : ""}
               </div>
             </details>`;
 
           return `
-            <article class="os-q ${isWrong ? "is-wrong" : ""}" id="q${q.qid}" data-result="${q.result}">
+            <article class="os-q" id="q${q.qid}" data-group="${esc(groupOf(q).toLowerCase())}">
               <div>
-                <span class="os-pill ${isWrong ? "incorrect" : "correct"}">Q${q.qid} · ${esc(q.result)}</span>
-                <span class="os-pill area">${esc(q.topic_area || "")}</span>
-                ${isWrong ? `<span class="os-pill incorrect">your: ${esc(q.your_answer)} · correct: ${esc(q.correct_answer)}</span>` : `<span class="os-pill correct">answer: ${esc(q.correct_answer)}</span>`}
+                <span class="os-pill area">Q${q.qid}</span>
+                ${q.topic_area ? `<span class="os-pill area">${esc(q.topic_area)}</span>` : ""}
+                <span class="os-pill answer">answer: ${esc(q.correct_answer)}</span>
               </div>
               <h3>${esc(q.question)}</h3>
               <ul class="os-opts">${optsHtml}</ul>
@@ -159,35 +131,30 @@
 
         const takeawaysHtml = `
           <section class="os-takeaways" id="takeaways">
-            <h2 style="margin-top:0">Key takeaways across all 26 questions</h2>
-            <ol>${d.key_takeaways.map((t) => `<li>${md(t)}</li>`).join("")}</ol>
-            <h3 style="margin-top:22px">Wrong-answer mental fixes</h3>
-            <ul style="padding-left:20px;line-height:1.6">
-              ${Object.entries(d.wrong_questions_focus).map(([k, v]) => `<li><strong>${esc(k)}:</strong> ${md(v)}</li>`).join("")}
-            </ul>
+            <h2 style="margin-top:0">Key takeaways across all ${d.questions.length} questions</h2>
+            <ol>${(d.key_takeaways || []).map((t) => `<li>${md(t)}</li>`).join("")}</ol>
             <p style="margin-top:18px"><a class="pde-cta" href="chapters.html">All chapters →</a> <a class="pde-cta" href="exam-traps.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Exam traps →</a></p>
           </section>`;
 
-        root.innerHTML = hero + filtersHtml + questionsHtml + takeawaysHtml;
+        root.innerHTML = intro + filtersHtml + questionsHtml + takeawaysHtml;
 
-        const applyFilter = (f) => {
-          const cards = root.querySelectorAll(".os-q");
-          cards.forEach((c) => {
-            const res = c.dataset.result;
-            const show = f === "all" || (f === "wrong" && res === "incorrect") || (f === "correct" && res === "correct");
+        const applyFilter = (group) => {
+          root.querySelectorAll(".os-q").forEach((c) => {
+            const show = group === "all" || c.dataset.group === group;
             c.style.display = show ? "" : "none";
           });
-          root.querySelectorAll(".os-filters button").forEach((b) => b.classList.toggle("active", b.dataset.filter === f));
+          root.querySelectorAll(".os-filters button").forEach((b) => b.classList.toggle("active", b.dataset.group === group));
           try {
             const u = new URL(location.href);
-            u.searchParams.set("filter", f);
+            u.searchParams.set("group", group);
             history.replaceState(null, "", u.toString());
           } catch (_e) {}
         };
         root.querySelectorAll(".os-filters button").forEach((b) => {
-          b.addEventListener("click", () => applyFilter(b.dataset.filter));
+          b.addEventListener("click", () => applyFilter(b.dataset.group));
         });
-        applyFilter(["all","wrong","correct"].includes(initialFilter) ? initialFilter : "all");
+        const validGroups = ["all", ...groups.map((g) => g.toLowerCase())];
+        applyFilter(validGroups.includes(initialGroup) ? initialGroup : "all");
 
         if (initialQ > 0) {
           const target = document.getElementById("q" + initialQ);
