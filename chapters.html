@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>Chapters · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=9">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=9">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=9">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=9">
+  <link rel="stylesheet" href="assets/css/app.css?v=12">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=12">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=12">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=12">
 </head>
 <body>
   <div class="page">
@@ -17,28 +17,146 @@
       <p class="eyebrow">Contents</p>
       <h1>All chapters</h1>
       <p class="lead">19 sections from the official exam guide. Tap to read what the exam tests, must-know services, gotchas, and decision tables.</p>
+
+      <div class="pde-search" role="search">
+        <input id="chapter-search" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Search chapters — try “Redis”, “Dataflow”, “CMEK”…"
+               aria-label="Search chapters"
+               aria-expanded="false" aria-controls="search-suggestions" aria-autocomplete="list">
+        <div id="search-suggestions" class="pde-search-suggest" role="listbox" hidden></div>
+      </div>
+
       <div id="list" class="pde-cards" style="margin-top:18px"></div>
     </main>
   </div>
   <script type="module">
     import { boot } from "./assets/js/app.js";
     import { Data } from "./assets/js/data.js";
-    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+    const esc = (s) => (s == null ? "" : String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
     if (boot()) {
       Promise.all([Data.chapters(), Data.topicsManifest()]).then(([d, tm]) => {
-        const list = document.getElementById("list");
         const byTitle = d.chapters || {};
-        list.innerHTML = (tm.topics || []).map((t) => {
+        const topics = tm.topics || [];
+
+        // ── Chapter cards ─────────────────────────────────────────────
+        // Note: we intentionally do NOT show a "question count" here — there
+        // is no per-chapter question bank, so that label was misleading.
+        const list = document.getElementById("list");
+        list.innerHTML = topics.map((t) => {
           const ch = byTitle[t.topic] || {};
           const summary = (ch.what_the_exam_tests || "").slice(0, 140);
           return `
             <div class="pde-card">
               <h3>${esc(t.topic)}</h3>
-              <p class="pde-card-meta">${ch.exam_weight ? esc(ch.exam_weight) + " weight · " : ""}${t.question_count || 0} question${t.question_count === 1 ? "" : "s"}</p>
+              ${ch.exam_weight ? `<p class="pde-card-meta">${esc(ch.exam_weight)} weight</p>` : ""}
               ${summary ? `<p class="pde-card-meta">${esc(summary)}${summary.length === 140 ? "…" : ""}</p>` : ""}
               <a href="chapter.html?slug=${encodeURIComponent(t.slug)}">Open →</a>
             </div>`;
         }).join("");
+
+        // ── Build a flat, searchable text blob per chapter ────────────
+        const flatten = (v) => {
+          if (v == null) return "";
+          if (typeof v === "string" || typeof v === "number") return v + " ";
+          if (Array.isArray(v)) return v.map(flatten).join("");
+          if (typeof v === "object") return Object.values(v).map(flatten).join("");
+          return "";
+        };
+        const index = topics.map((t) => {
+          const ch = byTitle[t.topic] || {};
+          const text = (t.topic + " " + flatten(ch)).replace(/\s+/g, " ").trim();
+          return { topic: t.topic, slug: t.slug, text, lower: text.toLowerCase() };
+        });
+
+        // ── Search / suggestions ──────────────────────────────────────
+        const input = document.getElementById("chapter-search");
+        const box = document.getElementById("search-suggestions");
+        let matches = [];
+        let active = -1;
+
+        const countOccurrences = (hay, needle) => {
+          let n = 0, i = 0;
+          while ((i = hay.indexOf(needle, i)) !== -1) { n++; i += needle.length; }
+          return n;
+        };
+
+        const snippet = (item, q) => {
+          const i = item.lower.indexOf(q);
+          if (i < 0) return "";
+          const start = Math.max(0, i - 45);
+          const end = Math.min(item.text.length, i + q.length + 75);
+          const raw = (start > 0 ? "… " : "") + item.text.slice(start, end).trim() + (end < item.text.length ? " …" : "");
+          return esc(raw).replace(new RegExp(escRe(q), "ig"), (m) => `<mark>${m}</mark>`);
+        };
+
+        function search(qRaw) {
+          const q = qRaw.toLowerCase().trim();
+          if (!q) { matches = []; return; }
+          matches = index
+            .map((it) => ({ it, count: countOccurrences(it.lower, q) }))
+            .filter((m) => m.count > 0)
+            .sort((a, b) => b.count - a.count)
+            .map((m) => m.it);
+        }
+
+        function render(qRaw) {
+          const q = qRaw.toLowerCase().trim();
+          active = -1;
+          input.removeAttribute("aria-activedescendant");
+          if (!q) { close(); return; }
+          if (!matches.length) {
+            box.innerHTML = `<p class="pde-search-empty">No chapters mention “${esc(qRaw.trim())}”.</p>`;
+          } else {
+            box.innerHTML = matches.map((it, idx) => {
+              const count = countOccurrences(it.lower, q);
+              const titleHtml = esc(it.topic).replace(new RegExp(escRe(q), "ig"), (m) => `<mark>${m}</mark>`);
+              return `
+                <a class="pde-suggest-item" role="option" id="sg-${idx}"
+                   href="chapter.html?slug=${encodeURIComponent(it.slug)}&q=${encodeURIComponent(q)}">
+                  <span class="pde-suggest-count">${count} match${count === 1 ? "" : "es"}</span>
+                  <span class="pde-suggest-title">${titleHtml}</span>
+                  <span class="pde-suggest-snippet">${snippet(it, q)}</span>
+                </a>`;
+            }).join("");
+          }
+          open();
+        }
+
+        function open() { box.hidden = false; input.setAttribute("aria-expanded", "true"); }
+        function close() { box.hidden = true; input.setAttribute("aria-expanded", "false"); active = -1; }
+
+        function setActive(idx) {
+          const items = [...box.querySelectorAll(".pde-suggest-item")];
+          if (!items.length) return;
+          active = (idx + items.length) % items.length;
+          items.forEach((el, i) => el.classList.toggle("is-active", i === active));
+          const el = items[active];
+          el.scrollIntoView({ block: "nearest" });
+          input.setAttribute("aria-activedescendant", el.id);
+        }
+
+        let t;
+        input.addEventListener("input", () => {
+          clearTimeout(t);
+          const v = input.value;
+          t = setTimeout(() => { search(v); render(v); }, 120);
+        });
+        input.addEventListener("focus", () => { if (input.value.trim()) { search(input.value); render(input.value); } });
+        input.addEventListener("keydown", (e) => {
+          const items = [...box.querySelectorAll(".pde-suggest-item")];
+          if (e.key === "ArrowDown") { e.preventDefault(); if (box.hidden) { search(input.value); render(input.value); } else setActive(active + 1); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
+          else if (e.key === "Enter") {
+            const target = active >= 0 ? items[active] : items[0];
+            if (target) { e.preventDefault(); location.href = target.getAttribute("href"); }
+          } else if (e.key === "Escape") { close(); input.blur(); }
+        });
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".pde-search")) close();
+        });
       });
     }
   </script>
