@@ -259,3 +259,72 @@ details.card summary .title {
   margin-top: 8px;
   line-height: 1.4;
 }
+
+/* ── Chapter search + autocomplete suggestions (chapters.html) ────────── */
+.pde-search {
+  position: relative;
+  margin: 18px 0 4px;
+}
+.pde-search > input[type="search"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+.pde-search-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 40;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #d8d4cc);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  max-height: 62vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.pde-search-suggest[hidden] { display: none; }
+.pde-suggest-item {
+  display: block;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border, #d8d4cc);
+  text-decoration: none;
+  color: var(--text, #1a1a1a);
+  cursor: pointer;
+}
+.pde-suggest-item:last-child { border-bottom: 0; }
+.pde-suggest-item:hover,
+.pde-suggest-item.is-active { background: var(--surface-hover, #edebe3); }
+.pde-suggest-count {
+  float: right;
+  margin-left: 10px;
+  font-size: 0.7rem;
+  color: var(--text-muted, #555);
+  white-space: nowrap;
+}
+.pde-suggest-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+.pde-suggest-snippet {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-muted, #555);
+}
+.pde-suggest-title mark,
+.pde-suggest-snippet mark {
+  background: var(--accent, #2f6f4e);
+  color: #fff;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+.pde-search-empty {
+  margin: 0;
+  padding: 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted, #555);
+}
