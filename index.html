@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=9">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=9">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=9">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=9">
+  <link rel="stylesheet" href="assets/css/app.css?v=10">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=10">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=10">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=10">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/icons/icon-192.png">
 </head>
@@ -20,143 +20,43 @@
     </main>
   </div>
 
-  <script src="assets/js/retention.js"></script>
   <script type="module">
     import { boot } from "./assets/js/app.js";
     import { Data } from "./assets/js/data.js";
-    import { State } from "./assets/js/state.js";
 
     if (boot()) {
-      const R = window.Retention;
-      // One-time migration from any legacy quiz_state localStorage, harmless if absent
-      try { R.migrate(); } catch (_e) {}
-
       const esc = (s) => (s == null ? "" : String(s)).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
       Promise.all([Data.chapters(), Data.topicsManifest()]).then(([cd, tm]) => {
         const chapters = cd.chapters || {};
-        const allTopics = (tm.topics || []).map((t) => ({ topic: t.topic, slug: t.slug }));
-        const states = R.getTopicStates(chapters, allTopics);
-        const reviewQueue = R.getReviewQueue(Date.now(), chapters);
-        const streak = R.getStreak();
-        const weak = R.getWeakTopics(3, { minAttempts: 3 });
 
-        const overdueCount = reviewQueue.filter((r) => r.overdue_ms >= 2 * 86400000).length;
-        const dueTotal = reviewQueue.length;
+        const heroHtml = `
+          <section class="pde-hero">
+            <p class="pde-eyebrow">Welcome</p>
+            <h1>Learn, decide, drill.</h1>
+            <p>Nineteen chapters of the official GCP Professional Data Engineer exam guide, plus Google's sample questions and scenario drills.</p>
+            <a class="pde-cta" href="chapters.html">Open chapters →</a>
+            <a class="pde-cta" href="exam-traps.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Exam traps</a>
+          </section>`;
 
-        // ── Hero ────────────────────────────────────────────────────────
-        let heroHtml;
-        if (overdueCount > 0) {
-          heroHtml = `
-            <section class="pde-hero">
-              <p class="pde-eyebrow">Today</p>
-              <h1>${overdueCount} overdue review${overdueCount === 1 ? "" : "s"} — clear ${overdueCount === 1 ? "it" : "these"} first</h1>
-              <p>${overdueCount} question${overdueCount === 1 ? "" : "s"} more than 2 days overdue.</p>
-              <a class="pde-cta" href="review.html">Start review →</a>
-              <a class="pde-cta" href="weak-areas.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Open weak areas</a>
-            </section>`;
-        } else if (dueTotal > 0) {
-          heroHtml = `
-            <section class="pde-hero">
-              <p class="pde-eyebrow">Today</p>
-              <h1>${dueTotal} review${dueTotal === 1 ? "" : "s"} due — keep the streak alive</h1>
-              <p>Spaced repetition queue for questions you've answered before.</p>
-              <a class="pde-cta" href="review.html">Start review →</a>
-            </section>`;
-        } else {
-          heroHtml = `
-            <section class="pde-hero">
-              <p class="pde-eyebrow">Welcome</p>
-              <h1>Study, drill, review.</h1>
-              <p>Five-hundred ninety-two questions across nineteen chapters of the official GCP Professional Data Engineer exam guide. Progress saved on this device only.</p>
-              <a class="pde-cta" href="quiz.html">Open quiz mode →</a>
-              <a class="pde-cta" href="chapters.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Chapters</a>
-            </section>`;
-        }
-
-        // ── Status pills ────────────────────────────────────────────────
-        const weakNeedAttn = states.filter((s) => s.bucket === "urgent" || s.bucket === "developing").length;
-        const pillsHtml = `
-          <div class="pde-status">
-            <span class="pde-pill streak">🔥 ${streak.count}-day streak</span>
-            ${dueTotal > 0 ? `<a class="pde-pill due" href="review.html"><strong>${dueTotal}</strong>&nbsp;due for review</a>` : ""}
-            ${weakNeedAttn > 0 ? `<a class="pde-pill" href="weak-areas.html">${weakNeedAttn} topic${weakNeedAttn === 1 ? "" : "s"} need attention</a>` : ""}
-          </div>`;
-
-        // ── Section: Untested high-weight ──────────────────────────────
-        const untestedHighWeight = states
-          .filter((s) => s.bucket === "untested" && (s.weight_rank >= 3.5))
-          .sort((a, b) => b.weight_rank - a.weight_rank)
-          .slice(0, 6);
-
-        const untestedHtml = untestedHighWeight.length ? `
-          <section>
-            <h2>Untested high-weight chapters</h2>
-            <p class="muted" style="margin:0 0 10px">These count heavily on the exam and you haven't touched them yet.</p>
-            <div class="pde-cards">
-              ${untestedHighWeight.map((s) => `
-                <div class="pde-card">
-                  <h3>${esc(s.topic)}</h3>
-                  <p class="pde-card-meta">${esc(s.exam_weight || "")} weight · untested</p>
-                  <a href="chapter.html?slug=${encodeURIComponent(s.slug)}">Open →</a>
-                </div>`).join("")}
-            </div>
-          </section>` : "";
-
-        // ── Section: Unfinished chapters ───────────────────────────────
-        const unfinished = states
-          .filter((s) => s.bucket === "developing" || s.bucket === "almost_mastered" || s.bucket === "urgent")
-          .sort((a, b) => a.wilson_lower - b.wilson_lower)
-          .slice(0, 6);
-
-        const unfinishedHtml = unfinished.length ? `
-          <section>
-            <h2>Unfinished chapters</h2>
-            <div class="pde-cards">
-              ${unfinished.map((s) => {
-                const label = s.bucket.replace(/_/g, " ");
-                return `
-                  <div class="pde-card">
-                    <h3>${esc(s.topic)}</h3>
-                    <p class="pde-card-meta">${label} · ${Math.round(s.accuracy * 100)}% on ${s.attempts} attempt${s.attempts === 1 ? "" : "s"}</p>
-                    <a href="chapter.html?slug=${encodeURIComponent(s.slug)}">Resume →</a>
-                  </div>`;
-              }).join("")}
-            </div>
-          </section>` : "";
-
-        // ── Section: Focus topics (lowest Wilson) ──────────────────────
-        const focusHtml = weak.length ? `
-          <section>
-            <h2>Focus topics</h2>
-            <div class="pde-cards">
-              ${weak.map((w) => `
-                <div class="pde-card">
-                  <h3>${esc(w.topic)}</h3>
-                  <p class="pde-card-meta">${Math.round(w.accuracy * 100)}% accuracy · ${w.correct}/${w.attempts} correct</p>
-                  <a href="quiz.html?topic=${encodeURIComponent(w.topic).replace(/%20/g,"-").toLowerCase()}">Study →</a>
-                </div>`).join("")}
-            </div>
-          </section>` : "";
-
-        // ── Section: All chapters ──────────────────────────────────────
         const allHtml = `
           <section>
             <h2>All chapters</h2>
             <div class="pde-cards">
-              ${(tm.topics || []).map((t) => `
+              ${(tm.topics || []).map((t) => {
+                const ch = chapters[t.topic] || {};
+                return `
                 <div class="pde-card">
                   <h3>${esc(t.topic)}</h3>
-                  <p class="pde-card-meta">${t.question_count || 0} question${t.question_count === 1 ? "" : "s"}</p>
+                  <p class="pde-card-meta">${ch.exam_weight ? esc(ch.exam_weight) + " weight" : ""}</p>
                   <a href="chapter.html?slug=${encodeURIComponent(t.slug)}">Open →</a>
-                </div>`).join("")}
+                </div>`;
+              }).join("")}
             </div>
           </section>`;
 
-        document.getElementById("root").innerHTML =
-          heroHtml + pillsHtml + untestedHtml + unfinishedHtml + focusHtml + allHtml;
+        document.getElementById("root").innerHTML = heroHtml + allHtml;
 
-        // Register SW (PWA)
         if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
       }).catch((err) => {
         document.getElementById("root").innerHTML =

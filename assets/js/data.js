@@ -6,9 +6,7 @@ const cache = new Map();
 function basePath() {
   const b = document.querySelector("base");
   if (b && b.href) return new URL(b.href).pathname.replace(/\/?$/, "/");
-  // fallback: derive from location
   const segs = location.pathname.split("/").filter(Boolean);
-  // If hosted at /repo/<page>.html, base is /repo/
   if (segs.length > 0 && segs[segs.length - 1].endsWith(".html")) segs.pop();
   return "/" + segs.join("/") + (segs.length ? "/" : "");
 }
@@ -31,22 +29,7 @@ export const Data = {
   url(p) { return BASE + p; },
 
   topicsManifest() { return get("topics-manifest.json"); },
-  topic(slug) { return get("topics/" + slug + ".json"); },
   chapters() { return get("chapters.json"); },
   scenarios() { return get("scenarios.json"); },
   services() { return get("services.json"); },
-  annotations() { return get("annotations.json"); },
-  explanations() { return get("explanations.json"); },
-
-  // load all topics + return flat question list (for bank, review, weak-areas)
-  async allQuestions() {
-    const tm = await this.topicsManifest();
-    const slugs = tm.topics.map((t) => t.slug);
-    const all = await Promise.all(slugs.map((s) => this.topic(s)));
-    const flat = [];
-    all.forEach((t) => {
-      (t.questions || []).forEach((q) => flat.push({ ...q, topic: t.topic, topicSlug: t.slug }));
-    });
-    return flat;
-  },
 };
