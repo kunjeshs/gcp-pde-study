@@ -1,7 +1,6 @@
-// app.js — shared UI: theme toggle, nav, auth gate, markdown render.
+// app.js — shared UI: theme toggle, nav, markdown render.
 
 import { State } from "./state.js";
-import { PASS_HASH } from "./auth.js";
 
 // ---- Theme ----------------------------------------------------------------
 function applyTheme(t) {
@@ -18,7 +17,6 @@ function initTheme() {
 function toggleTheme(ev) {
   const cur = document.documentElement.getAttribute("data-theme") || "dark";
   const next = cur === "dark" ? "light" : "dark";
-  // Play radial sweep from the click location
   try {
     const x = (ev && ev.clientX) || window.innerWidth / 2;
     const y = (ev && ev.clientY) || window.innerHeight / 2;
@@ -35,40 +33,14 @@ function toggleTheme(ev) {
   applyTheme(next);
 }
 
-// ---- Auth gate ------------------------------------------------------------
-export async function sha256Hex(text) {
-  const buf = new TextEncoder().encode(text);
-  const hash = await crypto.subtle.digest("SHA-256", buf);
-  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-export async function verifyPassword(pw) {
-  if (!PASS_HASH) return true;
-  const h = await sha256Hex(pw);
-  return h === PASS_HASH.toLowerCase();
-}
-
-function requireAuthOrRedirect() {
-  if (!PASS_HASH) return true;
-  if (State.isAuthed()) return true;
-  const here = location.pathname + location.search + location.hash;
-  const base = document.querySelector("base")?.getAttribute("href") || "./";
-  location.replace(base + "login.html?next=" + encodeURIComponent(here));
-  return false;
-}
-
 // ---- Nav ------------------------------------------------------------------
 const NAV_ITEMS = [
   ["index.html", "Home"],
   ["chapters.html", "Chapters"],
-  ["question-bank.html", "Question Bank"],
-  ["official-sample.html", "Official Sample"],
-  ["quiz.html", "Quiz"],
-  ["review.html", "Review"],
-  ["weak-areas.html", "Weak Areas"],
   ["services.html", "Services"],
+  ["official-sample.html", "Official Sample"],
   ["exam-traps.html", "Exam Traps"],
-  ["cheat-sheet.html", "Cheat Sheet"],
+  ["exam-guide.html", "Exam Guide"],
 ];
 
 function renderAppbar() {
@@ -95,7 +67,6 @@ function renderAppbar() {
     </div>
     <nav class="nav" data-nav>
       ${navHTML}
-      ${PASS_HASH && State.isAuthed() ? `<button class="button ghost sm" data-signout title="Sign out">Sign out</button>` : ""}
     </nav>
     <div class="theme-dial-wrap">
       <button class="theme-dial" data-theme-toggle aria-label="Toggle theme" title="Toggle day/night theme">
@@ -117,12 +88,7 @@ function renderAppbar() {
   slot.querySelector("[data-menu-toggle]")?.addEventListener("click", () => {
     slot.querySelector("[data-nav]")?.classList.toggle("open");
   });
-  slot.querySelector("[data-signout]")?.addEventListener("click", () => {
-    State.signOut();
-    location.replace(base + "login.html");
-  });
 
-  // Sync the dial label with current theme
   const cur = document.documentElement.getAttribute("data-theme") || "dark";
   const lbl = slot.querySelector(".theme-dial__label");
   if (lbl) lbl.textContent = (cur === "light") ? "DAY" : "NIGHT";
@@ -173,10 +139,8 @@ export function qs(sel, root = document) { return root.querySelector(sel); }
 export function qsa(sel, root = document) { return [...root.querySelectorAll(sel)]; }
 
 // ---- Boot ----------------------------------------------------------------
-export function boot({ requireAuth = true, chapter = false } = {}) {
+export function boot({ chapter = false } = {}) {
   initTheme();
-  if (requireAuth && !requireAuthOrRedirect()) return false;
-  // Apply redesign wrapper class to body so global tokens take effect
   if (!document.body.classList.contains("pde-redesign")) {
     document.body.classList.add("pde-redesign");
   }

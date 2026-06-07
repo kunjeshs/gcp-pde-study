@@ -1,6 +1,6 @@
 /* overrides.css — small additions on top of redesign.css/app.css.
- * Keeps a few legacy classes used by quiz.js/question-bank.html that
- * don't belong in the .pde-redesign scope yet.
+ * Keeps a few legacy classes (cards, buttons, drill option lists) used
+ * by chapter.html's Drill tab and exam-traps.html.
  */
 
 /* Loading state used by chapter.html bootstrap */
@@ -101,7 +101,7 @@ details.card[open] { border-color: var(--border-strong, #bdb8ab); }
   gap: 12px;
 }
 
-/* Buttons (legacy) — used by quiz.js, review.html, etc. */
+/* Buttons (legacy .button class) */
 .button,
 button.button {
   display: inline-flex;
@@ -270,7 +270,7 @@ details.card summary .title {
   margin-top: 18px;
 }
 
-/* ── Quiz runner (used by quiz.js) ────────────────────────────────────── */
+/* ── Legacy quiz-card styles (kept in case of reuse) ─────────────────── */
 .quiz-card {
   background: var(--surface, #fff);
   border: 1px solid var(--border, #d8d4cc);

@@ -1,24 +1,19 @@
 // sw.js — service worker. Cache-first for shell, stale-while-revalidate for data.
 // Bump VERSION on every deploy that changes shell files.
 
-const VERSION = "pde-v10-2026-06-06";
+const VERSION = "pde-v11-public-2026-06-07";
 const SHELL_CACHE = "shell-" + VERSION;
 const DATA_CACHE = "data-" + VERSION;
 
 const SHELL = [
   "./",
   "./index.html",
-  "./login.html",
   "./chapters.html",
   "./chapter.html",
-  "./question-bank.html",
   "./official-sample.html",
-  "./quiz.html",
-  "./review.html",
-  "./weak-areas.html",
   "./services.html",
   "./exam-traps.html",
-  "./cheat-sheet.html",
+  "./exam-guide.html",
   "./manifest.json",
   "./assets/css/app.css",
   "./assets/css/redesign.css",
@@ -26,10 +21,7 @@ const SHELL = [
   "./assets/css/theme-toggle.css",
   "./assets/css/overrides.css",
   "./assets/js/app.js",
-  "./assets/js/auth.js",
   "./assets/js/data.js",
-  "./assets/js/quiz.js",
-  "./assets/js/retention.js",
   "./assets/js/state.js",
   "./assets/js/theme-toggle.js",
 ];

@@ -165,7 +165,7 @@
             <ul style="padding-left:20px;line-height:1.6">
               ${Object.entries(d.wrong_questions_focus).map(([k, v]) => `<li><strong>${esc(k)}:</strong> ${md(v)}</li>`).join("")}
             </ul>
-            <p style="margin-top:18px"><a class="pde-cta" href="quiz.html">Open quiz mode →</a> <a class="pde-cta" href="chapters.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">All chapters →</a></p>
+            <p style="margin-top:18px"><a class="pde-cta" href="chapters.html">All chapters →</a> <a class="pde-cta" href="exam-traps.html" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Exam traps →</a></p>
           </section>`;
 
         root.innerHTML = hero + filtersHtml + questionsHtml + takeawaysHtml;

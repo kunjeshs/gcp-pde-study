@@ -166,29 +166,10 @@
           <div id="drill-list"><p class="muted">Loading drills…</p></div>
         `;
 
-        // ── Quiz tab body ─────────────────────────────────────────────
-        const quizHtml = `
-          <div class="pde-quiz-preview">
-            <h2 style="margin-top:0">Ready to drill?</h2>
-            <p>You've walked through every tab. Reinforce with the quiz, then come back tomorrow.</p>
-            <a class="pde-cta" href="quiz.html?topic=${encodeURIComponent(slug)}">Open quiz →</a>
-            <a class="pde-cta" href="quiz.html?topic=${encodeURIComponent(slug)}&amp;shuffle=1" style="background:transparent;color:var(--pde-accent);border:1px solid var(--pde-accent);margin-left:6px">Shuffled</a>
-          </div>
-        `;
-
         // ── Render shell ──────────────────────────────────────────────
-        const totalQs = (topic?.question_count || 0);
-        const mastery = (() => {
-          try {
-            const states = window.Retention.getTopicStates(d.chapters || {}, [{ topic: key, slug }]);
-            const me = states.find((s) => s.slug === slug);
-            return me ? { mastered: me.mastered_qids, attempts: me.attempts } : { mastered: 0, attempts: 0 };
-          } catch (_e) { return { mastered: 0, attempts: 0 }; }
-        })();
-
         root.innerHTML = `
           <h1>${esc(key)}</h1>
-          <p class="muted" style="margin-top:-2px">Exam weight: ${esc(ch.exam_weight || "—")} · ${totalQs} questions · ${mastery.mastered} mastered / ${totalQs} total</p>
+          <p class="muted" style="margin-top:-2px">Exam weight: ${esc(ch.exam_weight || "—")}</p>
 
           <div class="pde-workflow" role="group" aria-label="Chapter workflow">
             <span class="pde-step" data-step="learn"><span class="pde-step-dot"></span>Learn</span>
@@ -196,27 +177,23 @@
             <span class="pde-step" data-step="decide"><span class="pde-step-dot"></span>Decide</span>
             <span class="pde-step-arrow">→</span>
             <span class="pde-step" data-step="drill"><span class="pde-step-dot"></span>Drill</span>
-            <span class="pde-step-arrow">→</span>
-            <span class="pde-step" data-step="quiz"><span class="pde-step-dot"></span>Quiz</span>
           </div>
 
           <div class="pde-tabs" role="tablist">
             <button class="pde-tab" role="tab" data-tab="learn">Learn</button>
             <button class="pde-tab" role="tab" data-tab="decide">Decide</button>
             <button class="pde-tab" role="tab" data-tab="drill">Drill</button>
-            <button class="pde-tab" role="tab" data-tab="quiz">Quiz</button>
           </div>
 
           <section class="pde-tabpanel" data-panel="learn">${learnHtml}</section>
           <section class="pde-tabpanel" data-panel="decide">${decideHtml || `<p class="muted">No decision content available for this chapter yet.</p>`}</section>
           <section class="pde-tabpanel" data-panel="drill">${drillHtml}</section>
-          <section class="pde-tabpanel" data-panel="quiz">${quizHtml}</section>
 
           <nav style="margin-top:48px;border-top:1px solid var(--pde-border);padding-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px" id="ch-nav"></nav>
         `;
 
         // Wire tabs
-        const visited = { learn: false, decide: false, drill: false, quiz: false };
+        const visited = { learn: false, decide: false, drill: false };
         function activate(tab) {
           root.querySelectorAll(".pde-tab").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab ? "true" : "false"));
           root.querySelectorAll(".pde-tabpanel").forEach((p) => p.classList.toggle("is-active", p.dataset.panel === tab));
@@ -235,7 +212,7 @@
         root.querySelectorAll(".pde-tab").forEach((b) => {
           b.addEventListener("click", () => activate(b.dataset.tab));
         });
-        const startTab = ["learn", "decide", "drill", "quiz"].includes(initialTab) ? initialTab : "learn";
+        const startTab = ["learn", "decide", "drill"].includes(initialTab) ? initialTab : "learn";
         activate(startTab);
 
         // Lazy-load scenario drills for the Drill tab
