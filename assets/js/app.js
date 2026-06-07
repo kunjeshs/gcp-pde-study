@@ -8,6 +8,9 @@ function applyTheme(t) {
   else document.documentElement.removeAttribute("data-theme");
   const lbl = document.querySelector(".theme-dial__label");
   if (lbl) lbl.textContent = (t === "light") ? "DAY" : "NIGHT";
+  // Keep the mobile browser chrome (address bar / status bar) in sync.
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", (t === "light") ? "#fafaf7" : "#0e1114");
 }
 function initTheme() {
   let t = State.getTheme();

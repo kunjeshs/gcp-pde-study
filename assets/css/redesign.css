@@ -11,6 +11,7 @@
   --pde-border: #d8d4cc;
   --pde-accent: #2f6f4e;        /* deep green, not generic-AI blue */
   --pde-accent-soft: #e6efe8;
+  --pde-on-accent: #ffffff;     /* text/icon color on top of --pde-accent */
   --pde-warn: #b65a14;
   --pde-danger: #b03030;
   --pde-radius: 4px;            /* sharp, not pill-rounded */

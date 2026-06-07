@@ -5,41 +5,44 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>Official Sample · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=11">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=11">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=11">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=11">
+  <link rel="stylesheet" href="assets/css/app.css?v=14">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=14">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=14">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=14">
   <style>
     .os-filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 22px; align-items: center; }
     .os-filters button { background: transparent; color: var(--pde-fg); border: 1px solid var(--pde-border); padding: 6px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; }
-    .os-filters button.active { background: var(--pde-accent); color: var(--pde-on-accent, #0e1114); border-color: var(--pde-accent); }
-    .os-q { border: 1px solid var(--pde-border); border-radius: 14px; padding: 18px 20px; margin: 14px 0; background: var(--pde-surface, #161a1f); }
+    .os-filters button.active { background: var(--pde-accent); color: var(--pde-on-accent); border-color: var(--pde-accent); }
+    .os-q { border: 1px solid var(--pde-border); border-radius: 14px; padding: 18px 20px; margin: 14px 0; background: var(--pde-panel); }
     .os-q h3 { margin: 8px 0 6px; font-size: 18px; line-height: 1.4; }
     .os-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--pde-border); font-size: 12px; margin-right: 6px; }
-    .os-pill.area { background: rgba(59,130,246,0.12); color: #60a5fa; border-color: rgba(59,130,246,0.35); }
-    .os-pill.answer { background: rgba(34,197,94,0.12); color: #22c55e; border-color: rgba(34,197,94,0.35); }
+    .os-pill.area { background: rgba(59,130,246,0.12); color: #1d6fd6; border-color: rgba(59,130,246,0.35); }
+    .os-pill.answer { background: var(--pde-accent-soft); color: var(--pde-accent); border-color: var(--pde-accent); }
     .os-opts { margin: 14px 0; padding: 0; list-style: none; }
     .os-opt { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--pde-border); margin-bottom: 6px; display: flex; gap: 10px; align-items: flex-start; }
     .os-opt .letter { font-weight: 700; min-width: 22px; }
     .os-opt.is-correct { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.4); }
     .os-tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
-    .os-tag.correct { background: rgba(34,197,94,0.18); color: #22c55e; }
+    .os-tag.correct { background: var(--pde-accent-soft); color: var(--pde-accent); }
     .os-think { margin-top: 14px; }
-    .os-think summary { cursor: pointer; font-weight: 600; padding: 10px 12px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--pde-border); }
+    .os-think summary { cursor: pointer; font-weight: 600; padding: 10px 12px; background: var(--pde-accent-soft); border-radius: 8px; border: 1px solid var(--pde-border); }
     .os-think[open] summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
-    .os-think .body { border: 1px solid var(--pde-border); border-top: none; padding: 16px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; background: rgba(255,255,255,0.015); }
+    .os-think .body { border: 1px solid var(--pde-border); border-top: none; padding: 16px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; background: var(--pde-panel); }
     .os-section { margin: 14px 0; }
-    .os-section h4 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--pde-muted); }
+    .os-section h4 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--pde-fg-muted); }
     .os-section p, .os-section li { line-height: 1.55; }
-    .os-section.win { border-left: 3px solid #22c55e; padding-left: 12px; background: rgba(34,197,94,0.06); border-radius: 0 6px 6px 0; padding: 12px 14px; }
-    .os-section.win h4 { color: #22c55e; }
+    .os-section.win { border-left: 3px solid var(--pde-accent); padding-left: 12px; background: var(--pde-accent-soft); border-radius: 0 6px 6px 0; padding: 12px 14px; }
+    .os-section.win h4 { color: var(--pde-accent); }
     .os-elim { display: grid; grid-template-columns: 28px 1fr; gap: 6px 10px; margin: 8px 0; }
     .os-elim .let { font-weight: 700; }
     .os-clues { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-    .os-clue { font-size: 11px; padding: 2px 8px; background: rgba(96,165,250,0.12); color: #60a5fa; border-radius: 999px; border: 1px solid rgba(96,165,250,0.3); }
-    .os-takeaways { background: var(--pde-surface, #161a1f); border: 1px solid var(--pde-border); border-radius: 14px; padding: 20px; margin-top: 26px; }
+    .os-clue { font-size: 11px; padding: 2px 8px; background: rgba(96,165,250,0.12); color: #1d6fd6; border-radius: 999px; border: 1px solid rgba(96,165,250,0.3); }
+    .os-takeaways { background: var(--pde-panel); border: 1px solid var(--pde-border); border-radius: 14px; padding: 20px; margin-top: 26px; }
     .os-takeaways ol { padding-left: 20px; }
     .os-takeaways li { margin: 6px 0; line-height: 1.55; }
+    /* Blue "area"/"clue" tags: darker for light bg, brighter for dark bg */
+    html[data-theme="dark"] .os-pill.area,
+    html[data-theme="dark"] .os-clue { color: #7cb3f5; }
   </style>
 </head>
 <body>
