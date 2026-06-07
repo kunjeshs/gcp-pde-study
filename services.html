@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0e1114">
+  <title>Services · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=9">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=9">
+  <link rel="stylesheet" href="assets/css/services.css?v=9">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=9">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=9">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="pde-wrap pde-services">
+      <header class="svc-hero">
+        <div class="svc-hero__inner">
+          <div>
+            <h1 class="svc-hero__title">GCP services reference</h1>
+            <p class="svc-hero__subtitle">All services by category with decision hints.</p>
+          </div>
+          <div class="svc-search">
+            <input id="q" type="search" placeholder="Search service / use-case…">
+          </div>
+        </div>
+      </header>
+
+      <div class="svc-mobile-cats" id="mobile-cats"></div>
+      <div id="sections"></div>
+    </main>
+  </div>
+  <script type="module">
+    import { boot } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+
+    const esc = (s) => (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+    const CAT = {
+      storage:        { label: "Storage",        color: "blue"    },
+      processing:     { label: "Processing",     color: "violet"  },
+      orchestration: { label: "Orchestration",  color: "amber"   },
+      ml_ai:          { label: "ML / AI",        color: "emerald" },
+      governance:     { label: "Governance",     color: "red"     },
+      operations:     { label: "Operations",     color: "slate"   },
+      infrastructure: { label: "Infrastructure", color: "orange"  },
+      cases:          { label: "Use cases",      color: "slate"   },
+    };
+    const KEY_LABELS = {
+      id: "ID", url: "Docs", type: "Type", managed: "Managed", scaling: "Scaling",
+      pde_snippet: "Exam snippet", best_for: "Best for", details: "Details",
+      tags: "Tags", os_equiv: "OSS equivalent", coding: "Coding", iam: "IAM",
+      availability: "Availability", cost: "Cost", trouble: "Troubleshoot",
+    };
+    const fmtKey = (k) => KEY_LABELS[k] || (k.charAt(0).toUpperCase() + k.slice(1).replace(/_/g, " "));
+
+    if (boot()) {
+      const d = await Data.services();
+      const sections = document.getElementById("sections");
+      const mobileCats = document.getElementById("mobile-cats");
+      const q = document.getElementById("q");
+
+      // Mobile category strip
+      mobileCats.innerHTML = `<button class="svc-mobile-cat is-active" data-cat="">All</button>` +
+        Object.entries(d.services || {}).map(([cat]) => {
+          const conf = CAT[cat] || { label: cat, color: "slate" };
+          return `<button class="svc-mobile-cat svc-mobile-cat--${conf.color}" data-cat="${esc(cat)}">${esc(conf.label)}</button>`;
+        }).join("");
+
+      mobileCats.addEventListener("click", (e) => {
+        const btn = e.target.closest(".svc-mobile-cat");
+        if (!btn) return;
+        mobileCats.querySelectorAll(".svc-mobile-cat").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        render();
+      });
+
+      function activeCat() {
+        const btn = mobileCats.querySelector(".svc-mobile-cat.is-active");
+        return btn ? btn.dataset.cat : "";
+      }
+
+      function displayName(s) {
+        return s.name || s.service || s.company || "?";
+      }
+      function bestFor(s) {
+        return s.best_for || s.pde_snippet || s.purpose || s.summary || s.description || s.title || s.pde_takeaway || "";
+      }
+      function typePill(s) {
+        return s.type || s.managed || s.industry || "";
+      }
+
+      function render() {
+        const term = (q.value || "").toLowerCase().trim();
+        const onlyCat = activeCat();
+        const html = Object.entries(d.services || {}).map(([cat, items]) => {
+          if (onlyCat && onlyCat !== cat) return "";
+          const conf = CAT[cat] || { label: cat, color: "slate" };
+          const filtered = items.filter((s) => !term || JSON.stringify(s).toLowerCase().includes(term));
+          if (!filtered.length) return "";
+          return `
+            <section style="margin-bottom:1.5rem">
+              <div class="svc-section-head">
+                <h2>${esc(conf.label)}</h2>
+                <p>${filtered.length} service${filtered.length === 1 ? "" : "s"}</p>
+              </div>
+              <div class="svc-tools">
+                ${filtered.map((s) => {
+                  const nm = displayName(s);
+                  const initials = nm.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase() || "?";
+                  const bf = bestFor(s);
+                  const tp = typePill(s);
+                  return `
+                    <div class="svc-row" data-color="${conf.color}">
+                      <button class="svc-row__head" type="button">
+                        <span class="svc-row__icon">${esc(initials)}</span>
+                        <div class="svc-row__body">
+                          <div class="svc-row__name">${esc(nm)}</div>
+                          ${bf ? `<div class="svc-row__best">${esc(bf).slice(0, 110)}${bf.length > 110 ? "…" : ""}</div>` : ""}
+                        </div>
+                        ${tp ? `<span class="svc-row__type">${esc(tp)}</span>` : ""}
+                        <span class="svc-row__chev">▾</span>
+                      </button>
+                      <div class="svc-row__detail">${detailHtml(s)}</div>
+                    </div>`;
+                }).join("")}
+              </div>
+            </section>`;
+        }).join("");
+        sections.innerHTML = html || `<div class="svc-empty"><p class="svc-empty__title">No matches.</p><p class="svc-empty__hint">Try a different search or category.</p></div>`;
+      }
+
+      function detailHtml(s) {
+        const skip = new Set(["id","name","service","summary","purpose","description","company","title","industry"]);
+        const renderVal = (v) => {
+          if (v == null || v === "") return "";
+          if (Array.isArray(v)) {
+            return `<div class="tag-row">${v.map((x) => `<span class="tag">${esc(typeof x === "string" ? x : JSON.stringify(x))}</span>`).join(" ")}</div>`;
+          }
+          if (typeof v === "object") {
+            return Object.entries(v).map(([k, vv]) => `<strong>${esc(fmtKey(k))}:</strong> ${esc(vv)}`).join(" · ");
+          }
+          if (typeof v === "string" && /^https?:\/\//.test(v)) {
+            return `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>`;
+          }
+          return esc(v);
+        };
+        return Object.entries(s)
+          .filter(([k, v]) => !skip.has(k) && v != null && v !== "" && !(Array.isArray(v) && !v.length))
+          .map(([k, v]) => `
+            <div class="svc-detail-row">
+              <p class="svc-detail-row__label">${esc(fmtKey(k))}</p>
+              <p class="svc-detail-row__value">${renderVal(v)}</p>
+            </div>`).join("");
+      }
+
+      sections.addEventListener("click", (e) => {
+        const head = e.target.closest(".svc-row__head");
+        if (!head) return;
+        head.closest(".svc-row").classList.toggle("is-open");
+      });
+
+      let t; q.addEventListener("input", () => { clearTimeout(t); t = setTimeout(render, 150); });
+      render();
+    }
+  </script>
+</body>
+</html>

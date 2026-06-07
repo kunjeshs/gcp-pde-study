@@ -1,0 +1,155 @@
+/* app.css — global resets + shared topbar/nav. Token-driven via
+ * theme-toggle.css. Page chrome (cards, hero, tabs) lives in redesign.css
+ * under the .pde-redesign scope. Light/dark themes share this file.
+ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg, #fafaf7);
+  color: var(--text, #1a1a1a);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent, #2f6f4e); }
+a:hover { color: var(--accent-strong, #245a3f); }
+
+img, svg { max-width: 100%; height: auto; }
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Topbar ───────────────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border, #d8d4cc);
+  background: var(--bg-soft, #ffffff);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.brand-link {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+.brand-mark {
+  background: var(--accent, #2f6f4e);
+  color: #fff;
+  font-family: ui-monospace, "JetBrains Mono", Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 6px 9px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+.brand-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.brand-subtitle {
+  color: var(--text-faint, #94918a);
+  font-size: 0.73rem;
+}
+
+.nav {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  font-size: 0.86rem;
+}
+.nav a {
+  text-decoration: none;
+  color: var(--text-muted, #555);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.nav a:hover {
+  background: var(--surface-hover, #edebe3);
+  color: var(--text, #1a1a1a);
+}
+.nav a.nav-active {
+  color: var(--accent, #2f6f4e);
+  background: var(--accent-dim, rgba(47,111,78,0.08));
+  font-weight: 600;
+}
+
+.menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border, #d8d4cc);
+  color: var(--text, #1a1a1a);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* ── Main content (.content fallback for pages that don't use .pde-wrap) ── */
+.content {
+  flex: 1;
+  padding: 20px 20px 64px;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Loading + empty states */
+.muted { color: var(--text-muted, #555); }
+.center { text-align: center; }
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-faint, #94918a);
+}
+.empty .big { font-size: 2.5rem; opacity: 0.4; margin-bottom: 8px; }
+
+.hidden { display: none !important; }
+
+/* ── Responsive: collapse topbar to hamburger on small screens ────────── */
+@media (max-width: 820px) {
+  .topbar { padding: 10px 14px; flex-wrap: wrap; }
+  .brand-subtitle { display: none; }
+  .nav {
+    display: none;
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    padding: 8px 0 4px;
+  }
+  .nav.open { display: flex; }
+  .nav a {
+    padding: 8px 12px;
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 110px;
+  }
+  .menu-btn { display: inline-flex; }
+}
+
+@media (max-width: 540px) {
+  .content { padding: 16px 14px 56px; }
+}

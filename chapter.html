@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0e1114">
+  <title>Chapter · GCP PDE Study Hub</title>
+  <link rel="stylesheet" href="assets/css/app.css?v=9">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=9">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=9">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=9">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar" data-appbar></header>
+    <main class="pde-wrap" id="root">
+      <p class="muted">Loading…</p>
+    </main>
+  </div>
+  <script type="module">
+    import { boot, md } from "./assets/js/app.js";
+    import { Data } from "./assets/js/data.js";
+
+    if (boot({ chapter: true })) {
+      const slug = new URLSearchParams(location.search).get("slug") || "";
+      const initialTab = (new URLSearchParams(location.search).get("tab") || "learn").toLowerCase();
+
+      Promise.all([Data.chapters(), Data.topicsManifest()]).then(([d, tm]) => {
+        const topic = (tm.topics || []).find((t) => t.slug === slug);
+        const key = topic?.topic;
+        const ch = key ? (d.chapters || {})[key] : null;
+        const root = document.getElementById("root");
+        if (!ch) {
+          root.innerHTML = `<div class="empty"><div class="big">∅</div>Chapter not found.</div>`;
+          return;
+        }
+
+        const esc = (s) => (s == null ? "" : String(s)).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        const fmtItem = (x) => {
+          if (x == null) return "";
+          if (typeof x === "string") return esc(x);
+          if (typeof x !== "object") return esc(String(x));
+          if (x.phrase && x.answer) return `<strong>${esc(x.phrase)}</strong> → ${esc(x.answer)}`;
+          if (x.clue && x.answer) return `<strong>${esc(x.clue)}</strong> → ${esc(x.answer)}`;
+          if (x.if && x.then) return `<strong>${esc(x.if)}</strong> → ${esc(x.then)}`;
+          if (x.scenario && (x.pick || x.answer)) return `<strong>${esc(x.scenario)}</strong> → ${esc(x.pick || x.answer)}`;
+          if (x.trap && x.fix) return `<strong>Trap:</strong> ${esc(x.trap)} <em>Fix:</em> ${esc(x.fix)}`;
+          if (x.pattern && x.solution) return `<strong>${esc(x.pattern)}</strong> → ${esc(x.solution)}`;
+          if (x.text) return esc(x.text);
+          return Object.entries(x)
+            .filter(([, v]) => v != null && v !== "")
+            .map(([k, v]) => `<strong>${esc(k)}:</strong> ${typeof v === "object" ? esc(JSON.stringify(v)) : esc(v)}`)
+            .join(" · ");
+        };
+        const ul = (xs) => Array.isArray(xs) && xs.length
+          ? `<ul class="pde-list">${xs.map((x) => `<li>${fmtItem(x)}</li>`).join("")}</ul>` : "";
+        const tableHtml = (rows) => {
+          if (!Array.isArray(rows) || !rows.length) return "";
+          const cols = Object.keys(rows[0]);
+          // Humanise snake_case keys (e.g. "if_question_says" -> "If question says")
+          // for the visible header/label only; data is still read by raw key.
+          const label = (c) => esc(c.replace(/_/g, " ").replace(/^\w/, (m) => m.toUpperCase()));
+          // ARIA roles are kept so the stacked-card mobile layout (which sets
+          // display:block on the table parts) still exposes table semantics.
+          // data-label drives the per-cell labels in that stacked layout.
+          return `<div class="pde-tbl-wrap"><table class="pde-tbl" role="table"><thead role="rowgroup"><tr role="row">${cols.map((c) => `<th role="columnheader" scope="col">${label(c)}</th>`).join("")}</tr></thead>
+            <tbody role="rowgroup">${rows.map((r) => `<tr role="row">${cols.map((c) => `<td role="cell" data-label="${label(c)}">${esc(r[c] == null ? "" : r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+        };
+
+        // ── Read sections for Learn tab ──────────────────────────────
+        const rc = ch.read_content;
+        let readSections = [];
+        if (Array.isArray(rc)) {
+          rc.forEach((s, i) => {
+            if (typeof s === "string") {
+              readSections.push({ heading: `Section ${i + 1}`, bodyHtml: `<div class="md">${md(s)}</div>` });
+            } else if (s && typeof s === "object") {
+              const heading = s.heading || `Section ${i + 1}`;
+              const bodyHtml = s.body_html ? s.body_html : (s.body ? `<div class="md">${md(s.body)}</div>` : "");
+              if (bodyHtml) readSections.push({ heading, bodyHtml });
+            }
+          });
+        } else if (typeof rc === "string") {
+          readSections.push({ heading: "Reading", bodyHtml: `<div class="md">${md(rc)}</div>` });
+        }
+
+        const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "");
+
+        const tocHtml = readSections.length ? `
+          <details class="pde-toc" open>
+            <summary>Jump to section</summary>
+            <nav>
+              <ol>
+                ${readSections.map((s) => `<li><a href="#read-${slugify(s.heading)}">${esc(s.heading)}</a></li>`).join("")}
+              </ol>
+            </nav>
+          </details>` : "";
+
+        const readListHtml = readSections.length ? `
+          <div class="pde-read-list">
+            ${readSections.map((s, i) => `
+              <details class="pde-read-item" id="read-${slugify(s.heading)}" ${i === 0 ? "open" : ""}>
+                <summary>${esc(s.heading)}</summary>
+                <div class="pde-read-body">${s.bodyHtml}</div>
+              </details>`).join("")}
+          </div>` : "";
+
+        // ── Learn tab body ────────────────────────────────────────────
+        const learnHtml = `
+          ${ch.what_the_exam_tests ? `
+            <h2>What the exam tests</h2>
+            <p>${esc(ch.what_the_exam_tests)}</p>` : ""}
+          ${ch.must_know_services ? `
+            <h2>Must-know services</h2>
+            ${ul(ch.must_know_services)}` : ch.key_services ? `
+            <h2>Key services</h2>
+            ${ul(ch.key_services)}` : ""}
+          ${readSections.length ? `
+            <h2>Read</h2>
+            <div class="pde-read-meta">
+              <span class="pde-read-meta-count">${readSections.length} sections</span>
+              <span class="pde-read-meta-sep">·</span>
+              <span>~${Math.max(5, readSections.length * 2)} min read</span>
+            </div>
+            <div class="pde-read-wrap">
+              ${tocHtml}
+              ${readListHtml}
+            </div>` : ""}
+        `;
+
+        // ── Decide tab body ───────────────────────────────────────────
+        const decideHtml = `
+          ${ch.clue_words ? `<h2>Clue words → answer</h2>${tableHtml(normalizeClueRows(ch.clue_words))}` : ""}
+          ${ch.scenario_patterns ? `<h2>Scenario patterns</h2>${
+            ch.scenario_patterns.map((p) => {
+              if (typeof p === "string") return `<p>${esc(p)}</p>`;
+              const title = p.scenario || p.pattern || p.title;
+              const body = p.solution || p.pick || p.answer || p.body || "";
+              return `<div class="pde-drill"><h3>${esc(title || "Scenario")}</h3>${body ? `<p>${esc(body)}</p>` : ""}</div>`;
+            }).join("")
+          }` : ""}
+          ${ch.common_traps ? `<h2>Common traps</h2>${ul(ch.common_traps)}` : ch.common_gotchas ? `<h2>Common gotchas</h2>${ul(ch.common_gotchas)}` : ""}
+          ${ch.decision_table ? `<h2>Decision table</h2>${tableHtml(ch.decision_table)}` : ""}
+          ${ch.service_decision_table ? `<h2>Service decision table</h2>${tableHtml(ch.service_decision_table)}` : ""}
+          ${ch.choose_this_when ? `<h3>Choose this when</h3>${ul(ch.choose_this_when)}` : ""}
+          ${ch.avoid_this_when ? `<h3>Avoid this when</h3>${ul(ch.avoid_this_when)}` : ""}
+          ${ch.exam_pattern_notes ? `<h2>Constraint → answer pattern</h2>${ul(ch.exam_pattern_notes)}` : ""}
+        `;
+
+        function normalizeClueRows(items) {
+          if (!Array.isArray(items)) return [];
+          return items.map((x) => {
+            if (!x) return null;
+            if (typeof x === "string") return { Phrase: x, "Likely answer": "" };
+            if (x.phrase && x.answer) return { Phrase: x.phrase, "Likely answer": x.answer };
+            if (x.clue && x.answer) return { Phrase: x.clue, "Likely answer": x.answer };
+            if (x.if && x.then) return { Phrase: x.if, "Likely answer": x.then };
+            return { Phrase: JSON.stringify(x), "Likely answer": "" };
+          }).filter(Boolean);
+        }
+
+        // ── Drill tab body ────────────────────────────────────────────
+        const drillHtml = `
+          <p class="muted">Open a drill, reason through it, then reveal the answer.</p>
+          <div id="drill-list"><p class="muted">Loading drills…</p></div>
+        `;
+
+        // ── Render shell ──────────────────────────────────────────────
+        root.innerHTML = `
+          <h1>${esc(key)}</h1>
+          <p class="muted" style="margin-top:-2px">Exam weight: ${esc(ch.exam_weight || "—")}</p>
+
+          <div class="pde-workflow" role="group" aria-label="Chapter workflow">
+            <span class="pde-step" data-step="learn"><span class="pde-step-dot"></span>Learn</span>
+            <span class="pde-step-arrow">→</span>
+            <span class="pde-step" data-step="decide"><span class="pde-step-dot"></span>Decide</span>
+            <span class="pde-step-arrow">→</span>
+            <span class="pde-step" data-step="drill"><span class="pde-step-dot"></span>Drill</span>
+          </div>
+
+          <div class="pde-tabs" role="tablist">
+            <button class="pde-tab" role="tab" data-tab="learn">Learn</button>
+            <button class="pde-tab" role="tab" data-tab="decide">Decide</button>
+            <button class="pde-tab" role="tab" data-tab="drill">Drill</button>
+          </div>
+
+          <section class="pde-tabpanel" data-panel="learn">${learnHtml}</section>
+          <section class="pde-tabpanel" data-panel="decide">${decideHtml || `<p class="muted">No decision content available for this chapter yet.</p>`}</section>
+          <section class="pde-tabpanel" data-panel="drill">${drillHtml}</section>
+
+          <nav style="margin-top:48px;border-top:1px solid var(--pde-border);padding-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px" id="ch-nav"></nav>
+        `;
+
+        // Wire tabs
+        const visited = { learn: false, decide: false, drill: false };
+        function activate(tab) {
+          root.querySelectorAll(".pde-tab").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab ? "true" : "false"));
+          root.querySelectorAll(".pde-tabpanel").forEach((p) => p.classList.toggle("is-active", p.dataset.panel === tab));
+          root.querySelectorAll(".pde-step").forEach((s) => s.classList.toggle("is-current", s.dataset.step === tab));
+          visited[tab] = true;
+          root.querySelectorAll(".pde-step").forEach((s) => {
+            if (visited[s.dataset.step]) s.classList.add("is-done");
+          });
+          try {
+            const u = new URL(location.href);
+            u.searchParams.set("tab", tab);
+            history.replaceState(null, "", u.toString());
+          } catch (_e) {}
+          if (tab === "drill") loadDrills();
+        }
+        root.querySelectorAll(".pde-tab").forEach((b) => {
+          b.addEventListener("click", () => activate(b.dataset.tab));
+        });
+        const startTab = ["learn", "decide", "drill"].includes(initialTab) ? initialTab : "learn";
+        activate(startTab);
+
+        // Lazy-load scenario drills for the Drill tab
+        let drillsLoaded = false;
+        async function loadDrills() {
+          if (drillsLoaded) return;
+          drillsLoaded = true;
+          const slot = document.getElementById("drill-list");
+          try {
+            const scen = await Data.scenarios();
+            const drills = (scen.drills || []).filter((s) => {
+              const t = (s.topic || "").toLowerCase();
+              return t.includes((key || "").toLowerCase()) || (key || "").toLowerCase().includes(t);
+            });
+            if (!drills.length) {
+              slot.innerHTML = `<p class="muted">No scenario drills mapped to this chapter yet. Try the Quiz tab.</p>`;
+              return;
+            }
+            const LETTERS = ["A","B","C","D","E","F"];
+            slot.innerHTML = drills.map((s, i) => {
+              const title = s.tested_concept || s.title || s.scenario || `Drill ${i + 1}`;
+              const correctIdx = (s.options || []).findIndex((o) => (o || "").trim() === (s.correct_answer || "").trim());
+              const opts = (s.options || []).map((o, oi) => `
+                <div class="opt ${oi === correctIdx ? "correct" : ""}">
+                  <span class="letter">${LETTERS[oi]}.</span><span>${esc(o)}</span>
+                </div>`).join("");
+              const cluePills = (s.clue_words || []).map((c) => `<span class="tag">${esc(c)}</span>`).join(" ");
+              return `
+                <details class="pde-drill">
+                  <summary><strong>${esc(title)}</strong></summary>
+                  ${cluePills ? `<p style="margin:8px 0">${cluePills}</p>` : ""}
+                  ${s.scenario ? `<p>${esc(s.scenario)}</p>` : ""}
+                  ${opts ? `<div class="opt-list">${opts}</div>` : ""}
+                  ${s.why_correct ? `<div class="pde-reveal-body" style="display:block;margin-top:10px"><strong>Why it's right:</strong> ${esc(s.why_correct)}</div>` : ""}
+                </details>`;
+            }).join("");
+          } catch (e) {
+            slot.innerHTML = `<p class="muted">Failed to load drills: ${esc(e.message)}</p>`;
+          }
+        }
+
+        // Prev/next chapter nav
+        const topics = tm.topics || [];
+        const idx = topics.findIndex((t) => t.slug === slug);
+        const prev = idx > 0 ? topics[idx - 1] : null;
+        const next = idx < topics.length - 1 ? topics[idx + 1] : null;
+        document.getElementById("ch-nav").innerHTML = `
+          <div>${prev ? `
+            <p class="muted" style="margin:0">← Previous</p>
+            <p style="margin:2px 0"><strong>${esc(prev.topic)}</strong></p>
+            <a href="chapter.html?slug=${encodeURIComponent(prev.slug)}">Open</a>` : ""}</div>
+          <div style="text-align:right">${next ? `
+            <p class="muted" style="margin:0">Next →</p>
+            <p style="margin:2px 0"><strong>${esc(next.topic)}</strong></p>
+            <a href="chapter.html?slug=${encodeURIComponent(next.slug)}">Open</a>` : ""}</div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>

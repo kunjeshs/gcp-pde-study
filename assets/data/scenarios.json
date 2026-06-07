@@ -1,0 +1,1240 @@
+{
+  "version": "1.0",
+  "generated": "2026-05-09",
+  "source_note": "Original exam-style scenario drills derived from the Google Cloud Professional Data Engineer Exam Guide v4.2 sub-objectives and current Google Cloud documentation. These are decision-pattern drills, NOT real exam questions. See CONTENT_GAP_REPORT.md for sourcing.",
+  "naming_note": "Uses current product names (Sensitive Data Protection, Dataplex Universal Catalog / Knowledge Catalog, BigQuery Editions, Vertex AI under Gemini Enterprise Agent Platform, Memorystore for Redis Cluster, Managed Service for Apache Kafka).",
+  "drills": [
+    {
+      "id": "drill-1.1-01",
+      "topic": "1.1 Designing for security and compliance",
+      "official_guide_mapping": "1.1 — Encryption and key management",
+      "difficulty": "medium",
+      "tested_concept": "CMEK vs CSEK vs EKM selection",
+      "clue_words": ["control our keys", "rotate", "BigQuery", "Cloud SQL"],
+      "scenario": "A regulated finance team must control rotation and revocation of encryption keys for BigQuery and Cloud SQL. They have no requirement that key material live outside Google. They want minimal operational overhead.",
+      "options": [
+        "Customer-Supplied Encryption Keys (CSEK) on BigQuery and Cloud SQL.",
+        "Customer-Managed Encryption Keys (CMEK) backed by Cloud KMS.",
+        "Cloud External Key Manager (Cloud EKM) with a third-party HSM.",
+        "Google-managed encryption keys (GMEK) with audit logs only."
+      ],
+      "correct_answer": "Customer-Managed Encryption Keys (CMEK) backed by Cloud KMS.",
+      "why_correct": "CMEK lets the team rotate and revoke keys for both services, with no need for an external HSM. CMEK is the default exam answer for 'control our keys' on BigQuery, Cloud SQL, Spanner, GCS, and Pub/Sub.",
+      "why_each_wrong_option_is_wrong": [
+        "CSEK is only supported on Cloud Storage and Compute Engine persistent disks, not BigQuery or Cloud SQL.",
+        "EKM is needed only when key material must physically leave Google premises; the scenario says no such requirement.",
+        "GMEK does not give the customer rotation/revocation control."
+      ]
+    },
+    {
+      "id": "drill-1.1-02",
+      "topic": "1.1 Designing for security and compliance",
+      "official_guide_mapping": "1.1 — Privacy and PII handling",
+      "difficulty": "medium",
+      "tested_concept": "Sensitive Data Protection format-preserving encryption",
+      "clue_words": ["mask SSN", "join on masked column", "preserve referential integrity"],
+      "scenario": "Analysts must run JOINs on a customer SSN column that has been masked across BigQuery datasets. Plain hashing is unacceptable because it breaks reversibility for the security team.",
+      "options": [
+        "Hash the column with SHA-256 in a scheduled query.",
+        "Use Sensitive Data Protection format-preserving encryption (FPE) / tokenization.",
+        "Apply BigQuery column-level masking with NULL replacement.",
+        "Drop the column and store SSNs separately."
+      ],
+      "correct_answer": "Use Sensitive Data Protection format-preserving encryption (FPE) / tokenization.",
+      "why_correct": "FPE / tokenization preserves joinability (same SSN → same token) and is reversible by the security team that holds the key. Hashing breaks reversibility; NULL masking breaks joinability.",
+      "why_each_wrong_option_is_wrong": [
+        "SHA-256 hashing is irreversible and breaks the 'reversible by security team' requirement.",
+        "NULL replacement makes the column unjoinable.",
+        "Splitting the column adds latency and orchestration without solving the masking-with-joinability requirement."
+      ]
+    },
+    {
+      "id": "drill-1.1-03",
+      "topic": "1.1 Designing for security and compliance",
+      "official_guide_mapping": "1.1 — VPC Service Controls",
+      "difficulty": "medium",
+      "tested_concept": "Exfiltration prevention vs IAM",
+      "clue_words": ["even with stolen credentials", "prevent exfiltration", "BigQuery, GCS"],
+      "scenario": "A bank is worried that a compromised service-account key could be used to copy BigQuery and GCS data to an attacker-controlled project. IAM is already minimized.",
+      "options": [
+        "Tighten IAM further by removing all roles from the SA.",
+        "Set up a VPC Service Controls perimeter around the BigQuery and GCS projects.",
+        "Enable Cloud DLP scans on the buckets and datasets.",
+        "Move the data to a different region."
+      ],
+      "correct_answer": "Set up a VPC Service Controls perimeter around the BigQuery and GCS projects.",
+      "why_correct": "VPC-SC blocks data egress to projects outside the perimeter even when IAM allows the action — exactly the exfiltration scenario described.",
+      "why_each_wrong_option_is_wrong": [
+        "IAM tightening cannot stop data movement when the credential is valid.",
+        "DLP discovers and classifies sensitive data but does not block exfiltration.",
+        "Region change does not stop a credential-based copy out of the project."
+      ]
+    },
+    {
+      "id": "drill-1.1-04",
+      "topic": "1.1 Designing for security and compliance",
+      "official_guide_mapping": "1.1 — BigQuery fine-grained access",
+      "difficulty": "medium",
+      "tested_concept": "Authorized views vs raw access",
+      "clue_words": ["share aggregate", "hide source rows"],
+      "scenario": "Marketing must read aggregated revenue by region from a sales table. They must not see the underlying transaction rows.",
+      "options": [
+        "Grant marketing dataViewer on the source dataset.",
+        "Create an authorized view in a separate dataset and grant marketing access to that dataset only.",
+        "Copy aggregated data to a new table on a daily schedule.",
+        "Grant marketing custom IAM with only SELECT permission."
+      ],
+      "correct_answer": "Create an authorized view in a separate dataset and grant marketing access to that dataset only.",
+      "why_correct": "Authorized views expose only the view's output without granting access to the source table — the canonical 'share aggregate, hide rows' pattern.",
+      "why_each_wrong_option_is_wrong": [
+        "dataViewer on source exposes everything.",
+        "Daily copy duplicates data and adds freshness lag.",
+        "BigQuery doesn't have a 'SELECT only on aggregate' IAM scope; views are the mechanism."
+      ]
+    },
+    {
+      "id": "drill-1.1-05",
+      "topic": "1.1 Designing for security and compliance",
+      "official_guide_mapping": "1.1 — Audit and compliance",
+      "difficulty": "easy",
+      "tested_concept": "Data Access audit logs",
+      "clue_words": ["who queried this data", "compliance audit"],
+      "scenario": "A compliance team needs an audit trail of every BigQuery read against a sensitive dataset. They notice that current logs show admin actions but not query-time reads.",
+      "options": [
+        "Enable Data Access audit logs for BigQuery.",
+        "Increase Admin Activity log retention.",
+        "Sink Admin Activity logs to BigQuery.",
+        "Turn on Cloud Trace for the project."
+      ],
+      "correct_answer": "Enable Data Access audit logs for BigQuery.",
+      "why_correct": "Data Access audit logs record reads/writes of user data and are off by default for most services; they are the answer to 'who queried this data.'",
+      "why_each_wrong_option_is_wrong": [
+        "Admin Activity logs do not include query-time reads.",
+        "Sinking the wrong log type does not capture reads.",
+        "Cloud Trace is for request latency, not data access."
+      ]
+    },
+    {
+      "id": "drill-1.2-01",
+      "topic": "1.2 Designing for reliability and fidelity",
+      "official_guide_mapping": "1.2 — Exactly-once into BigQuery",
+      "difficulty": "medium",
+      "tested_concept": "Storage Write API vs streaming inserts",
+      "clue_words": ["no duplicates", "no missing rows", "streaming into BQ"],
+      "scenario": "A streaming pipeline must produce exactly-once delivery into BigQuery for a financial event stream. Duplicates would double-count revenue.",
+      "options": [
+        "Use BigQuery streaming inserts with insertId for dedupe.",
+        "Use the BigQuery Storage Write API in pending mode with stream commits.",
+        "Use a Dataflow batch job that runs every minute.",
+        "Use Pub/Sub ordering keys without changing the sink."
+      ],
+      "correct_answer": "Use the BigQuery Storage Write API in pending mode with stream commits.",
+      "why_correct": "Storage Write API supports exactly-once via pending streams that are committed atomically. Streaming insert dedupe is best-effort within ~1 minute.",
+      "why_each_wrong_option_is_wrong": [
+        "Streaming inserts with insertId only dedupe within ~1 minute, not exactly-once.",
+        "Frequent batch jobs introduce gaps and duplicates at boundaries.",
+        "Ordering keys help order, not exactly-once delivery."
+      ]
+    },
+    {
+      "id": "drill-1.2-02",
+      "topic": "1.2 Designing for reliability and fidelity",
+      "official_guide_mapping": "1.2 — ACID and availability decision",
+      "difficulty": "medium",
+      "tested_concept": "Spanner multi-region vs Cloud SQL",
+      "clue_words": ["global", "strong consistency", "five-nines", "ACID"],
+      "scenario": "An inventory system serves customers in four regions and must support strongly consistent multi-region writes with a 99.999% SLA.",
+      "options": [
+        "Cloud SQL with cross-region read replicas.",
+        "Cloud Spanner multi-region configuration.",
+        "AlloyDB with read pool nodes in each region.",
+        "Bigtable with regional replication."
+      ],
+      "correct_answer": "Cloud Spanner multi-region configuration.",
+      "why_correct": "Spanner multi-region delivers global ACID with 99.999% SLA — the only option that matches all three requirements.",
+      "why_each_wrong_option_is_wrong": [
+        "Cloud SQL replicas are async and read-only; not for multi-region writes.",
+        "AlloyDB is regional; read pool replicas don't add multi-region write consistency.",
+        "Bigtable is eventually consistent for cross-region replication."
+      ]
+    },
+    {
+      "id": "drill-1.2-03",
+      "topic": "1.2 Designing for reliability and fidelity",
+      "official_guide_mapping": "1.2 — Validation",
+      "difficulty": "medium",
+      "tested_concept": "Dataform assertions vs ad-hoc SQL",
+      "clue_words": ["validate uniqueness", "every transform run", "Git"],
+      "scenario": "A team builds BigQuery transformations and needs row-level uniqueness and not-null assertions on every run, with results gated by code review.",
+      "options": [
+        "Add post-run SELECT COUNT queries in a Cloud Scheduler job.",
+        "Use Dataform with declared assertions in Git-versioned SQLX.",
+        "Manually run validation queries after each scheduled query.",
+        "Use Looker dashboards to spot anomalies."
+      ],
+      "correct_answer": "Use Dataform with declared assertions in Git-versioned SQLX.",
+      "why_correct": "Dataform assertions are declarative tests that run with every transform; SQLX is versioned in Git and gated by review — exactly the workflow described.",
+      "why_each_wrong_option_is_wrong": [
+        "Post-run queries in a scheduler add operational burden and lack Git review.",
+        "Manual validation does not satisfy 'every run.'",
+        "Looker dashboards are reactive, not preventative."
+      ]
+    },
+    {
+      "id": "drill-1.3-01",
+      "topic": "1.3 Designing for flexibility and portability",
+      "official_guide_mapping": "1.3 — Multi-cloud / portability",
+      "difficulty": "medium",
+      "tested_concept": "BigLake vs native BigQuery storage",
+      "clue_words": ["may move to AWS", "open formats", "BQ governance"],
+      "scenario": "A team stores Parquet on GCS today and may relocate to AWS in two years. They want BigQuery row/column security and Spark access for now.",
+      "options": [
+        "Load all Parquet into native BigQuery storage.",
+        "Use a BigLake table over the GCS Parquet files with BigQuery row/column policies.",
+        "Use a plain external table over the GCS files.",
+        "Move the data to Cloud SQL."
+      ],
+      "correct_answer": "Use a BigLake table over the GCS Parquet files with BigQuery row/column policies.",
+      "why_correct": "BigLake gives BQ governance over open files, accessible from Spark, with no copy — preserving portability if the team later migrates clouds.",
+      "why_each_wrong_option_is_wrong": [
+        "Native BQ storage is fast but locks data in BQ; portability is lost.",
+        "External (non-BigLake) tables skip BQ row/column security.",
+        "Cloud SQL is for OLTP, not analytical Parquet."
+      ]
+    },
+    {
+      "id": "drill-1.4-01",
+      "topic": "1.4 Designing data migrations",
+      "official_guide_mapping": "1.4 — Migration tool selection",
+      "difficulty": "easy",
+      "tested_concept": "Transfer Appliance for very large offline transfers",
+      "clue_words": ["80 TB", "100 Mbps", "one-time"],
+      "scenario": "An on-prem cluster has 80 TB of historical data to ship to GCS. Outbound bandwidth is 100 Mbps. The transfer is one-time.",
+      "options": [
+        "gcloud storage cp in parallel.",
+        "Storage Transfer Service.",
+        "Transfer Appliance.",
+        "BigQuery Data Transfer Service."
+      ],
+      "correct_answer": "Transfer Appliance.",
+      "why_correct": "80 TB at 100 Mbps would take ~74 days online. Transfer Appliance is the offline path for very large one-time loads.",
+      "why_each_wrong_option_is_wrong": [
+        "gcloud storage cannot beat the link speed.",
+        "Storage Transfer Service is for online cloud-to-cloud / HTTP.",
+        "BigQuery Data Transfer Service is for SaaS / warehouse sources, not raw on-prem files."
+      ]
+    },
+    {
+      "id": "drill-1.4-02",
+      "topic": "1.4 Designing data migrations",
+      "official_guide_mapping": "1.4 — Database migration with low downtime",
+      "difficulty": "medium",
+      "tested_concept": "DMS CDC vs mysqldump",
+      "clue_words": ["minimal downtime", "MySQL → Cloud SQL", "ongoing changes"],
+      "scenario": "A company migrates an on-prem MySQL database to Cloud SQL. They cannot afford more than a few minutes of downtime; writes continue during the cutover.",
+      "options": [
+        "mysqldump → gcloud storage upload → mysql import.",
+        "Database Migration Service with CDC and a short cutover.",
+        "Storage Transfer Service for the data files.",
+        "Datastream into BigQuery."
+      ],
+      "correct_answer": "Database Migration Service with CDC and a short cutover.",
+      "why_correct": "DMS replicates ongoing changes via CDC so the cutover window is tiny — exactly the 'minimal downtime' pattern.",
+      "why_each_wrong_option_is_wrong": [
+        "mysqldump requires read-only or write-pause for the dump duration.",
+        "STS does not understand DB transactions.",
+        "Datastream targets analytics in BQ/GCS, not Cloud SQL."
+      ]
+    },
+    {
+      "id": "drill-2.1-01",
+      "topic": "2.1 Planning the data pipelines",
+      "official_guide_mapping": "2.1 — Latency-driven architecture",
+      "difficulty": "medium",
+      "tested_concept": "Streaming buffer choice",
+      "clue_words": ["IoT devices", "decoupled", "schema flexibility"],
+      "scenario": "Tens of thousands of IoT devices publish telemetry. Backend services consume it independently and must scale without modifying producers.",
+      "options": [
+        "Devices write directly to BigQuery streaming inserts.",
+        "Devices publish to Pub/Sub; consumers subscribe.",
+        "Devices write to Cloud SQL via REST API.",
+        "Devices write to GCS objects per message."
+      ],
+      "correct_answer": "Devices publish to Pub/Sub; consumers subscribe.",
+      "why_correct": "Pub/Sub decouples producers and consumers, autoscales, and is the canonical buffer before BigQuery / Dataflow.",
+      "why_each_wrong_option_is_wrong": [
+        "Direct streaming to BQ creates tight coupling and per-row cost without a decoupling buffer.",
+        "Cloud SQL is OLTP; not designed for high-throughput device writes.",
+        "Per-message GCS objects produce a small-file problem."
+      ]
+    },
+    {
+      "id": "drill-2.2-01",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Dataflow vs Dataproc",
+      "difficulty": "medium",
+      "tested_concept": "Managed-service preference vs lift-and-shift",
+      "clue_words": ["minimize ops", "autoscaling", "exactly-once", "new pipeline"],
+      "scenario": "A new streaming pipeline must autoscale, deliver exactly-once to BigQuery, and require no cluster management.",
+      "options": [
+        "Dataproc with a persistent cluster running Spark Streaming.",
+        "Dataflow with the BigQuery Storage Write API sink.",
+        "Cloud Data Fusion with Hadoop plugins.",
+        "Cloud Run on a Pub/Sub push subscription."
+      ],
+      "correct_answer": "Dataflow with the BigQuery Storage Write API sink.",
+      "why_correct": "Dataflow is the managed Beam runtime: serverless, autoscales, supports exactly-once via Storage Write API.",
+      "why_each_wrong_option_is_wrong": [
+        "Persistent Dataproc requires cluster management and is wrong for 'minimize ops.'",
+        "Cloud Data Fusion is GUI ETL, not a streaming engine of choice here.",
+        "Cloud Run is request-driven; not the right model for windowed streaming."
+      ]
+    },
+    {
+      "id": "drill-2.2-02",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Dataflow windowing and late data",
+      "difficulty": "hard",
+      "tested_concept": "Allowed lateness vs dropping",
+      "clue_words": ["events arrive 10 minutes late", "still want them counted", "after 1 hour drop"],
+      "scenario": "A clickstream pipeline aggregates per-minute counts. Some events arrive up to 10 minutes late and must be counted; events later than 1 hour must be discarded.",
+      "options": [
+        "Use processing-time windows.",
+        "Use 1-minute fixed event-time windows with allowed lateness 1 hour and a side output for post-horizon late data.",
+        "Use global windows and run a daily batch job.",
+        "Use 1-minute fixed processing-time windows with no lateness handling."
+      ],
+      "correct_answer": "Use 1-minute fixed event-time windows with allowed lateness 1 hour and a side output for post-horizon late data.",
+      "why_correct": "Event-time windows respect when the event happened. Allowed lateness keeps the window open up to 1 hour; the side output captures or routes truly late records.",
+      "why_each_wrong_option_is_wrong": [
+        "Processing-time windows misplace late events into the wrong bucket.",
+        "Global windows break per-minute granularity.",
+        "Without lateness handling, the 10-minute-late events are dropped."
+      ]
+    },
+    {
+      "id": "drill-2.2-03",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Apache Kafka migration",
+      "difficulty": "medium",
+      "tested_concept": "Managed Service for Apache Kafka vs Pub/Sub Lite",
+      "clue_words": ["Kafka Connect", "Kafka Streams", "existing tooling"],
+      "scenario": "A team migrating from on-prem Apache Kafka uses Kafka Connect, Streams, and ksqlDB heavily. They want minimal code rewrite.",
+      "options": [
+        "Move to Pub/Sub Lite using its Kafka-compatible API.",
+        "Move to Pub/Sub regular and rewrite consumers.",
+        "Move to Managed Service for Apache Kafka.",
+        "Move to Cloud Data Fusion."
+      ],
+      "correct_answer": "Move to Managed Service for Apache Kafka.",
+      "why_correct": "Per Google's current choose-doc, Managed Service for Apache Kafka is the preferred managed Kafka path — full Kafka API, ecosystem (Connect, Streams, ksqlDB), and minimal rewrite.",
+      "why_each_wrong_option_is_wrong": [
+        "Pub/Sub Lite is no longer Google's preferred Kafka migration target and is zonal.",
+        "Pub/Sub regular requires rewriting consumers.",
+        "Cloud Data Fusion is GUI ETL, not a Kafka cluster."
+      ]
+    },
+    {
+      "id": "drill-2.2-04",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Pub/Sub patterns",
+      "difficulty": "medium",
+      "tested_concept": "Ordering keys",
+      "clue_words": ["per-user order", "high throughput", "global"],
+      "scenario": "A multiplayer game backend needs per-user ordering of events; users are global and event volume is high.",
+      "options": [
+        "Pub/Sub Lite with a single zone.",
+        "Pub/Sub regular with ordering keys set to user_id.",
+        "Cloud Tasks with FIFO queues.",
+        "Pub/Sub regular without ordering keys."
+      ],
+      "correct_answer": "Pub/Sub regular with ordering keys set to user_id.",
+      "why_correct": "Ordering keys deliver per-key order on a global, multi-zone Pub/Sub topic — the right balance of order and scale.",
+      "why_each_wrong_option_is_wrong": [
+        "Pub/Sub Lite is zonal and not global.",
+        "Cloud Tasks is for HTTP task dispatch, not high-throughput streaming.",
+        "Without ordering keys, Pub/Sub does not guarantee per-user order."
+      ]
+    },
+    {
+      "id": "drill-2.2-05",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Cloud Data Fusion",
+      "difficulty": "easy",
+      "tested_concept": "No-code ETL choice",
+      "clue_words": ["citizen developer", "drag-and-drop", "no code"],
+      "scenario": "Business analysts want to build ETL pipelines visually without writing code, then schedule them.",
+      "options": [
+        "Apache Beam on Dataflow.",
+        "Cloud Data Fusion with the visual studio.",
+        "Dataproc with Hive scripts.",
+        "BigQuery scheduled queries written in SQL."
+      ],
+      "correct_answer": "Cloud Data Fusion with the visual studio.",
+      "why_correct": "Cloud Data Fusion is the visual no-code ETL service for citizen developers.",
+      "why_each_wrong_option_is_wrong": [
+        "Beam requires code.",
+        "Hive on Dataproc requires SQL/HQL and cluster management.",
+        "BQ scheduled queries require SQL."
+      ]
+    },
+    {
+      "id": "drill-2.2-06",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — AI data enrichment",
+      "difficulty": "hard",
+      "tested_concept": "BQ AI functions vs Dataflow + Vertex",
+      "clue_words": ["classify each row", "Gemini", "data already in BQ"],
+      "scenario": "A team has a 50M-row BigQuery table and wants to add a sentiment label to each row using Gemini, with minimal pipeline orchestration.",
+      "options": [
+        "Export to GCS and run a Dataflow job calling Vertex endpoints.",
+        "Use ML.GENERATE_TEXT or AI.GENERATE in BigQuery against a Vertex remote model.",
+        "Use BigQuery scheduled queries that call an external HTTP function.",
+        "Use Dataproc Spark with custom Gemini code."
+      ],
+      "correct_answer": "Use ML.GENERATE_TEXT or AI.GENERATE in BigQuery against a Vertex remote model.",
+      "why_correct": "These functions enrich rows with LLM output directly in BigQuery — minimal orchestration, data stays in BQ.",
+      "why_each_wrong_option_is_wrong": [
+        "Exporting and re-loading adds cost and operational overhead.",
+        "External HTTP functions have rate-limit and reliability concerns.",
+        "Dataproc adds a cluster and code; BQ-native AI functions exist."
+      ]
+    },
+    {
+      "id": "drill-2.2-07",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Spark/Hadoop ecosystem",
+      "difficulty": "medium",
+      "tested_concept": "Dataproc ephemeral clusters with Metastore",
+      "clue_words": ["existing Hive metastore", "daily ETL", "minimize cost"],
+      "scenario": "An existing Spark + Hive ETL runs daily. The team wants to keep their Hive metastore and Spark code while minimizing cost.",
+      "options": [
+        "Dataflow with Apache Beam.",
+        "Persistent Dataproc cluster running 24/7.",
+        "Ephemeral Dataproc clusters with Dataproc Metastore for Hive.",
+        "Cloud Data Fusion."
+      ],
+      "correct_answer": "Ephemeral Dataproc clusters with Dataproc Metastore for Hive.",
+      "why_correct": "Ephemeral cluster spins up for the job and is deleted after — much cheaper. Dataproc Metastore keeps Hive metadata external to clusters.",
+      "why_each_wrong_option_is_wrong": [
+        "Dataflow would require a code rewrite.",
+        "Persistent cluster pays for idle compute most of the day.",
+        "Cloud Data Fusion is not a Spark/Hive engine."
+      ]
+    },
+    {
+      "id": "drill-2.3-01",
+      "topic": "2.3 Deploying and operationalizing the pipelines",
+      "official_guide_mapping": "2.3 — Composer vs Workflows",
+      "difficulty": "medium",
+      "tested_concept": "Orchestrator selection",
+      "clue_words": ["multi-step DAG", "retries", "branching", "sensors"],
+      "scenario": "A daily ETL has 12 tasks, branches on file existence, retries 3 times, and has dependencies between tasks.",
+      "options": [
+        "Cloud Scheduler with multiple endpoints.",
+        "Workflows.",
+        "Cloud Composer (Airflow).",
+        "BigQuery scheduled queries chained."
+      ],
+      "correct_answer": "Cloud Composer (Airflow).",
+      "why_correct": "Composer's Airflow operators provide retries, branching, sensors, and dependency management for complex DAGs.",
+      "why_each_wrong_option_is_wrong": [
+        "Cloud Scheduler is one-shot cron, not a DAG.",
+        "Workflows is light orchestration, not a DAG runtime with sensors and rich operators.",
+        "BQ scheduled queries cannot model multi-step DAGs with branching/sensors."
+      ]
+    },
+    {
+      "id": "drill-2.3-02",
+      "topic": "2.3 Deploying and operationalizing the pipelines",
+      "official_guide_mapping": "2.3 — Eventarc",
+      "difficulty": "easy",
+      "tested_concept": "Event-driven trigger over polling",
+      "clue_words": ["when a file lands in GCS", "trigger pipeline"],
+      "scenario": "When a file lands in a GCS bucket, a transformation pipeline should run. Today the team polls every minute.",
+      "options": [
+        "Keep polling but reduce interval to 10 seconds.",
+        "Use Eventarc to fire on the GCS finalize event into a Cloud Function or Workflow.",
+        "Use BigQuery scheduled queries.",
+        "Run a Composer DAG every minute."
+      ],
+      "correct_answer": "Use Eventarc to fire on the GCS finalize event into a Cloud Function or Workflow.",
+      "why_correct": "Eventarc routes Google events (object create) to consumers — eliminates polling and runs on demand.",
+      "why_each_wrong_option_is_wrong": [
+        "Polling at any interval wastes API calls.",
+        "BQ scheduled queries do not subscribe to GCS events.",
+        "Composer every minute pays GKE baseline + scheduling overhead."
+      ]
+    },
+    {
+      "id": "drill-3.1-01",
+      "topic": "3.1 Selecting storage systems",
+      "official_guide_mapping": "3.1 — Storage decision tree",
+      "difficulty": "medium",
+      "tested_concept": "Bigtable vs BigQuery vs Spanner",
+      "clue_words": ["IoT", "millions of QPS", "sub-10 ms", "time-series"],
+      "scenario": "An IoT platform writes a metric every second from a million devices and serves the last hour at sub-10 ms latency to a dashboard. No JOINs are required.",
+      "options": [
+        "BigQuery streaming inserts and dashboards.",
+        "Bigtable with a row-key like reverse_timestamp#device_id.",
+        "Spanner multi-region.",
+        "Firestore in Datastore mode."
+      ],
+      "correct_answer": "Bigtable with a row-key like reverse_timestamp#device_id.",
+      "why_correct": "Bigtable serves single-key reads at sub-10 ms at huge scale; reverse-timestamp prefix avoids hot tablets while time-bounded reads still work.",
+      "why_each_wrong_option_is_wrong": [
+        "BigQuery is analytical, not sub-10 ms point lookup.",
+        "Spanner is global ACID and overkill / costly for time-series IoT.",
+        "Firestore Datastore mode is a document store, not designed for the throughput pattern."
+      ]
+    },
+    {
+      "id": "drill-3.1-02",
+      "topic": "3.1 Selecting storage systems",
+      "official_guide_mapping": "3.1 — AlloyDB",
+      "difficulty": "medium",
+      "tested_concept": "AlloyDB HTAP",
+      "clue_words": ["Postgres team", "low-latency analytical queries", "operational data"],
+      "scenario": "A team stays on PostgreSQL but needs fast analytical queries on operational data without an ETL hop to BigQuery.",
+      "options": [
+        "Cloud SQL Postgres with read replicas.",
+        "AlloyDB with read pool nodes for analytics.",
+        "BigQuery with Datastream CDC.",
+        "Spanner with Postgres dialect."
+      ],
+      "correct_answer": "AlloyDB with read pool nodes for analytics.",
+      "why_correct": "AlloyDB's columnar engine accelerates analytical queries on Postgres operational data — the HTAP sweet spot.",
+      "why_each_wrong_option_is_wrong": [
+        "Cloud SQL Postgres replicas don't have a columnar accelerator.",
+        "Datastream → BigQuery introduces latency and an ETL hop.",
+        "Spanner Postgres dialect is global ACID, not optimized for in-place analytics on Postgres OLTP."
+      ]
+    },
+    {
+      "id": "drill-3.1-03",
+      "topic": "3.1 Selecting storage systems",
+      "official_guide_mapping": "3.1 — GCS classes / Autoclass",
+      "difficulty": "easy",
+      "tested_concept": "Autoclass vs lifecycle",
+      "clue_words": ["unpredictable access", "auto cost optimization"],
+      "scenario": "A data lake bucket has unpredictable per-object access — some objects are touched daily, others never again.",
+      "options": [
+        "Set a lifecycle rule to move everything to Coldline at 30 days.",
+        "Enable Autoclass on the bucket.",
+        "Set the default class to Archive.",
+        "Manually move objects every quarter."
+      ],
+      "correct_answer": "Enable Autoclass on the bucket.",
+      "why_correct": "Autoclass moves objects between classes per access pattern — best for unpredictable access.",
+      "why_each_wrong_option_is_wrong": [
+        "A blanket Coldline rule penalizes hot objects with retrieval cost.",
+        "Default Archive incurs early-delete penalties for hot objects.",
+        "Manual moves don't scale and miss patterns."
+      ]
+    },
+    {
+      "id": "drill-3.1-04",
+      "topic": "3.1 Selecting storage systems",
+      "official_guide_mapping": "3.1 — Memorystore Redis Cluster",
+      "difficulty": "easy",
+      "tested_concept": "Cache replication and failover",
+      "clue_words": ["sub-ms cache", "leaderboards", "high availability"],
+      "scenario": "A leaderboard service needs sub-ms reads, sharded across keys, with replication and failover within zone outage.",
+      "options": [
+        "Memorystore Redis (basic tier, single zone).",
+        "Memorystore for Redis Cluster (cluster mode with replicas).",
+        "Bigtable.",
+        "Firestore."
+      ],
+      "correct_answer": "Memorystore for Redis Cluster (cluster mode with replicas).",
+      "why_correct": "Cluster mode shards across nodes with replication and failover — the production-grade Redis option v4.2 names.",
+      "why_each_wrong_option_is_wrong": [
+        "Basic tier is single zone and lacks failover.",
+        "Bigtable is not sub-ms in-memory.",
+        "Firestore is not a cache."
+      ]
+    },
+    {
+      "id": "drill-3.2-01",
+      "topic": "3.2 Planning for using a data warehouse",
+      "official_guide_mapping": "3.2 — Partition + cluster",
+      "difficulty": "medium",
+      "tested_concept": "Partition + cluster + require_partition_filter",
+      "clue_words": ["prevent full scans", "filter on date and customer_id"],
+      "scenario": "A wide BigQuery table is queried mostly by date range and customer_id. Analysts have run accidental full scans.",
+      "options": [
+        "Partition by ingestion-time only; cluster on customer_id; do not require partition filter.",
+        "Partition by event_date with require_partition_filter=true; cluster on customer_id.",
+        "Cluster only on event_date.",
+        "Use search indexes only."
+      ],
+      "correct_answer": "Partition by event_date with require_partition_filter=true; cluster on customer_id.",
+      "why_correct": "Partition pruning by date + cluster pruning by customer_id matches the query pattern; require_partition_filter prevents full scans.",
+      "why_each_wrong_option_is_wrong": [
+        "Without require_partition_filter, accidental full scans persist.",
+        "Clustering alone doesn't enforce a filter.",
+        "Search indexes are for needle-in-haystack TEXT lookups, not analytical filters."
+      ]
+    },
+    {
+      "id": "drill-3.2-02",
+      "topic": "3.2 Planning for using a data warehouse",
+      "official_guide_mapping": "3.2 — On-demand vs Editions",
+      "difficulty": "medium",
+      "tested_concept": "Pricing model selection",
+      "clue_words": ["predictable monthly bill", "heavy daily ETL", "12 analysts"],
+      "scenario": "An org has heavy daily ETL plus 12 analysts running ad-hoc queries. They need a predictable monthly bill and ability to cap cost.",
+      "options": [
+        "On-demand pricing for everyone.",
+        "BigQuery Editions (Enterprise) with autoscaling slots and a baseline reservation.",
+        "BigQuery flat-rate annual slots.",
+        "BigQuery Storage API only with no compute."
+      ],
+      "correct_answer": "BigQuery Editions (Enterprise) with autoscaling slots and a baseline reservation.",
+      "why_correct": "Editions give predictable cost via baseline + autoscale; Enterprise edition supports the features most teams need.",
+      "why_each_wrong_option_is_wrong": [
+        "On-demand is unpredictable for heavy workloads.",
+        "Flat-rate purchasing was retired July 5, 2023.",
+        "Storage API alone doesn't run analytical queries."
+      ]
+    },
+    {
+      "id": "drill-3.2-03",
+      "topic": "3.2 Planning for using a data warehouse",
+      "official_guide_mapping": "3.2 — Materialized view vs scheduled query",
+      "difficulty": "easy",
+      "tested_concept": "Materialized view choice",
+      "clue_words": ["repeated aggregation", "freshness", "low cost"],
+      "scenario": "Dashboards run the same daily aggregation 200 times per day. The team wants near-real-time freshness and lowest scan cost.",
+      "options": [
+        "Scheduled query running every minute writing to a result table.",
+        "Materialized view over the source.",
+        "BigQuery cached results only.",
+        "Looker Studio extract."
+      ],
+      "correct_answer": "Materialized view over the source.",
+      "why_correct": "Materialized views auto-refresh incrementally and serve precomputed results — fastest, cheapest pattern for repeated aggregations.",
+      "why_each_wrong_option_is_wrong": [
+        "Frequent scheduled queries cost more and lag.",
+        "Cached results are query-scoped and not shared across users.",
+        "Looker extracts add staleness and storage."
+      ]
+    },
+    {
+      "id": "drill-3.2-04",
+      "topic": "3.2 Planning for using a data warehouse",
+      "official_guide_mapping": "3.2 — Modeling",
+      "difficulty": "medium",
+      "tested_concept": "Nested + repeated fields",
+      "clue_words": ["orders with line items", "denormalize", "fewer JOINs"],
+      "scenario": "An e-commerce schema has Orders and OrderItems. Analysts repeatedly JOIN them. The team wants better BQ performance.",
+      "options": [
+        "Snowflake the schema further.",
+        "Store OrderItems as ARRAY<STRUCT> within Orders.",
+        "Move OrderItems into Bigtable.",
+        "Materialize a flat join into a daily table."
+      ],
+      "correct_answer": "Store OrderItems as ARRAY<STRUCT> within Orders.",
+      "why_correct": "Nested + repeated fields in BQ avoid the JOIN entirely and play well with columnar storage.",
+      "why_each_wrong_option_is_wrong": [
+        "Snowflake increases JOIN cost.",
+        "Bigtable is not for analytical SQL with JOIN.",
+        "A daily flat join works but ARRAY<STRUCT> is the canonical BQ idiom."
+      ]
+    },
+    {
+      "id": "drill-3.3-01",
+      "topic": "3.3 Using a data lake",
+      "official_guide_mapping": "3.3 — BigLake vs external table",
+      "difficulty": "medium",
+      "tested_concept": "Governance over open files",
+      "clue_words": ["row-level security", "BQ + Spark", "Parquet on GCS"],
+      "scenario": "Both BigQuery and Spark teams must read the same GCS Parquet files, with the same row-level security policy.",
+      "options": [
+        "External tables for both teams.",
+        "BigLake table with row-access policies; Spark uses the BigLake connector.",
+        "Native BigQuery storage; Spark exports nightly.",
+        "Two separate copies, one per team."
+      ],
+      "correct_answer": "BigLake table with row-access policies; Spark uses the BigLake connector.",
+      "why_correct": "BigLake unifies governance across BQ and Spark with row/column policies on open files.",
+      "why_each_wrong_option_is_wrong": [
+        "External tables skip BQ row-level security.",
+        "Native BQ storage breaks Spark direct access.",
+        "Two copies invite drift and double the cost."
+      ]
+    },
+    {
+      "id": "drill-3.4-01",
+      "topic": "3.4 Designing for a data platform",
+      "official_guide_mapping": "3.4 — Analytics Hub",
+      "difficulty": "easy",
+      "tested_concept": "Zero-copy cross-org sharing",
+      "clue_words": ["share with 50 partners", "no copying", "BQ datasets"],
+      "scenario": "A media company publishes curated BigQuery datasets to 50 partner organizations and does not want to copy data per partner.",
+      "options": [
+        "Export each dataset to GCS and share signed URLs.",
+        "Use Analytics Hub listings; partners link as a linked dataset.",
+        "Grant each partner dataViewer on the source dataset.",
+        "Copy datasets into 50 partner projects daily."
+      ],
+      "correct_answer": "Use Analytics Hub listings; partners link as a linked dataset.",
+      "why_correct": "Analytics Hub is the zero-copy cross-org sharing fabric for BigQuery datasets and Pub/Sub topics.",
+      "why_each_wrong_option_is_wrong": [
+        "GCS exports duplicate data and lose freshness.",
+        "Granting dataViewer on source over-shares.",
+        "Daily copies are operational and costly at this scale."
+      ]
+    },
+    {
+      "id": "drill-4.1-01",
+      "topic": "4.1 Preparing data for visualization",
+      "official_guide_mapping": "4.1 — BI Engine + materialized view",
+      "difficulty": "medium",
+      "tested_concept": "Sub-second dashboards",
+      "clue_words": ["sub-second refresh", "Looker Studio", "BigQuery"],
+      "scenario": "A Looker Studio dashboard backed by BigQuery feels slow. Most queries are repeated aggregations on a 5 TB partitioned table.",
+      "options": [
+        "Add a BI Engine reservation in the same location and back hot aggregations with a materialized view.",
+        "Increase the BigQuery slot reservation 10×.",
+        "Move the data to Cloud SQL.",
+        "Move the dashboard to Connected Sheets."
+      ],
+      "correct_answer": "Add a BI Engine reservation in the same location and back hot aggregations with a materialized view.",
+      "why_correct": "BI Engine accelerates BI dashboards in-memory; materialized views serve the repeated aggregation cheaply.",
+      "why_each_wrong_option_is_wrong": [
+        "More slots help but BI Engine is the canonical sub-second dashboard answer.",
+        "Cloud SQL is OLTP, not analytical.",
+        "Connected Sheets is for spreadsheet analysts, not the dashboard problem."
+      ]
+    },
+    {
+      "id": "drill-4.1-02",
+      "topic": "4.1 Preparing data for visualization",
+      "official_guide_mapping": "4.1 — Column-level masking",
+      "difficulty": "medium",
+      "tested_concept": "Policy tags + dynamic data masking",
+      "clue_words": ["mask SSN", "by role", "BigQuery"],
+      "scenario": "Analysts must see masked SSN values; auditors must see clear values. Both query the same table.",
+      "options": [
+        "Maintain two tables, one masked one clear.",
+        "Apply a policy tag to the SSN column with dynamic data masking; grant Fine-Grained Reader to auditors only.",
+        "Hash SSN at write time.",
+        "Use authorized views with manual SUBSTR()."
+      ],
+      "correct_answer": "Apply a policy tag to the SSN column with dynamic data masking; grant Fine-Grained Reader to auditors only.",
+      "why_correct": "Policy tags + dynamic data masking provide column-level role-based masking on a single table.",
+      "why_each_wrong_option_is_wrong": [
+        "Two tables drift and double cost.",
+        "Hashing breaks auditor clear-text need.",
+        "Manual SUBSTR scales poorly and isn't policy-controlled."
+      ]
+    },
+    {
+      "id": "drill-4.2-01",
+      "topic": "4.2 Preparing data for AI and ML",
+      "official_guide_mapping": "4.2 — Simplest capable path",
+      "difficulty": "easy",
+      "tested_concept": "Pretrained API choice",
+      "clue_words": ["extract structured fields", "invoices", "fastest to ship"],
+      "scenario": "A team needs to extract vendor name, amount, and due date from PDF invoices. They are not ML specialists.",
+      "options": [
+        "Train a custom Vertex AI vision model.",
+        "Use AutoML Vision Object Detection.",
+        "Use Document AI with the invoice processor.",
+        "Build a regex parser on extracted text."
+      ],
+      "correct_answer": "Use Document AI with the invoice processor.",
+      "why_correct": "Document AI's invoice processor is a pretrained service for exactly this task — simplest capable path.",
+      "why_each_wrong_option_is_wrong": [
+        "Custom training is slow and unnecessary.",
+        "AutoML Vision is image classification, not invoice field extraction.",
+        "Regex on OCR text breaks on layout variation."
+      ]
+    },
+    {
+      "id": "drill-4.2-02",
+      "topic": "4.2 Preparing data for AI and ML",
+      "official_guide_mapping": "4.2 — Forecasting in BQML",
+      "difficulty": "easy",
+      "tested_concept": "ARIMA_PLUS",
+      "clue_words": ["forecast demand", "BigQuery", "time series"],
+      "scenario": "A retailer wants to forecast SKU-level demand from a BigQuery sales table without exporting data.",
+      "options": [
+        "Vertex AI custom training with TensorFlow.",
+        "BigQuery ML with ARIMA_PLUS.",
+        "Cloud Functions calling Prophet.",
+        "Looker Studio trendlines."
+      ],
+      "correct_answer": "BigQuery ML with ARIMA_PLUS.",
+      "why_correct": "ARIMA_PLUS handles seasonality and holidays for time-series forecasting in BQML — train where data lives.",
+      "why_each_wrong_option_is_wrong": [
+        "Custom training is operationally heavy for a tabular forecast.",
+        "Calling Prophet from Cloud Functions adds export and orchestration.",
+        "Looker trendlines are visual only, not forecasts."
+      ]
+    },
+    {
+      "id": "drill-4.2-03",
+      "topic": "4.2 Preparing data for AI and ML",
+      "official_guide_mapping": "4.2 — Embeddings + RAG",
+      "difficulty": "hard",
+      "tested_concept": "RAG architecture",
+      "clue_words": ["chatbot over private docs", "semantic search", "Gemini grounding"],
+      "scenario": "A team builds a chatbot that answers from internal PDFs. They want semantic retrieval and grounded Gemini responses.",
+      "options": [
+        "Fine-tune Gemini on the PDFs.",
+        "Use ML.GENERATE_EMBEDDING to embed chunks; store in Vertex AI Vector Search; retrieve top-k and ground the Gemini prompt.",
+        "Index the PDFs in BigQuery search indexes only.",
+        "Use Cloud Translation API on the PDFs."
+      ],
+      "correct_answer": "Use ML.GENERATE_EMBEDDING to embed chunks; store in Vertex AI Vector Search; retrieve top-k and ground the Gemini prompt.",
+      "why_correct": "Canonical RAG: embed → vector store → retrieve → ground. Avoids the cost and rigidity of fine-tuning.",
+      "why_each_wrong_option_is_wrong": [
+        "Fine-tuning is slow, expensive, and stale.",
+        "Search indexes give keyword search, not semantic similarity.",
+        "Translation API is unrelated."
+      ]
+    },
+    {
+      "id": "drill-4.2-04",
+      "topic": "4.2 Preparing data for AI and ML",
+      "official_guide_mapping": "4.2 — Training-serving skew",
+      "difficulty": "medium",
+      "tested_concept": "Vertex AI Feature Store + Model Monitoring",
+      "clue_words": ["accurate offline", "wrong in production", "feature drift"],
+      "scenario": "A model trained on offline data performs well in eval but degrades in production over weeks.",
+      "options": [
+        "Retrain with more epochs.",
+        "Use Vertex AI Feature Store for consistent features and Vertex Model Monitoring for skew/drift detection.",
+        "Switch to a bigger model.",
+        "Increase batch prediction frequency."
+      ],
+      "correct_answer": "Use Vertex AI Feature Store for consistent features and Vertex Model Monitoring for skew/drift detection.",
+      "why_correct": "Feature Store eliminates training-serving skew; Model Monitoring catches feature drift in production.",
+      "why_each_wrong_option_is_wrong": [
+        "More epochs do not fix skew/drift.",
+        "Bigger model does not address the data-distribution problem.",
+        "Higher batch frequency does not fix skew."
+      ]
+    },
+    {
+      "id": "drill-4.3-01",
+      "topic": "4.3 Sharing data",
+      "official_guide_mapping": "4.3 — Row-level vs authorized view",
+      "difficulty": "medium",
+      "tested_concept": "Row-access policies",
+      "clue_words": ["each user only sees their region", "single table"],
+      "scenario": "Sales reps in three regions all query one table; each must see only their region's rows.",
+      "options": [
+        "Three regional copies of the table.",
+        "Row-access policies keyed on the user's session attribute.",
+        "Three authorized views, one per region, on the same source.",
+        "Hide the region column with policy tags."
+      ],
+      "correct_answer": "Row-access policies keyed on the user's session attribute.",
+      "why_correct": "Row-access policies enforce row-level filtering by user attribute on a single table.",
+      "why_each_wrong_option_is_wrong": [
+        "Copies drift and waste storage.",
+        "Three views works but adds maintenance and is not the most direct row-level mechanism.",
+        "Hiding the column doesn't filter the rows."
+      ]
+    },
+    {
+      "id": "drill-5.1-01",
+      "topic": "5.1 Optimizing resources",
+      "official_guide_mapping": "5.1 — Persistent vs ephemeral Dataproc",
+      "difficulty": "easy",
+      "tested_concept": "Ephemeral cluster pattern",
+      "clue_words": ["daily batch", "3 hours", "minimize cost"],
+      "scenario": "A daily Spark ETL runs for 3 hours then idles for 21 hours. The team wants to minimize cost.",
+      "options": [
+        "Persistent Dataproc cluster running 24/7.",
+        "Ephemeral Dataproc cluster created per run, with Spot workers and Dataproc Metastore.",
+        "Cloud Composer running queries continuously.",
+        "Dataflow streaming."
+      ],
+      "correct_answer": "Ephemeral Dataproc cluster created per run, with Spot workers and Dataproc Metastore.",
+      "why_correct": "Cluster lives only during the job; Spot workers cut compute cost ~70 % for batch.",
+      "why_each_wrong_option_is_wrong": [
+        "Persistent cluster pays 21 idle hours per day.",
+        "Composer doesn't run Spark.",
+        "Dataflow streaming is for unbounded data."
+      ]
+    },
+    {
+      "id": "drill-5.1-02",
+      "topic": "5.1 Optimizing resources",
+      "official_guide_mapping": "5.1 — GCS lifecycle",
+      "difficulty": "easy",
+      "tested_concept": "Class lifecycle for cold data",
+      "clue_words": ["log archives", "read once a year", "cheapest"],
+      "scenario": "Compliance requires retaining log archives for 7 years; they are read at most once a year.",
+      "options": [
+        "Standard class with no lifecycle.",
+        "Lifecycle rule transitioning to Archive class after 365 days.",
+        "Coldline class with no lifecycle.",
+        "Move to Bigtable."
+      ],
+      "correct_answer": "Lifecycle rule transitioning to Archive class after 365 days.",
+      "why_correct": "Archive is the cheapest storage class; the lifecycle rule transitions automatically once access cools.",
+      "why_each_wrong_option_is_wrong": [
+        "Standard is the priciest option.",
+        "Coldline is for ≥ once/quarter access; Archive matches once/year.",
+        "Bigtable is for low-latency reads at high cost."
+      ]
+    },
+    {
+      "id": "drill-5.2-01",
+      "topic": "5.2 Designing automation and repeatability",
+      "official_guide_mapping": "5.2 — IaC + CI/CD",
+      "difficulty": "easy",
+      "tested_concept": "Terraform with GCS state",
+      "clue_words": ["reproducible", "dev/staging/prod", "version-controlled infra"],
+      "scenario": "A platform team must promote infrastructure across dev/staging/prod identically and audit changes via PRs.",
+      "options": [
+        "Hand-written gcloud scripts in a wiki.",
+        "Terraform modules per environment, state in GCS with versioning and locking; PRs in Git.",
+        "Manual changes via Cloud Console.",
+        "Deployment Manager templates emailed around."
+      ],
+      "correct_answer": "Terraform modules per environment, state in GCS with versioning and locking; PRs in Git.",
+      "why_correct": "Terraform with GCS state is the canonical GCP IaC pattern, with PR-based promotion and auditability.",
+      "why_each_wrong_option_is_wrong": [
+        "Wiki scripts are not reproducible or auditable.",
+        "Manual changes drift across envs.",
+        "Email-distributed templates aren't version-controlled."
+      ]
+    },
+    {
+      "id": "drill-5.3-01",
+      "topic": "5.3 Organizing workloads based on business requirements",
+      "official_guide_mapping": "5.3 — Reservations + assignments",
+      "difficulty": "medium",
+      "tested_concept": "Slot isolation",
+      "clue_words": ["nightly ETL ran late", "ad-hoc analysts", "same project"],
+      "scenario": "Nightly ETL is finishing late because ad-hoc analysts saturate slots. Both share one BigQuery on-demand pool.",
+      "options": [
+        "Tell analysts to query off-hours.",
+        "Move to BigQuery Editions and create separate reservations and assignments — ETL gets a baseline guarantee, BI gets autoscale only.",
+        "Switch ETL to Dataproc.",
+        "Add maximum_bytes_billed to all queries."
+      ],
+      "correct_answer": "Move to BigQuery Editions and create separate reservations and assignments — ETL gets a baseline guarantee, BI gets autoscale only.",
+      "why_correct": "Reservations + assignments isolate workloads with guaranteed baselines while still allowing idle-slot borrowing.",
+      "why_each_wrong_option_is_wrong": [
+        "Schedule pleas don't enforce.",
+        "Rewriting ETL to Dataproc is a heavy migration without solving the isolation problem.",
+        "maximum_bytes_billed caps a single query but doesn't isolate workloads."
+      ]
+    },
+    {
+      "id": "drill-5.4-01",
+      "topic": "5.4 Monitoring and troubleshooting processes",
+      "official_guide_mapping": "5.4 — Pub/Sub backlog metric",
+      "difficulty": "easy",
+      "tested_concept": "oldest_unacked_message_age alert",
+      "clue_words": ["consumers fell behind", "Pub/Sub backlog growing"],
+      "scenario": "A streaming consumer process slows down. Operators want an alert before SLO breach.",
+      "options": [
+        "Alert on subscription/oldest_unacked_message_age above a threshold.",
+        "Alert on topic publish rate.",
+        "Alert on subscriber CPU only.",
+        "Alert on number of subscriptions."
+      ],
+      "correct_answer": "Alert on subscription/oldest_unacked_message_age above a threshold.",
+      "why_correct": "This metric directly measures backlog age — the canonical alert for falling-behind consumers.",
+      "why_each_wrong_option_is_wrong": [
+        "Publish rate doesn't say whether consumers are keeping up.",
+        "CPU is a proxy and noisy.",
+        "Subscription count is unrelated."
+      ]
+    },
+    {
+      "id": "drill-5.4-02",
+      "topic": "5.4 Monitoring and troubleshooting processes",
+      "official_guide_mapping": "5.4 — Bigtable hotspot",
+      "difficulty": "medium",
+      "tested_concept": "Key Visualizer",
+      "clue_words": ["Bigtable slow", "intermittent", "specific keys"],
+      "scenario": "Bigtable read latency spikes intermittently for some keys. The team suspects a hotspot.",
+      "options": [
+        "Increase node count blindly.",
+        "Use Bigtable Key Visualizer to diagnose hot tablets and revise the row-key design.",
+        "Switch to Spanner.",
+        "Add a Memorystore cache in front."
+      ],
+      "correct_answer": "Use Bigtable Key Visualizer to diagnose hot tablets and revise the row-key design.",
+      "why_correct": "Key Visualizer shows access heatmaps over the key space; the right fix is row-key redesign.",
+      "why_each_wrong_option_is_wrong": [
+        "More nodes don't fix a hot tablet.",
+        "Switching DBs is a heavy migration that doesn't address row-key design.",
+        "A cache helps reads but doesn't fix tablet imbalance."
+      ]
+    },
+    {
+      "id": "drill-5.4-03",
+      "topic": "5.4 Monitoring and troubleshooting processes",
+      "official_guide_mapping": "5.4 — Dataflow streaming lag",
+      "difficulty": "medium",
+      "tested_concept": "system_lag / data_freshness",
+      "clue_words": ["Dataflow streaming behind", "watermark"],
+      "scenario": "A streaming Dataflow pipeline shows downstream BQ tables lagging by 30 minutes.",
+      "options": [
+        "Alert on worker CPU.",
+        "Inspect system_lag and data_freshness; check watermark progression and stage timing.",
+        "Restart the job nightly.",
+        "Increase Pub/Sub topic retention."
+      ],
+      "correct_answer": "Inspect system_lag and data_freshness; check watermark progression and stage timing.",
+      "why_correct": "These are Dataflow's canonical streaming-health metrics; watermark progression diagnoses where the pipeline is slow.",
+      "why_each_wrong_option_is_wrong": [
+        "Worker CPU is a proxy at best.",
+        "Restarting hides the issue.",
+        "Topic retention doesn't change pipeline throughput."
+      ]
+    },
+    {
+      "id": "drill-5.5-01",
+      "topic": "5.5 Maintaining awareness of failures and mitigating impact",
+      "official_guide_mapping": "5.5 — Drain vs cancel",
+      "difficulty": "easy",
+      "tested_concept": "Drain for streaming update",
+      "clue_words": ["update streaming pipeline", "cannot lose in-flight"],
+      "scenario": "A streaming Dataflow job needs a code update without losing any in-flight messages.",
+      "options": [
+        "Cancel the job and start a new one.",
+        "Drain the job, redeploy the updated code.",
+        "Pause the source.",
+        "Let the job crash and restart."
+      ],
+      "correct_answer": "Drain the job, redeploy the updated code.",
+      "why_correct": "Drain stops new ingest, finishes in-flight, exits cleanly — exactly what 'cannot lose in-flight' requires.",
+      "why_each_wrong_option_is_wrong": [
+        "Cancel may lose in-flight data.",
+        "Pausing the source still leaves in-flight stuck.",
+        "Crashing risks data loss and corruption."
+      ]
+    },
+    {
+      "id": "drill-5.5-02",
+      "topic": "5.5 Maintaining awareness of failures and mitigating impact",
+      "official_guide_mapping": "5.5 — Recovery beyond time travel",
+      "difficulty": "medium",
+      "tested_concept": "Snapshots vs time travel",
+      "clue_words": ["recover from 30 days ago", "BigQuery"],
+      "scenario": "A user dropped a critical BigQuery table 14 days ago. The default time-travel window has elapsed.",
+      "options": [
+        "Time travel.",
+        "Restore from a BigQuery snapshot taken before the drop.",
+        "Re-run the source pipelines from scratch.",
+        "Use BigQuery export."
+      ],
+      "correct_answer": "Restore from a BigQuery snapshot taken before the drop.",
+      "why_correct": "Time travel is up to 7 days; snapshots provide unlimited point-in-time recovery (billed only on changes).",
+      "why_each_wrong_option_is_wrong": [
+        "Time travel is past its window.",
+        "Re-running pipelines may not produce the same data and is operationally heavy.",
+        "Export depends on whether one was taken; snapshots are the canonical answer."
+      ]
+    },
+    {
+      "id": "drill-5.5-03",
+      "topic": "5.5 Maintaining awareness of failures and mitigating impact",
+      "official_guide_mapping": "5.5 — Cloud SQL HA vs cross-region replica",
+      "difficulty": "medium",
+      "tested_concept": "Replication and failover",
+      "clue_words": ["zone outage", "automatic failover", "MySQL"],
+      "scenario": "A regional MySQL workload must survive a zone outage with automatic failover and minimal data loss.",
+      "options": [
+        "Cross-region read replica.",
+        "Cloud SQL regional HA configuration.",
+        "Daily automated backups only.",
+        "Spanner multi-region."
+      ],
+      "correct_answer": "Cloud SQL regional HA configuration.",
+      "why_correct": "Regional HA is a synchronous standby in another zone with automatic failover.",
+      "why_each_wrong_option_is_wrong": [
+        "Cross-region replicas are async and require manual promotion.",
+        "Daily backups don't provide automatic failover.",
+        "Spanner multi-region is global ACID; overkill for regional MySQL."
+      ]
+    },
+    {
+      "id": "drill-2.2-08",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Beam session windows",
+      "difficulty": "medium",
+      "tested_concept": "Session window vs fixed window",
+      "clue_words": ["user session", "gap of inactivity", "variable length"],
+      "scenario": "A clickstream pipeline must group events into per-user sessions ending after 30 minutes of inactivity.",
+      "options": [
+        "Fixed 30-minute windows.",
+        "Sliding 30-minute windows every 1 minute.",
+        "Session windows with gap duration 30 minutes.",
+        "Global window."
+      ],
+      "correct_answer": "Session windows with gap duration 30 minutes.",
+      "why_correct": "Session windows close after a configured gap of inactivity per key — exactly the user-session model.",
+      "why_each_wrong_option_is_wrong": [
+        "Fixed windows split sessions arbitrarily.",
+        "Sliding windows overlap and don't close on gap.",
+        "Global window has no time-based grouping."
+      ]
+    },
+    {
+      "id": "drill-3.1-05",
+      "topic": "3.1 Selecting storage systems",
+      "official_guide_mapping": "3.1 — Spanner vs Cloud SQL",
+      "difficulty": "medium",
+      "tested_concept": "Global ACID vs regional",
+      "clue_words": ["global writes", "ACID", "horizontal scale"],
+      "scenario": "A retail platform writes orders simultaneously from US, EU, and APAC and must enforce strong consistency on inventory across regions.",
+      "options": [
+        "Cloud SQL with cross-region replicas.",
+        "Spanner multi-region.",
+        "BigQuery with streaming inserts.",
+        "Bigtable replicated."
+      ],
+      "correct_answer": "Spanner multi-region.",
+      "why_correct": "Spanner multi-region is the only option providing global, strongly-consistent multi-region writes with ACID.",
+      "why_each_wrong_option_is_wrong": [
+        "Cloud SQL replicas are async and not for multi-region writes.",
+        "BigQuery is analytical, not transactional.",
+        "Bigtable is eventually consistent across regions."
+      ]
+    },
+    {
+      "id": "drill-1.2-04",
+      "topic": "1.2 Designing for reliability and fidelity",
+      "official_guide_mapping": "1.2 — Validation with Cloud Data Fusion",
+      "difficulty": "medium",
+      "tested_concept": "Visual ETL with built-in validation",
+      "clue_words": ["non-engineering team", "drag-and-drop", "validation rules"],
+      "scenario": "A non-engineering team builds simple ETL flows and needs visual rule-based row validation without writing Python.",
+      "options": [
+        "Cloud Data Fusion with validation plugins.",
+        "Apache Beam pipelines on Dataflow.",
+        "Dataform with assertions.",
+        "Cloud Composer DAGs."
+      ],
+      "correct_answer": "Cloud Data Fusion with validation plugins.",
+      "why_correct": "Cloud Data Fusion is visual / no-code with built-in validation plugins — fits the non-engineering team.",
+      "why_each_wrong_option_is_wrong": [
+        "Beam requires code.",
+        "Dataform requires SQL/SQLX.",
+        "Composer requires Python DAGs."
+      ]
+    },
+    {
+      "id": "drill-3.4-02",
+      "topic": "3.4 Designing for a data platform",
+      "official_guide_mapping": "3.4 — Knowledge Catalog (Dataplex)",
+      "difficulty": "easy",
+      "tested_concept": "Dataplex Universal Catalog vs standalone Data Catalog",
+      "clue_words": ["search across data fabric", "policy tags"],
+      "scenario": "A platform team needs a searchable catalog with policy tags across BigQuery and GCS in 2026.",
+      "options": [
+        "Standalone Data Catalog.",
+        "Dataplex Universal Catalog (Knowledge Catalog).",
+        "Custom search index in Elasticsearch.",
+        "BigQuery INFORMATION_SCHEMA only."
+      ],
+      "correct_answer": "Dataplex Universal Catalog (Knowledge Catalog).",
+      "why_correct": "Standalone Data Catalog was discontinued 2026-01-30; Dataplex Universal Catalog (rebranded Knowledge Catalog April 2026) is the current product.",
+      "why_each_wrong_option_is_wrong": [
+        "Standalone Data Catalog is discontinued.",
+        "Custom Elasticsearch is not the GCP-native managed catalog.",
+        "INFORMATION_SCHEMA is BQ metadata only."
+      ]
+    },
+    {
+      "id": "drill-2.3-03",
+      "topic": "2.3 Deploying and operationalizing the pipelines",
+      "official_guide_mapping": "2.3 — Workflows for light orchestration",
+      "difficulty": "easy",
+      "tested_concept": "Workflows vs Composer",
+      "clue_words": ["chain three HTTP calls", "scale to zero", "no Python"],
+      "scenario": "A serverless service must chain three HTTP API calls in sequence on a daily cron and scale to zero between runs.",
+      "options": [
+        "Cloud Composer.",
+        "Workflows triggered by Cloud Scheduler.",
+        "Cloud Function with shell scripts.",
+        "Cloud Build pipeline."
+      ],
+      "correct_answer": "Workflows triggered by Cloud Scheduler.",
+      "why_correct": "Workflows is serverless API/service orchestration with no Python and scale-to-zero — matches the constraints exactly.",
+      "why_each_wrong_option_is_wrong": [
+        "Composer pays GKE baseline 24/7.",
+        "Cloud Function shell scripts are fragile and don't model orchestration.",
+        "Cloud Build is for CI/CD, not runtime orchestration."
+      ]
+    },
+    {
+      "id": "drill-1.4-03",
+      "topic": "1.4 Designing data migrations",
+      "official_guide_mapping": "1.4 — BigQuery Data Transfer Service",
+      "difficulty": "easy",
+      "tested_concept": "Warehouse migration with schema translation",
+      "clue_words": ["Teradata to BigQuery", "schema translation"],
+      "scenario": "A migration team moves a Teradata warehouse to BigQuery with minimal manual schema mapping.",
+      "options": [
+        "Storage Transfer Service.",
+        "BigQuery Data Transfer Service for Teradata.",
+        "Database Migration Service.",
+        "gcloud storage cp."
+      ],
+      "correct_answer": "BigQuery Data Transfer Service for Teradata.",
+      "why_correct": "BQ Data Transfer Service includes schema translation for Teradata and Redshift sources.",
+      "why_each_wrong_option_is_wrong": [
+        "STS is for files, not warehouses.",
+        "DMS targets relational OLTP databases (MySQL/Postgres/Oracle/SQL Server) into Cloud SQL/AlloyDB.",
+        "gcloud storage is plain object copy."
+      ]
+    },
+    {
+      "id": "drill-3.2-05",
+      "topic": "3.2 Planning for using a data warehouse",
+      "official_guide_mapping": "3.2 — require_partition_filter",
+      "difficulty": "easy",
+      "tested_concept": "Prevent runaway scans",
+      "clue_words": ["analyst SELECT *", "scan whole table"],
+      "scenario": "Analysts repeatedly issue SELECT * on a large partitioned table without a date filter, scanning the whole table.",
+      "options": [
+        "Educate analysts.",
+        "Set require_partition_filter=true on the table.",
+        "Increase BigQuery slot reservation.",
+        "Drop the partitioning."
+      ],
+      "correct_answer": "Set require_partition_filter=true on the table.",
+      "why_correct": "The setting forces queries to filter on the partition column, blocking accidental full scans.",
+      "why_each_wrong_option_is_wrong": [
+        "Education does not enforce.",
+        "More slots accelerate the bad query, not prevent it.",
+        "Removing partitioning makes the problem worse."
+      ]
+    },
+    {
+      "id": "drill-2.2-09",
+      "topic": "2.2 Building the pipelines",
+      "official_guide_mapping": "2.2 — Dataform versioned transforms",
+      "difficulty": "easy",
+      "tested_concept": "Dataform vs scheduled queries",
+      "clue_words": ["version-controlled transforms", "dependency graph", "BQ"],
+      "scenario": "A team manages 200 BigQuery transforms with a dependency graph, Git review, and assertions on every run.",
+      "options": [
+        "BigQuery scheduled queries.",
+        "Dataform with SQLX in Git.",
+        "Cloud Composer DAGs of BQ jobs.",
+        "Cloud Functions calling BQ."
+      ],
+      "correct_answer": "Dataform with SQLX in Git.",
+      "why_correct": "Dataform is purpose-built for BQ SQL transforms with dependency graph, Git versioning, and assertions.",
+      "why_each_wrong_option_is_wrong": [
+        "Scheduled queries lack dependency graphs and assertions.",
+        "Composer can do it but adds GKE cost and Python wrapping.",
+        "Cloud Functions don't model dependency graphs of SQL."
+      ]
+    }
+  ]
+}
