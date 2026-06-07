@@ -328,3 +328,26 @@ details.card summary .title {
   font-size: 0.85rem;
   color: var(--text-muted, #555);
 }
+
+/* ── In-page search-term highlighting (chapter.html?...&q=term) ───────── */
+mark.pde-hl {
+  background: #ffd54a;
+  color: #1a1a1a;
+  border-radius: 2px;
+  padding: 0 1px;
+  scroll-margin-top: 80px;
+}
+.pde-hl-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--accent, #2f6f4e);
+  background: var(--accent-dim, rgba(47, 111, 78, 0.08));
+  border-radius: var(--pde-radius, 4px);
+  font-size: 0.85rem;
+}
+.pde-hl-banner .pde-hl-clear { flex: 0 0 auto; }

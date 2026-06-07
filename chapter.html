@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0e1114">
   <title>Chapter · GCP PDE Study Hub</title>
-  <link rel="stylesheet" href="assets/css/app.css?v=9">
-  <link rel="stylesheet" href="assets/css/redesign.css?v=9">
-  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=9">
-  <link rel="stylesheet" href="assets/css/overrides.css?v=9">
+  <link rel="stylesheet" href="assets/css/app.css?v=13">
+  <link rel="stylesheet" href="assets/css/redesign.css?v=13">
+  <link rel="stylesheet" href="assets/css/theme-toggle.css?v=13">
+  <link rel="stylesheet" href="assets/css/overrides.css?v=13">
 </head>
 <body>
   <div class="page">
@@ -24,6 +24,9 @@
     if (boot({ chapter: true })) {
       const slug = new URLSearchParams(location.search).get("slug") || "";
       const initialTab = (new URLSearchParams(location.search).get("tab") || "learn").toLowerCase();
+      // Term carried over from the chapters-page search box (chapter.html?...&q=redis).
+      const highlightTerm = (new URLSearchParams(location.search).get("q") || "").trim();
+      const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
       Promise.all([Data.chapters(), Data.topicsManifest()]).then(([d, tm]) => {
         const topic = (tm.topics || []).find((t) => t.slug === slug);
@@ -215,6 +218,80 @@
         const startTab = ["learn", "decide", "drill"].includes(initialTab) ? initialTab : "learn";
         activate(startTab);
 
+        // ── Search-term highlighting ──────────────────────────────────
+        // Arriving from a chapters-page search suggestion carries ?q=<term>.
+        // Highlight every occurrence, drop a dismissible banner, and jump to
+        // the first match (opening its collapsed section / switching tabs).
+        function highlightIn(container, term) {
+          if (!container || !term) return 0;
+          const lower = term.toLowerCase();
+          const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+              if (!node.nodeValue || !node.nodeValue.toLowerCase().includes(lower)) return NodeFilter.FILTER_REJECT;
+              const tag = node.parentNode && node.parentNode.nodeName;
+              if (tag === "SCRIPT" || tag === "STYLE" || tag === "MARK") return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            },
+          });
+          const targets = [];
+          let node;
+          while ((node = walker.nextNode())) targets.push(node);
+          let count = 0;
+          targets.forEach((textNode) => {
+            const text = textNode.nodeValue;
+            const re = new RegExp(escRe(term), "gi");
+            const frag = document.createDocumentFragment();
+            let last = 0, m;
+            while ((m = re.exec(text))) {
+              if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+              const mark = document.createElement("mark");
+              mark.className = "pde-hl";
+              mark.textContent = m[0];
+              frag.appendChild(mark);
+              last = m.index + m[0].length;
+              count++;
+              if (m.index === re.lastIndex) re.lastIndex++;
+            }
+            if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+            textNode.parentNode.replaceChild(frag, textNode);
+          });
+          return count;
+        }
+
+        function revealMark(mark) {
+          let el = mark.parentElement;
+          while (el && el !== root) {
+            if (el.tagName === "DETAILS") el.open = true;
+            el = el.parentElement;
+          }
+          const panel = mark.closest(".pde-tabpanel");
+          if (panel && !panel.classList.contains("is-active")) activate(panel.dataset.panel);
+          setTimeout(() => { try { mark.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (_e) {} }, 60);
+        }
+
+        function clearHighlights() {
+          root.querySelectorAll("mark.pde-hl").forEach((m) => m.replaceWith(document.createTextNode(m.textContent)));
+          root.normalize();
+          const u = new URL(location.href);
+          u.searchParams.delete("q");
+          history.replaceState(null, "", u.toString());
+        }
+
+        if (highlightTerm) {
+          let total = 0;
+          root.querySelectorAll(".pde-tabpanel").forEach((p) => { total += highlightIn(p, highlightTerm); });
+          if (total) {
+            const banner = document.createElement("div");
+            banner.className = "pde-hl-banner";
+            banner.innerHTML = `<span>Highlighting <strong>${total}</strong> match${total === 1 ? "" : "es"} for “<strong>${esc(highlightTerm)}</strong>”</span><button type="button" class="button sm pde-hl-clear">Clear</button>`;
+            const anchor = root.querySelector(".pde-workflow");
+            if (anchor) root.insertBefore(banner, anchor); else root.prepend(banner);
+            banner.querySelector(".pde-hl-clear").addEventListener("click", () => { clearHighlights(); banner.remove(); });
+            const first = root.querySelector("mark.pde-hl");
+            if (first) revealMark(first);
+          }
+        }
+
         // Lazy-load scenario drills for the Drill tab
         let drillsLoaded = false;
         async function loadDrills() {
@@ -249,6 +326,7 @@
                   ${s.why_correct ? `<div class="pde-reveal-body" style="display:block;margin-top:10px"><strong>Why it's right:</strong> ${esc(s.why_correct)}</div>` : ""}
                 </details>`;
             }).join("");
+            if (highlightTerm) highlightIn(slot, highlightTerm);
           } catch (e) {
             slot.innerHTML = `<p class="muted">Failed to load drills: ${esc(e.message)}</p>`;
           }
